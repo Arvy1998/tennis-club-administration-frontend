@@ -3,6 +3,15 @@ import ReactDOM from 'react-dom';
 
 import App from './App';
 
-ReactDOM.render(<App/>, document.getElementById('app'));
+import { CookiesProvider } from 'react-cookie';
+
+ReactDOM.render(
+    <React.StrictMode>
+        <CookiesProvider>
+            <App />
+        </CookiesProvider>
+    </React.StrictMode>,
+    document.getElementById('app'),
+);
 
 module.hot.accept();

@@ -17,6 +17,14 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
+import { useMutation } from "@apollo/react-hooks";
+import { 
+    LOGIN_USER,
+    REGISTER_USER,
+} from './gql/mutations/mutations';
+
+import { useAuthToken } from './hooks/useAuthToken';
+
 const useStyles = makeStyles((theme) => ({
     paper: {
         marginTop: theme.spacing(8),
@@ -42,6 +50,19 @@ const Login = () => {
     const classes = useStyles();
     const history = useHistory();
 
+    const [_, setAuthToken] = useAuthToken();
+
+    const [loginUser, { data: loginData }] = useMutation(LOGIN_USER, {
+        onCompleted: (data) => {
+            setAuthToken(data.loginUser);
+        },
+    });
+    // const [registerUser, { data: registerData }] = useMutation(REGISTER_USER, {
+    //     onCompleted: (data) => {
+    //         setAuthToken(data.registerUser);
+    //     },
+    // });
+
     // const [firstName, setFirstName] = useState('');
     // const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
@@ -49,7 +70,16 @@ const Login = () => {
 
     function handleSubmit(event) {
         event.preventDefault();
-        console.log('Email:', email, 'Password: ', password);
+        
+        const x = loginUser({
+            variables: {
+                userInput: {
+                    email,
+                    password,
+                },
+            },
+        });
+        console.log({x});
     }
 
     return (
