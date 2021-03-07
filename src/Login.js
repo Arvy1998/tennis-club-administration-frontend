@@ -11,14 +11,16 @@ import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import SportsTennis from '@material-ui/icons/SportsTennis';
+import AlternateEmail from '@material-ui/icons/AlternateEmail';
+import VpnKey from '@material-ui/icons/VpnKey';
 
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
 import { useMutation } from "@apollo/react-hooks";
-import { 
+import {
     LOGIN_USER,
     REGISTER_USER,
 } from './gql/mutations/mutations';
@@ -38,12 +40,18 @@ const useStyles = makeStyles((theme) => ({
     },
     form: {
         width: '100%',
-        marginTop: theme.spacing(1),
     },
     buttonBox: {
         justifyContent: 'center',
         margin: theme.spacing(3, 0, 2),
-    }
+    },
+    welcomeText: {
+        color: 'grey',
+        marginTop: theme.spacing(1),
+    },
+    appName: {
+        fontWeight: 'bold',
+    },
 }));
 
 const Login = () => {
@@ -57,11 +65,12 @@ const Login = () => {
             setAuthToken(data.loginUser);
         },
     });
-    // const [registerUser, { data: registerData }] = useMutation(REGISTER_USER, {
-    //     onCompleted: (data) => {
-    //         setAuthToken(data.registerUser);
-    //     },
-    // });
+
+    const [registerUser, { data: registerData }] = useMutation(REGISTER_USER, {
+        onCompleted: (data) => {
+            setAuthToken(data.registerUser);
+        },
+    });
 
     // const [firstName, setFirstName] = useState('');
     // const [lastName, setLastName] = useState('');
@@ -70,7 +79,7 @@ const Login = () => {
 
     function handleSubmit(event) {
         event.preventDefault();
-        
+
         const x = loginUser({
             variables: {
                 userInput: {
@@ -79,48 +88,72 @@ const Login = () => {
                 },
             },
         });
-        console.log({x});
+        console.log({ x });
     }
 
     return (
         <Container component="main" maxWidth="xs">
             <CssBaseline />
             <div className={classes.paper}>
-                <Avatar className={classes.avatar}>
-                    <LockOutlinedIcon />
-                </Avatar>
-                <Typography component="h1" variant="h5">
-                    Sign in
+                <Grid
+                    container
+                    spacing={0}
+                    direction="row"
+                    alignItems="center"
+                    justify="center"
+                >
+                    <Avatar className={classes.avatar}>
+                        <SportsTennis />
+                    </Avatar>
+                    <Typography component="h1" variant="h5" className={classes.appName}>
+                        LawnTennisClubIS
+                    </Typography>
+                </Grid>
+                <Typography component="h1" variant="h5" className={classes.welcomeText}>
+                    Welcome back! Please login to your account.
                 </Typography>
                 <form className={classes.form} onSubmit={handleSubmit}>
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="email"
-                        label="Email Address"
-                        name="email"
-                        autoComplete="email"
-                        autoFocus
-                        onInput={e => setEmail(e.target.value)}
-                    />
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        name="password"
-                        label="Password"
-                        type="password"
-                        id="password"
-                        autoComplete="current-password"
-                        onInput={e => setPassword(e.target.value)}
-                    />
-                    <FormControlLabel
-                        control={<Checkbox value="remember" color="primary" />}
-                        label="Remember me"
-                    />
+                    <Grid container spacing={1} alignItems="flex-end" justify="center">
+                        <Grid item>
+                            <AlternateEmail />
+                        </Grid>
+                        <Grid item >
+                            <TextField
+                                margin="normal"
+                                required
+                                style={{width: 300}}
+                                id="email"
+                                label="Email Address"
+                                name="email"
+                                autoComplete="email"
+                                onInput={e => setEmail(e.target.value)}
+                            />
+                        </Grid>
+                    </Grid>
+                    <Grid container spacing={1} alignItems="flex-end" justify="center">
+                        <Grid item>
+                            <VpnKey />
+                        </Grid>
+                        <Grid item>
+                            <TextField
+                                margin="normal"
+                                required
+                                style={{width: 300}}
+                                name="password"
+                                label="Password"
+                                type="password"
+                                id="password"
+                                autoComplete="current-password"
+                                onInput={e => setPassword(e.target.value)}
+                            />
+                        </Grid>
+                    </Grid>
+                    <Grid item spacing={1} alignItems="flex-end">
+                        <FormControlLabel
+                            control={<Checkbox value="remember" color="secondary" />}
+                            label="Remember me"
+                        />
+                    </Grid>
                     <Grid container justify="center">
                         <Button
                             type="submit"
@@ -135,7 +168,7 @@ const Login = () => {
                         <Grid container>
                             <Grid item>
                                 <Link href="#" variant="body2">
-                                    {"Don't have an account? Sign Up"}
+                                    {"Don't have an account? Register!"}
                                 </Link>
                             </Grid>
                         </Grid>
