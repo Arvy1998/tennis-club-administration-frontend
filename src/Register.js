@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router';
 
 import Avatar from '@material-ui/core/Avatar';
@@ -10,7 +10,13 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+
+import SportsTennis from '@material-ui/icons/SportsTennis';
+import AlternateEmail from '@material-ui/icons/AlternateEmail';
+import VpnKey from '@material-ui/icons/VpnKey';
+import TextFieldsIcon from '@material-ui/icons/TextFields';
+import WcIcon from '@material-ui/icons/Wc';
+
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 
@@ -20,6 +26,11 @@ import {
 } from './gql/mutations/mutations';
 
 import { makeStyles } from '@material-ui/core/styles';
+
+import { useAuthToken } from './hooks/useAuthToken';
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -34,12 +45,37 @@ const useStyles = makeStyles((theme) => ({
     },
     form: {
         width: '100%',
-        marginTop: theme.spacing(3),
     },
     submit: {
         margin: theme.spacing(3, 0, 2),
     },
+    welcomeText: {
+        color: 'grey',
+        marginTop: theme.spacing(1),
+    },
+    appName: {
+        fontWeight: 'bold',
+    },
+    buttonBox: {
+        justifyContent: 'center',
+        margin: theme.spacing(3, 0, 2),
+    },
 }));
+
+const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            width: 250,
+        },
+    },
+};
+
+const genderSelection = [
+    'Male',
+    'Female',
+    'Other',
+];
 
 const Register = () => {
     const classes = useStyles();
@@ -57,6 +93,20 @@ const Register = () => {
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [gender, setGender] = useState('');
+
+    const handleGenderSelect = (event) => {
+        setGender(event.target.value.toUpperString());
+    };
+
+    function getStyles(gender, theme) {
+        return {
+            fontWeight:
+                personName.indexOf(gender) === -1
+                    ? theme.typography.fontWeightRegular
+                    : theme.typography.fontWeightMedium,
+        };
+    }
 
     function handleSubmit(event) {
         event.preventDefault();
@@ -64,101 +114,154 @@ const Register = () => {
         registerUser({
             variables: {
                 userInput: {
+                    firstName,
+                    lastName,
+                    sex: gender,
                     email,
                     password,
                 },
             },
         });
 
-        history.push('/home');
+        if (registerData && registerData.registerUser) {
+            history.push('/home');
+        }
     }
 
     return (
         <Container component="main" maxWidth="xs">
             <CssBaseline />
             <div className={classes.paper}>
-                <Avatar className={classes.avatar}>
-                    <LockOutlinedIcon />
-                </Avatar>
-                <Typography component="h1" variant="h5">
-                    Register
-        </Typography>
-                <form className={classes.form} noValidate>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                autoComplete="fname"
-                                name="firstName"
-                                variant="outlined"
-                                required
-                                fullWidth
-                                id="firstName"
-                                label="First Name"
-                                autoFocus
-                            />
+                <Grid
+                    container
+                    spacing={0}
+                    direction="row"
+                    alignItems="center"
+                    justify="center"
+                >
+                    <Avatar className={classes.avatar}>
+                        <SportsTennis />
+                    </Avatar>
+                    <Typography component="h1" variant="h5" className={classes.appName}>
+                        LawnTennisClubIS
+                    </Typography>
+                </Grid>
+                <Typography component="h1" variant="h5" className={classes.welcomeText}>
+                    Welcome! Please register here.
+                </Typography>
+                <form className={classes.form} onSubmit={handleSubmit}>
+                    <Grid container>
+                        <Grid container spacing={1} alignItems="flex-end" justify="center">
+                            <Grid item>
+                                <TextFieldsIcon />
+                            </Grid>
+                            <Grid item >
+                                <TextField
+                                    autoComplete="fname"
+                                    name="firstName"
+                                    required
+                                    style={{ width: 300 }}
+                                    id="firstName"
+                                    label="First Name"
+                                    onInput={e => setFirstName(e.target.value)}
+                                />
+                            </Grid>
                         </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                id="lastName"
-                                label="Last Name"
-                                name="lastName"
-                                autoComplete="lname"
-                            />
+                        <Grid container spacing={1} alignItems="flex-end" justify="center">
+                            <Grid item>
+                                <TextFieldsIcon />
+                            </Grid>
+                            <Grid item >
+                                <TextField
+                                    required
+                                    style={{ width: 300 }}
+                                    id="lastName"
+                                    label="Last Name"
+                                    name="lastName"
+                                    autoComplete="lname"
+                                    onInput={e => setLastName(e.target.value)}
+                                />
+                            </Grid>
                         </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                id="email"
-                                label="Email Address"
-                                name="email"
-                                autoComplete="email"
-                            />
+                        <Grid container spacing={1} alignItems="flex-end" justify="center">
+                            <Grid item>
+                                <TextFieldsIcon />
+                            </Grid>
+                            <Grid item>
+                                <Select
+                                    labelId="genderSelect"
+                                    id="genderSelect-id"
+                                    multiple
+                                    onChange={handleGenderSelect}
+                                    input={<Input />}
+                                    MenuProps={MenuProps}
+                                >
+                                    {genderSelection.map((gender) => (
+                                        <MenuItem key={gender} value={gender} style={getStyles(gender, theme)}>
+                                            {gender}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </Grid>
                         </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                name="password"
-                                label="Password"
-                                type="password"
-                                id="password"
-                                autoComplete="current-password"
-                            />
+                        <Grid container spacing={1} alignItems="flex-end" justify="center">
+                            <Grid item>
+                                <AlternateEmail />
+                            </Grid>
+                            <Grid item >
+                                <TextField
+                                    required
+                                    style={{ width: 300 }}
+                                    id="email"
+                                    label="Email Address"
+                                    name="email"
+                                    autoComplete="email"
+                                    onInput={e => setEmail(e.target.value)}
+                                />
+                            </Grid>
                         </Grid>
-                        <Grid item xs={12}>
-                            <FormControlLabel
-                                control={<Checkbox value="allowExtraEmails" color="primary" />}
-                                label="I want to receive inspiration, marketing promotions and updates via email."
-                            />
+                        <Grid container spacing={1} alignItems="flex-end" justify="center">
+                            <Grid item>
+                                <VpnKey />
+                            </Grid>
+                            <Grid item>
+                                <TextField
+                                    required
+                                    style={{ width: 300 }}
+                                    name="password"
+                                    label="Password"
+                                    type="password"
+                                    id="password"
+                                    autoComplete="current-password"
+                                    onInput={e => setPassword(e.target.value)}
+                                />
+                            </Grid>
                         </Grid>
                     </Grid>
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                    >
-                        Register
+                    <Grid container justify="center">
+                        <Button
+                            type="submit"
+                            variant="outlined"
+                            color="secondary"
+                            className={classes.buttonBox}
+                        >
+                            Register
                     </Button>
-                    <Grid container justify="flex-end">
-                        <Grid item>
-                            <Link
-                                variant="body2"
-                                onClick={() => {
-                                    history.push('/login');
-                                }}
-                            >
-                                {'Already have an account? Sign in!'}
-                            </Link>
-                        </Grid>
                     </Grid>
+                    <Box>
+                        <Grid container>
+                            <Grid item>
+                                <Link
+                                    variant="body2"
+                                    onClick={() => {
+                                        history.push('/login');
+                                    }}
+                                >
+                                    {'Already have an account? Sign in!'}
+                                </Link>
+                            </Grid>
+                        </Grid>
+                    </Box>
                 </form>
             </div>
         </Container>

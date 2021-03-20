@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
     },
     buttonBox: {
         justifyContent: 'center',
-        margin: theme.spacing(3, 0, 2),
+        margin: theme.spacing(0, 0, 3),
     },
     welcomeText: {
         color: 'grey',
@@ -51,6 +51,9 @@ const useStyles = makeStyles((theme) => ({
     appName: {
         fontWeight: 'bold',
     },
+    checkBoxPadding: {
+        marginLeft: theme.spacing(2),
+    }
 }));
 
 const Login = () => {
@@ -80,7 +83,9 @@ const Login = () => {
             },
         });
 
-        history.push('/home');
+        if (loginData && loginData.loginUser) {
+            history.push('/home');
+        }
     }
 
     return (
@@ -111,7 +116,6 @@ const Login = () => {
                         </Grid>
                         <Grid item >
                             <TextField
-                                margin="normal"
                                 required
                                 style={{ width: 300 }}
                                 id="email"
@@ -128,7 +132,6 @@ const Login = () => {
                         </Grid>
                         <Grid item>
                             <TextField
-                                margin="normal"
                                 required
                                 style={{ width: 300 }}
                                 name="password"
@@ -140,12 +143,18 @@ const Login = () => {
                             />
                         </Grid>
                     </Grid>
-                    <Grid item spacing={1} alignItems="flex-end">
+                    <Box p={1} />
+                    <Grid item spacing={2} alignItems="flex-end">
                         <FormControlLabel
-                            control={<Checkbox value="remember" color="secondary" />}
+                            control={<Checkbox
+                                className={classes.checkBoxMargin}
+                                value="remember"
+                                color="secondary"
+                            />}
                             label="Remember me"
                         />
                     </Grid>
+                    <Box />
                     <Grid container justify="center">
                         <Button
                             type="submit"
@@ -172,7 +181,7 @@ const Login = () => {
                     </Box>
                 </form>
             </div>
-        </Container>
+        </Container >
     );
 };
 
