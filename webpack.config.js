@@ -24,10 +24,12 @@ module.exports = {
     output: {
       path: path.resolve(__dirname, './dist'),
       filename: 'bundle.js',
+      publicPath: '/',
     },
     plugins: [new webpack.HotModuleReplacementPlugin()],
     devServer: {
       contentBase: path.resolve(__dirname, './dist'),
       hot: true,
+      historyApiFallback: true,
     },
 }

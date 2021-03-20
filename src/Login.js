@@ -22,7 +22,6 @@ import Container from '@material-ui/core/Container';
 import { useMutation } from "@apollo/react-hooks";
 import {
     LOGIN_USER,
-    REGISTER_USER,
 } from './gql/mutations/mutations';
 
 import { useAuthToken } from './hooks/useAuthToken';
@@ -66,21 +65,13 @@ const Login = () => {
         },
     });
 
-    const [registerUser, { data: registerData }] = useMutation(REGISTER_USER, {
-        onCompleted: (data) => {
-            setAuthToken(data.registerUser);
-        },
-    });
-
-    // const [firstName, setFirstName] = useState('');
-    // const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     function handleSubmit(event) {
         event.preventDefault();
 
-        const x = loginUser({
+        loginUser({
             variables: {
                 userInput: {
                     email,
@@ -88,7 +79,8 @@ const Login = () => {
                 },
             },
         });
-        console.log({ x });
+
+        history.push('/home');
     }
 
     return (
@@ -121,7 +113,7 @@ const Login = () => {
                             <TextField
                                 margin="normal"
                                 required
-                                style={{width: 300}}
+                                style={{ width: 300 }}
                                 id="email"
                                 label="Email Address"
                                 name="email"
@@ -138,7 +130,7 @@ const Login = () => {
                             <TextField
                                 margin="normal"
                                 required
-                                style={{width: 300}}
+                                style={{ width: 300 }}
                                 name="password"
                                 label="Password"
                                 type="password"
@@ -167,7 +159,12 @@ const Login = () => {
                     <Box>
                         <Grid container>
                             <Grid item>
-                                <Link href="#" variant="body2">
+                                <Link
+                                    variant="body2"
+                                    onClick={() => {
+                                        history.push('/register');
+                                    }}
+                                >
                                     {"Don't have an account? Register!"}
                                 </Link>
                             </Grid>
