@@ -19,6 +19,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
+import LinearProgress from '@material-ui/core/LinearProgress';
+
 import { useMutation } from "@apollo/react-hooks";
 import {
     LOGIN_USER,
@@ -53,7 +55,13 @@ const useStyles = makeStyles((theme) => ({
     },
     checkBoxPadding: {
         marginLeft: theme.spacing(2),
-    }
+    },
+    root: {
+        width: '100%',
+        '& > * + *': {
+            marginTop: theme.spacing(2),
+        },
+    },
 }));
 
 const Login = () => {
@@ -71,8 +79,20 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
+    const [loginActionDone, setLoginActionDone] = useState(false);
+
+    if (!loginData && loginActionDone) {
+        return (
+            <div className={classes.root}>
+                <LinearProgress color="secondary" />
+            </div>
+        );
+    }
+
     function handleSubmit(event) {
         event.preventDefault();
+
+        setLoginActionDone(true);
 
         loginUser({
             variables: {
@@ -82,10 +102,10 @@ const Login = () => {
                 },
             },
         });
+    }
 
-        if (loginData && loginData.loginUser) {
-            history.push('/home');
-        }
+    if (loginData && loginData.loginUser) {
+        history.push('/home');
     }
 
     return (
@@ -144,7 +164,7 @@ const Login = () => {
                         </Grid>
                     </Grid>
                     <Box p={1} />
-                    <Grid item spacing={2} alignItems="flex-end">
+                    <Grid container spacing={2} alignItems="flex-end">
                         <FormControlLabel
                             control={<Checkbox
                                 className={classes.checkBoxMargin}

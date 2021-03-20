@@ -2,6 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 
 import { makeStyles } from '@material-ui/core/styles';
+import { useHistory } from 'react-router';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
@@ -15,10 +16,13 @@ import Badge from '@material-ui/core/Badge';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import MenuIcon from '@material-ui/icons/Menu';
+import Button from '@material-ui/core/Button';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 
 import { mainListItems, secondaryListItems } from '../utils/listMenuItems';
+
+import { useAuthToken } from './hooks/useAuthToken';
 
 const drawerWidth = 240;
 
@@ -103,23 +107,33 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Home() {
   const classes = useStyles();
+  const history = useHistory();
+
   const [open, setOpen] = React.useState(true);
+
+  const [_, removeAuthToken] = useAuthToken();
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
+
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+
+  function logoutAction() {
+    removeAuthToken();
+    history.push('/');
+  }
 
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <AppBar 
+      <AppBar
         position="absolute"
         color="secondary"
         className={clsx(classes.appBar, open && classes.appBarShift)
-      }>
+        }>
         <Toolbar className={classes.toolbar}>
           <IconButton
             edge="start"
@@ -134,9 +148,9 @@ export default function Home() {
             LawnTennisClubIS
           </Typography>
           <IconButton color="inherit">
-            {/* <Badge badgeContent={4} color="secondary">
-              <NotificationsIcon />
-            </Badge> */}
+            <Button variant="contained" color="secondary" onClick={logoutAction}>
+              Log Out
+            </Button>
           </IconButton>
         </Toolbar>
       </AppBar>

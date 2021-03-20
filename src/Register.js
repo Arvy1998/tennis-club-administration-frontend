@@ -10,12 +10,17 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
+import Select from '@material-ui/core/Select';
+import Input from '@material-ui/core/Input';
+import MenuItem from '@material-ui/core/MenuItem';
+import ListItemText from '@material-ui/core/ListItemText';
 
 import SportsTennis from '@material-ui/icons/SportsTennis';
 import AlternateEmail from '@material-ui/icons/AlternateEmail';
 import VpnKey from '@material-ui/icons/VpnKey';
 import TextFieldsIcon from '@material-ui/icons/TextFields';
 import WcIcon from '@material-ui/icons/Wc';
+import PhoneIcon from '@material-ui/icons/Phone';
 
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
@@ -25,7 +30,7 @@ import {
     REGISTER_USER,
 } from './gql/mutations/mutations';
 
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 
 import { useAuthToken } from './hooks/useAuthToken';
 
@@ -80,6 +85,7 @@ const genderSelection = [
 const Register = () => {
     const classes = useStyles();
     const history = useHistory();
+    const theme = useTheme();
 
     const [_, setAuthToken] = useAuthToken();
 
@@ -93,16 +99,17 @@ const Register = () => {
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [gender, setGender] = useState('');
+    const [selectedGender, setSelectedGender] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
 
-    const handleGenderSelect = (event) => {
-        setGender(event.target.value.toUpperString());
+    function handleGenderSelect (event) {
+        setSelectedGender(event.target.value.toUpperCase());
     };
 
-    function getStyles(gender, theme) {
+    function getStyles(gender, selectedGender, theme) {
         return {
             fontWeight:
-                personName.indexOf(gender) === -1
+                selectedGender.indexOf(gender) === -1
                     ? theme.typography.fontWeightRegular
                     : theme.typography.fontWeightMedium,
         };
@@ -116,16 +123,15 @@ const Register = () => {
                 userInput: {
                     firstName,
                     lastName,
-                    sex: gender,
+                    sex: selectedGender,
+                    phoneNumber,
                     email,
                     password,
                 },
             },
         });
 
-        if (registerData && registerData.registerUser) {
-            history.push('/home');
-        }
+        history.push('/home');
     }
 
     return (
@@ -185,23 +191,39 @@ const Register = () => {
                         </Grid>
                         <Grid container spacing={1} alignItems="flex-end" justify="center">
                             <Grid item>
-                                <TextFieldsIcon />
+                                <WcIcon />
                             </Grid>
                             <Grid item>
                                 <Select
                                     labelId="genderSelect"
                                     id="genderSelect-id"
-                                    multiple
+                                    style={{ width: 300, padding: '6px' }}
                                     onChange={handleGenderSelect}
                                     input={<Input />}
                                     MenuProps={MenuProps}
                                 >
                                     {genderSelection.map((gender) => (
-                                        <MenuItem key={gender} value={gender} style={getStyles(gender, theme)}>
+                                        <MenuItem key={gender} value={gender} style={
+                                            getStyles(gender, selectedGender, theme)
+                                        }>
                                             {gender}
                                         </MenuItem>
                                     ))}
                                 </Select>
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={1} alignItems="flex-end" justify="center">
+                            <Grid item>
+                                <PhoneIcon />
+                            </Grid>
+                            <Grid item >
+                                <TextField
+                                    style={{ width: 300 }}
+                                    id="phoneNumber"
+                                    label="Phone Number"
+                                    name="phoneNumber"
+                                    onInput={e => setPhoneNumber(e.target.value)}
+                                />
                             </Grid>
                         </Grid>
                         <Grid container spacing={1} alignItems="flex-end" justify="center">
