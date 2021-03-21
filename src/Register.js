@@ -11,6 +11,8 @@ import Box from '@material-ui/core/Box';
 import Select from '@material-ui/core/Select';
 import Input from '@material-ui/core/Input';
 import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
 
 import SportsTennis from '@material-ui/icons/SportsTennis';
 import AlternateEmail from '@material-ui/icons/AlternateEmail';
@@ -32,6 +34,7 @@ import {
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 
 import { useAuthToken } from './hooks/useAuthToken';
+import filterNotEnteredEntries from '../utils/filterNotEnteredEntries';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -117,7 +120,7 @@ const Register = () => {
         );
     }
 
-    function handleGenderSelect (event) {
+    function handleGenderSelect(event) {
         setSelectedGender(event.target.value.toUpperCase());
     };
 
@@ -137,14 +140,14 @@ const Register = () => {
 
         registerUser({
             variables: {
-                userInput: {
+                userInput: filterNotEnteredEntries({
                     firstName,
                     lastName,
                     sex: selectedGender,
                     phoneNumber,
                     email,
                     password,
-                },
+                }),
             },
         });
     }
@@ -213,22 +216,25 @@ const Register = () => {
                                 <WcIcon />
                             </Grid>
                             <Grid item>
-                                <Select
-                                    labelId="genderSelect"
-                                    id="genderSelect-id"
-                                    style={{ width: 300, padding: '6px' }}
-                                    onChange={handleGenderSelect}
-                                    input={<Input />}
-                                    MenuProps={MenuProps}
-                                >
-                                    {genderSelection.map((gender) => (
-                                        <MenuItem key={gender} value={gender} style={
-                                            getStyles(gender, selectedGender, theme)
-                                        }>
-                                            {gender}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel id="genderSelect">Gender</InputLabel>
+                                    <Select
+                                        labelId="genderSelect"
+                                        id="genderSelect-id"
+                                        style={{ width: 300 }}
+                                        onChange={handleGenderSelect}
+                                        input={<Input />}
+                                        MenuProps={MenuProps}
+                                    >
+                                        {genderSelection.map((gender) => (
+                                            <MenuItem key={gender} value={gender} style={
+                                                getStyles(gender, selectedGender, theme)
+                                            }>
+                                                {gender}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
                             </Grid>
                         </Grid>
                         <Grid container spacing={1} alignItems="flex-end" justify="center">

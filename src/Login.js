@@ -27,6 +27,7 @@ import {
 } from './gql/mutations/mutations';
 
 import { useAuthToken } from './hooks/useAuthToken';
+import filterNotEnteredEntries from '../utils/filterNotEnteredEntries';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -96,10 +97,10 @@ const Login = () => {
 
         loginUser({
             variables: {
-                userInput: {
+                userInput: filterNotEnteredEntries({
                     email,
                     password,
-                },
+                }),
             },
         });
     }

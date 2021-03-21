@@ -3,6 +3,7 @@ import React from 'react';
 import Login from './Login';
 import Register from './Register';
 import Home from './Home';
+import Account from './Account';
 
 import {
     BrowserRouter as Router,
@@ -23,6 +24,7 @@ const App = () => {
                         <Route path="/register" component={Register} />
                         <Route path="/login" component={Login} />
                         <Route path="/home" component={Home} />
+                        <Route path="/account" component={Account} />
                     </Switch>
                 </Router>
             </div>
