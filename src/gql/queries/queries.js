@@ -4,9 +4,12 @@ const GET_USER = gql`
     query getUser($email: String!) {
         getUser(email: $email) {
             id
-            password
             firstName
             lastName
+            city
+            address
+            sex
+            phoneNumber
             email
             city
             role

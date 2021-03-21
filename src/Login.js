@@ -69,11 +69,12 @@ const Login = () => {
     const classes = useStyles();
     const history = useHistory();
 
-    const [_, setAuthToken] = useAuthToken();
+    const [_, setAuthToken, setUser] = useAuthToken();
 
     const [loginUser, { data: loginData }] = useMutation(LOGIN_USER, {
         onCompleted: (data) => {
-            setAuthToken(data.loginUser);
+            setAuthToken(data.loginUser.token);
+            setUser(data.loginUser);
         },
     });
 

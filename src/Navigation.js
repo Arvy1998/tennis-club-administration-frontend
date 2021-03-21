@@ -106,7 +106,7 @@ export default function Home() {
 
   const [open, setOpen] = React.useState(true);
 
-  const [_, removeAuthToken] = useAuthToken();
+  const [_, removeAuthToken, clearUser] = useAuthToken();
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -118,6 +118,7 @@ export default function Home() {
 
   function logoutAction() {
     removeAuthToken();
+    clearUser();
     history.push('/');
   }
 

@@ -95,11 +95,12 @@ const Register = () => {
     const history = useHistory();
     const theme = useTheme();
 
-    const [_, setAuthToken] = useAuthToken();
+    const [_, setAuthToken, setUser] = useAuthToken();
 
     const [registerUser, { data: registerData }] = useMutation(REGISTER_USER, {
         onCompleted: (data) => {
-            setAuthToken(data.registerUser);
+            setAuthToken(data.registerUser.token);
+            setUser(data.registerUser);
         },
     });
 

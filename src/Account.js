@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { useHistory } from 'react-router';
@@ -26,16 +26,22 @@ import StreetviewIcon from '@material-ui/icons/Streetview';
 
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 import Navigation from './Navigation';
 
-import { useAuthToken } from './hooks/useAuthToken';
 import filterNotEnteredEntries from '../utils/filterNotEnteredEntries';
 
 import { useMutation } from "@apollo/react-hooks";
 import {
-    REGISTER_USER,
+    UPDATE_USER,
 } from './gql/mutations/mutations';
+
+import { useQuery } from "@apollo/react-hooks";
+import {
+    GET_USER,
+} from './gql/queries/queries';
+
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -82,6 +88,9 @@ const useStyles = makeStyles((theme) => ({
     spacingBetween: {
         padding: theme.spacing(5),
     },
+    spacingBetweenFields: {
+        padding: theme.spacing(0.5),
+    }
 }));
 
 const MenuProps = {
@@ -97,7 +106,14 @@ const genderSelection = [
     'Male',
     'Female',
     'Other',
+    '',
 ];
+
+const genderMap = {
+    'MALE': 'Male',
+    'FEMALE': 'Female',
+    'OTHER': 'Other',
+}
 
 const levelSelection = {
     'Level 1.5': 'You have limited experience and are working primarily on getting the ball in play.',
@@ -132,13 +148,13 @@ export default function Account() {
     const history = useHistory();
     const theme = useTheme();
 
-    const [_, setAuthToken] = useAuthToken();
+    const [updated, setUpdated] = useState(null);
 
-    const [registerUser, { data: registerData }] = useMutation(REGISTER_USER, {
-        onCompleted: (data) => {
-            setAuthToken(data.registerUser);
-        },
-    });
+    const [loadedUserData, setLoadedUserData] = useState(null);
+    const [isLoading, setIsLoading] = useState(null);
+    const [isError, setIsError] = useState(null);
+
+    const [editUser, { data: updateUserData }] = useMutation(UPDATE_USER);
 
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -153,14 +169,35 @@ export default function Account() {
     const [selectedGender, setSelectedGender] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
 
-    const [registerActionDone, setRegisterActionDone] = useState(false);
+    const { loading, error, data } = useQuery(GET_USER, {
+        variables: { email: localStorage.getItem('email') },
+    });
 
-    if (!registerData && registerActionDone) {
+    useEffect(() => {
+        if (loading) {
+            setIsLoading(loading);
+        }
+
+        if (error) {
+            setIsError(error);
+        }
+
+        if (data) {
+            setLoadedUserData(data);
+        }
+    }, [loading, error, data]);
+
+    if (!loadedUserData || isLoading) {
         return (
             <div className={classes.root}>
                 <LinearProgress color="secondary" />
             </div>
         );
+    }
+
+    let user;
+    if (loadedUserData) {
+        user = loadedUserData.getUser;
     }
 
     function handleGenderSelect(event) {
@@ -176,13 +213,16 @@ export default function Account() {
         };
     }
 
-    function handleContactInformationSubmit(event) {
+    function handleInformationSubmit(event) {
         event.preventDefault();
 
-        setRegisterActionDone(true);
+        setUpdated(true);
 
-        registerUser({
+        setIsLoading(true);
+
+        editUser({
             variables: {
+                email: localStorage.getItem('email'),
                 userInput: filterNotEnteredEntries({
                     firstName,
                     lastName,
@@ -190,36 +230,23 @@ export default function Account() {
                     city,
                     address,
                     phoneNumber,
-                    email,
+                    email: localStorage.getItem('email'),
                     password,
                     newPassword,
                     newEmail,
                 }),
             },
         });
+
+        setIsLoading(false);
     }
 
-    function handleCredentialInformationSubmit(event) {
-        event.preventDefault();
-
-        setRegisterActionDone(true);
-
-        registerUser({
-            variables: {
-                userInput: filterNotEnteredEntries({
-                    firstName,
-                    lastName,
-                    sex: selectedGender,
-                    phoneNumber,
-                    email,
-                    password,
-                }),
-            },
-        });
-    }
-
-    if (registerData && registerData.registerUser) {
-        history.push('/home');
+    if (!updateUserData && updated) {
+        return (
+            <div className={classes.root}>
+                <LinearProgress color="secondary" />
+            </div>
+        );
     }
 
     return (
@@ -229,7 +256,7 @@ export default function Account() {
                 <div className={classes.appBarSpacer} />
                 <Container className={classes.container}>
                     <Grid container spacing={3}>
-                        <form className={classes.form} onSubmit={handleContactInformationSubmit}>
+                        <form className={classes.form} onSubmit={handleInformationSubmit} initialValues={user}>
                             <Grid container spacing={1} alignItems="flex-end" justify="center">
                                 <Typography
                                     component="h1"
@@ -248,6 +275,7 @@ export default function Account() {
                                         <TextField
                                             autoComplete="fname"
                                             name="firstName"
+                                            defaultValue={user.firstName}
                                             required
                                             style={{ width: 300 }}
                                             id="firstName"
@@ -255,21 +283,25 @@ export default function Account() {
                                             onInput={e => setFirstName(e.target.value)}
                                         />
                                     </Grid>
-                                    <Grid item>
-                                        <TextFieldsIcon />
-                                    </Grid>
-                                    <Grid item >
-                                        <TextField
-                                            required
-                                            style={{ width: 300 }}
-                                            id="lastName"
-                                            label="Last Name"
-                                            name="lastName"
-                                            autoComplete="lname"
-                                            onInput={e => setLastName(e.target.value)}
-                                        />
+                                    <Grid container spacing={1} alignItems="flex-end" justify="center">
+                                        <Grid item>
+                                            <TextFieldsIcon />
+                                        </Grid>
+                                        <Grid item >
+                                            <TextField
+                                                required
+                                                style={{ width: 300 }}
+                                                defaultValue={user.lastName}
+                                                id="lastName"
+                                                label="Last Name"
+                                                name="lastName"
+                                                autoComplete="lname"
+                                                onInput={e => setLastName(e.target.value)}
+                                            />
+                                        </Grid>
                                     </Grid>
                                 </Grid>
+                                <Grid className={classes.spacingBetweenFields}></Grid>
                                 <Grid container spacing={1} alignItems="flex-end" justify="center">
                                     <Grid item>
                                         <WcIcon />
@@ -280,6 +312,7 @@ export default function Account() {
                                             <Select
                                                 labelId="genderSelect"
                                                 id="genderSelect-id"
+                                                defaultValue={genderMap[user.sex] || ''}
                                                 style={{ width: 300 }}
                                                 onChange={handleGenderSelect}
                                                 input={<Input />}
@@ -306,6 +339,7 @@ export default function Account() {
                                             id="phoneNumber"
                                             label="Phone Number"
                                             name="phoneNumber"
+                                            defaultValue={user.phoneNumber}
                                             onInput={e => setPhoneNumber(e.target.value)}
                                         />
                                     </Grid>
@@ -320,9 +354,12 @@ export default function Account() {
                                             id="city"
                                             label="City"
                                             name="city"
+                                            defaultValue={user.city}
                                             onInput={e => setCity(e.target.value)}
                                         />
                                     </Grid>
+                                </Grid>
+                                <Grid container spacing={1} alignItems="flex-end" justify="center">
                                     <Grid item>
                                         <StreetviewIcon />
                                     </Grid>
@@ -332,24 +369,27 @@ export default function Account() {
                                             id="address"
                                             label="Address"
                                             name="address"
+                                            defaultValue={user.address}
                                             onInput={e => setAddress(e.target.value)}
                                         />
                                     </Grid>
+                                    <Grid>
+                                    </Grid>
                                 </Grid>
-                                </Grid>
-                            <Grid container justify="center">
-                                <Button
-                                    type="submit"
-                                    variant="outlined"
-                                    color="secondary"
-                                    className={classes.buttonBox}
-                                >
-                                    Save
+                                <Grid container justify="center">
+                                    <Button
+                                        type="submit"
+                                        variant="outlined"
+                                        color="secondary"
+                                        className={classes.buttonBox}
+                                    >
+                                        Save
                                 </Button>
+                                </Grid>
                             </Grid>
                         </form>
                         <Grid className={classes.spacingBetween}></Grid>
-                        <form className={classes.form} onSubmit={handleCredentialInformationSubmit}>
+                        <form className={classes.form} onSubmit={handleInformationSubmit}>
                             <Grid container spacing={1} alignItems="flex-end" justify="center">
                                 <Typography
                                     component="h1"
@@ -366,14 +406,17 @@ export default function Account() {
                                     </Grid>
                                     <Grid item >
                                         <TextField
+                                            disabled={true}
                                             style={{ width: 300 }}
                                             id="email"
                                             label="Old Email Address"
+                                            defaultValue={user.email}
                                             name="email"
                                             autoComplete="email"
                                             onInput={e => setEmail(e.target.value)}
                                         />
                                     </Grid>
+                                    <Grid container spacing={1} alignItems="flex-end" justify="center"></Grid>
                                     <Grid item>
                                         <AlternateEmail />
                                     </Grid>
@@ -388,22 +431,24 @@ export default function Account() {
                                         />
                                     </Grid>
                                 </Grid>
+                            </Grid>
+                            <Grid container spacing={1} alignItems="flex-end" justify="center">
+                                <Grid item>
+                                    <VpnKey />
+                                </Grid>
+                                <Grid item>
+                                    <TextField
+                                        required
+                                        style={{ width: 300 }}
+                                        name="password"
+                                        label="Old Password"
+                                        type="password"
+                                        id="password"
+                                        autoComplete="current-password"
+                                        onInput={e => setPassword(e.target.value)}
+                                    />
+                                </Grid>
                                 <Grid container spacing={1} alignItems="flex-end" justify="center">
-                                    <Grid item>
-                                        <VpnKey />
-                                    </Grid>
-                                    <Grid item>
-                                        <TextField
-                                            required
-                                            style={{ width: 300 }}
-                                            name="password"
-                                            label="Old Password"
-                                            type="password"
-                                            id="password"
-                                            autoComplete="current-password"
-                                            onInput={e => setPassword(e.target.value)}
-                                        />
-                                    </Grid>
                                     <Grid item>
                                         <VpnKey />
                                     </Grid>
@@ -412,8 +457,8 @@ export default function Account() {
                                             style={{ width: 300 }}
                                             name="newPassword"
                                             label="New Password"
-                                            type="newPassword"
-                                            id="password"
+                                            type="password"
+                                            id="newPassword"
                                             autoComplete="current-password"
                                             onInput={e => setNewPassword(e.target.value)}
                                         />
@@ -434,6 +479,6 @@ export default function Account() {
                     </Grid>
                 </Container>
             </main>
-        </div>
+        </div >
     );
 }
