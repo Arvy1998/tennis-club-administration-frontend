@@ -123,6 +123,7 @@ export default function Account() {
     const [address, setAddress] = useState('');
     const [city, setCity] = useState('');
     const [newPassword, setNewPassword] = useState('');
+    const [newEmail, setNewEmail] = useState('');
     const [level, setLevel] = useState('');
 
     const [selectedGender, setSelectedGender] = useState('');
@@ -168,6 +169,7 @@ export default function Account() {
                     email,
                     password,
                     newPassword,
+                    newEmail,
                 }),
             },
         });
@@ -342,10 +344,23 @@ export default function Account() {
                                         <TextField
                                             style={{ width: 300 }}
                                             id="email"
-                                            label="Email Address"
+                                            label="Old Email Address"
                                             name="email"
                                             autoComplete="email"
                                             onInput={e => setEmail(e.target.value)}
+                                        />
+                                    </Grid>
+                                    <Grid item>
+                                        <AlternateEmail />
+                                    </Grid>
+                                    <Grid item >
+                                        <TextField
+                                            style={{ width: 300 }}
+                                            id="newEmail"
+                                            label="New Email Address"
+                                            name="newEmail"
+                                            autoComplete="email"
+                                            onInput={e => setNewEmail(e.target.value)}
                                         />
                                     </Grid>
                                 </Grid>
@@ -370,7 +385,6 @@ export default function Account() {
                                     </Grid>
                                     <Grid item>
                                         <TextField
-                                            required
                                             style={{ width: 300 }}
                                             name="newPassword"
                                             label="New Password"
