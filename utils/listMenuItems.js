@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom'
 
 import ListItem from '@material-ui/core/ListItem';
+import Box from '@material-ui/core/Box';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
@@ -15,6 +16,7 @@ import LoyaltyIcon from '@material-ui/icons/Loyalty';
 import TableChartIcon from '@material-ui/icons/TableChart';
 import AnnouncementIcon from '@material-ui/icons/Announcement';
 import InfoIcon from '@material-ui/icons/Info';
+import ContactSupportIcon from '@material-ui/icons/ContactSupport';
 
 export const mainListItems = (
     <div>
@@ -59,7 +61,14 @@ export const mainListItems = (
 
 export const secondaryListItems = (
     <div>
-        <ListSubheader inset>Other</ListSubheader>
+        <ListSubheader>
+            <Box display="flex">
+                <ListItemIcon>
+                    <ContactSupportIcon color="disabled" />
+                </ListItemIcon>
+                <ListItemText primary="Information" />
+            </Box>
+        </ListSubheader>
         <ListItem button component={Link} to="/top">
             <ListItemIcon>
                 <TableChartIcon />

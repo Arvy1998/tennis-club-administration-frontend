@@ -5,15 +5,12 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Select from '@material-ui/core/Select';
 import Input from '@material-ui/core/Input';
 import MenuItem from '@material-ui/core/MenuItem';
-import ListItemText from '@material-ui/core/ListItemText';
 
 import SportsTennis from '@material-ui/icons/SportsTennis';
 import AlternateEmail from '@material-ui/icons/AlternateEmail';
@@ -24,6 +21,8 @@ import PhoneIcon from '@material-ui/icons/Phone';
 
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
+
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 import { useMutation } from "@apollo/react-hooks";
 import {
@@ -65,6 +64,12 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'center',
         margin: theme.spacing(3, 0, 2),
     },
+    root: {
+        width: '100%',
+        '& > * + *': {
+            marginTop: theme.spacing(2),
+        },
+    },
 }));
 
 const MenuProps = {
@@ -102,6 +107,16 @@ const Register = () => {
     const [selectedGender, setSelectedGender] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
 
+    const [registerActionDone, setRegisterActionDone] = useState(false);
+
+    if (!registerData && registerActionDone) {
+        return (
+            <div className={classes.root}>
+                <LinearProgress color="secondary" />
+            </div>
+        );
+    }
+
     function handleGenderSelect (event) {
         setSelectedGender(event.target.value.toUpperCase());
     };
@@ -118,6 +133,8 @@ const Register = () => {
     function handleSubmit(event) {
         event.preventDefault();
 
+        setRegisterActionDone(true);
+
         registerUser({
             variables: {
                 userInput: {
@@ -130,7 +147,9 @@ const Register = () => {
                 },
             },
         });
+    }
 
+    if (registerData && registerData.registerUser) {
         history.push('/home');
     }
 
