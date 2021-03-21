@@ -106,7 +106,7 @@ const genderSelection = [
     'Male',
     'Female',
     'Other',
-    '',
+    'Not Selected',
 ];
 
 const genderMap = {
@@ -226,7 +226,7 @@ export default function Account() {
                 userInput: filterNotEnteredEntries({
                     firstName,
                     lastName,
-                    sex: selectedGender,
+                    sex: selectedGender !== 'NOT SELECTED' ? selectedGender : null,
                     city,
                     address,
                     phoneNumber,
@@ -312,7 +312,7 @@ export default function Account() {
                                             <Select
                                                 labelId="genderSelect"
                                                 id="genderSelect-id"
-                                                defaultValue={genderMap[user.sex] || ''}
+                                                defaultValue={genderMap[user.sex] || 'Not Selected'}
                                                 style={{ width: 300 }}
                                                 onChange={handleGenderSelect}
                                                 input={<Input />}
