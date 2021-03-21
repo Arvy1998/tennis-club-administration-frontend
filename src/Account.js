@@ -90,6 +90,9 @@ const useStyles = makeStyles((theme) => ({
     },
     spacingBetweenFields: {
         padding: theme.spacing(0.5),
+    },
+    loadingBarContainer: {
+        paddingBottom: theme.spacing(6),
     }
 }));
 
@@ -189,7 +192,7 @@ export default function Account() {
 
     if (!loadedUserData || isLoading) {
         return (
-            <div className={classes.root}>
+            <div className={classes.loadingBarContainer}>
                 <LinearProgress color="secondary" />
             </div>
         );
@@ -243,7 +246,7 @@ export default function Account() {
 
     if (!updateUserData && updated) {
         return (
-            <div className={classes.root}>
+            <div className={classes.loadingBarContainer}>
                 <LinearProgress color="secondary" />
             </div>
         );
