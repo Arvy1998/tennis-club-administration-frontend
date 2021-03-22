@@ -93,7 +93,12 @@ const useStyles = makeStyles((theme) => ({
     },
     loadingBarContainer: {
         paddingBottom: theme.spacing(6),
-    }
+    },
+    centeredForms: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
 }));
 
 const MenuProps = {
@@ -161,7 +166,6 @@ export default function Account() {
 
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [address, setAddress] = useState('');
     const [city, setCity] = useState('');
@@ -188,7 +192,7 @@ export default function Account() {
         if (data) {
             setLoadedUserData(data);
         }
-    }, [loading, error, data]);
+    }, []);
 
     if (!loadedUserData || isLoading) {
         return (
@@ -256,10 +260,10 @@ export default function Account() {
         <div className={classes.root}>
             <Navigation />
             <main className={classes.formContainer}>
-                <div className={classes.appBarSpacer} />
+                <div className={classes.centeredForms} />
                 <Container className={classes.container}>
-                    <Grid container spacing={3}>
-                        <form className={classes.form} onSubmit={handleInformationSubmit} initialValues={user}>
+                    <Grid container spacing={3} alignItems="flex-end" justify="center">
+                        <form className={classes.form} onSubmit={handleInformationSubmit}>
                             <Grid container spacing={1} alignItems="flex-end" justify="center">
                                 <Typography
                                     component="h1"
