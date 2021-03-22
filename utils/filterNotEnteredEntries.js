@@ -4,8 +4,6 @@ const filterNotEnteredEntries = (entries) => {
           delete entries[entryKey];
         }
       });
-
-      console.log({entries});
     
       return entries;
 }

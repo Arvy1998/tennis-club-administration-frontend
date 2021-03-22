@@ -88,6 +88,7 @@ const genderSelection = [
     'Male',
     'Female',
     'Other',
+    'Not Selected',
 ];
 
 const Register = () => {
@@ -144,7 +145,7 @@ const Register = () => {
                 userInput: filterNotEnteredEntries({
                     firstName,
                     lastName,
-                    sex: selectedGender,
+                    sex: selectedGender !== 'NOT SELECTED' ? selectedGender : '',
                     phoneNumber,
                     email,
                     password,

@@ -138,11 +138,11 @@ export default function Home() {
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
             LawnTennisClubIS
           </Typography>
-          <IconButton color="inherit">
+          <div>
             <Button variant="contained" color="secondary" onClick={logoutAction}>
               Log Out
-            </Button>
-          </IconButton>
+              </Button>
+          </div>
         </Toolbar>
       </AppBar>
       <Drawer

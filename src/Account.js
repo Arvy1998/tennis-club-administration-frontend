@@ -187,12 +187,14 @@ export default function Account() {
 
         if (error) {
             setIsError(error);
+            setIsLoading(false);
         }
 
         if (data) {
             setLoadedUserData(data);
+            setIsLoading(false);
         }
-    }, []);
+    }, [loading, error, data]);
 
     if (!loadedUserData || isLoading) {
         return (
