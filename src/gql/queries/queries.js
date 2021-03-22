@@ -9,6 +9,7 @@ const GET_USER = gql`
             city
             address
             sex
+            level
             phoneNumber
             email
             city

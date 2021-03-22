@@ -1,20 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import _ from 'lodash';
 
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { useHistory } from 'react-router';
-import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 
-import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
 import Select from '@material-ui/core/Select';
 import Input from '@material-ui/core/Input';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import AlternateEmail from '@material-ui/icons/AlternateEmail';
 import VpnKey from '@material-ui/icons/VpnKey';
@@ -23,6 +21,7 @@ import WcIcon from '@material-ui/icons/Wc';
 import PhoneIcon from '@material-ui/icons/Phone';
 import HomeIcon from '@material-ui/icons/Home';
 import StreetviewIcon from '@material-ui/icons/Streetview';
+import EjectIcon from '@material-ui/icons/Eject';
 
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
@@ -135,6 +134,7 @@ const levelSelection = {
     'Level 5.5': 'You have mastered power and/or consistency as a major weapon. You can vary strategies and styles of play in a competitive situation and hit dependable shots in a stress situation.',
     'Level 6.0 - 7.0': 'You have had intensive training for national tournament competition at the junior and collegiate levels and have obtained a sectional and/or national ranking.',
     'Level 7.0': 'You are a world-class player.',
+    'Not Selected': 'Please select a level.',
 };
 
 const levelSelectionMap = {
@@ -149,6 +149,7 @@ const levelSelectionMap = {
     'Level 5.5': 'LEVEL_5_5',
     'Level 6.0 - 7.0': 'LEVEL_6_0_7_0',
     'Level 7.0': 'LEVEL_7_0',
+    'Not Selected': 'NOT SELECTED',
 };
 
 export default function Account() {
@@ -171,7 +172,7 @@ export default function Account() {
     const [city, setCity] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [newEmail, setNewEmail] = useState('');
-    const [level, setLevel] = useState('');
+    const [selectedLevel, setSelectedLevel] = useState('');
 
     const [selectedGender, setSelectedGender] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
@@ -213,6 +214,10 @@ export default function Account() {
         setSelectedGender(event.target.value.toUpperCase());
     };
 
+    function handleLevelSelect(event) {
+        setSelectedLevel(levelSelectionMap[event.target.value] || null);
+    };
+
     function getStyles(gender, selectedGender, theme) {
         return {
             fontWeight:
@@ -222,11 +227,19 @@ export default function Account() {
         };
     }
 
+    function getLevelSelectionStyles(level, selectedLevel, theme) {
+        return {
+            fontWeight:
+                selectedLevel.indexOf(level) === -1
+                    ? theme.typography.fontWeightRegular
+                    : theme.typography.fontWeightMedium,
+        };
+    }
+
     function handleInformationSubmit(event) {
         event.preventDefault();
 
         setUpdated(true);
-
         setIsLoading(true);
 
         editUser({
@@ -236,6 +249,7 @@ export default function Account() {
                     firstName,
                     lastName,
                     sex: selectedGender !== 'NOT SELECTED' ? selectedGender : null,
+                    level: selectedLevel !== 'NOT SELECTED' ? selectedLevel : null,
                     city,
                     address,
                     phoneNumber,
@@ -247,9 +261,10 @@ export default function Account() {
             },
         });
 
+        setUpdated(false);
         setIsLoading(false);
     }
-
+    
     if (!updateUserData && updated) {
         return (
             <div className={classes.loadingBarContainer}>
@@ -357,7 +372,7 @@ export default function Account() {
                                     <Grid item>
                                         <HomeIcon />
                                     </Grid>
-                                    <Grid item >
+                                    <Grid item>
                                         <TextField
                                             style={{ width: 300 }}
                                             id="city"
@@ -372,7 +387,7 @@ export default function Account() {
                                     <Grid item>
                                         <StreetviewIcon />
                                     </Grid>
-                                    <Grid item >
+                                    <Grid item>
                                         <TextField
                                             style={{ width: 300 }}
                                             id="address"
@@ -383,6 +398,36 @@ export default function Account() {
                                         />
                                     </Grid>
                                     <Grid>
+                                    </Grid>
+                                </Grid>
+                                <Grid className={classes.spacingBetweenFields}></Grid>
+                                <Grid container spacing={1} alignItems="flex-end" justify="center">
+                                    <Grid item>
+                                        <EjectIcon />
+                                    </Grid>
+                                    <Grid item>
+                                        <FormControl className={classes.formControl}>
+                                            <InputLabel id="levelSelect">Level</InputLabel>
+                                            <Tooltip title={levelSelection[_.invert(levelSelectionMap)[selectedLevel] || 'Not Selected']}>
+                                                <Select
+                                                    labelId="levelSelect"
+                                                    id="levelSelect-id"
+                                                    defaultValue={_.invert(levelSelectionMap)[user.level] || 'Not Selected'}
+                                                    style={{ width: 300 }}
+                                                    onChange={handleLevelSelect}
+                                                    input={<Input />}
+                                                    MenuProps={MenuProps}
+                                                >
+                                                    {Object.keys(levelSelection).map((key) => (
+                                                        <MenuItem key={key} value={key} style={
+                                                            getLevelSelectionStyles(key, selectedLevel, theme)
+                                                        }>
+                                                            {key}
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </Tooltip>
+                                        </FormControl>
                                     </Grid>
                                 </Grid>
                                 <Grid container justify="center">
@@ -413,7 +458,7 @@ export default function Account() {
                                     <Grid item>
                                         <AlternateEmail />
                                     </Grid>
-                                    <Grid item >
+                                    <Grid item>
                                         <TextField
                                             disabled={true}
                                             style={{ width: 300 }}
