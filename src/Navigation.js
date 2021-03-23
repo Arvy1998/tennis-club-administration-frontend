@@ -60,6 +60,10 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
   },
+  signedAsTitle: {
+    flexGrow: 1,
+    paddingRight: theme.spacing(4),
+  },
   drawerPaper: {
     position: 'relative',
     whiteSpace: 'nowrap',
@@ -139,9 +143,14 @@ export default function Home() {
             LawnTennisClubIS
           </Typography>
           <div>
+            <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.signedAsTitle}>
+              {`Signed in as ${localStorage.getItem('firstName')} ${localStorage.getItem('lastName')}`}
+            </Typography>
+          </div>
+          <div>
             <Button variant="contained" color="secondary" onClick={logoutAction}>
               Log Out
-              </Button>
+            </Button>
           </div>
         </Toolbar>
       </AppBar>

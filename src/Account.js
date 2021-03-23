@@ -98,6 +98,9 @@ const useStyles = makeStyles((theme) => ({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    spacingBetweenDifferentFields: {
+        padding: theme.spacing(0.2),
+    }
 }));
 
 const MenuProps = {
@@ -264,7 +267,7 @@ export default function Account() {
         setUpdated(false);
         setIsLoading(false);
     }
-    
+
     if (!updateUserData && updated) {
         return (
             <div className={classes.loadingBarContainer}>
@@ -290,6 +293,7 @@ export default function Account() {
                                     Contact Information
                                 </Typography>
                             </Grid>
+                            <Grid className={classes.spacingBetweenFields}></Grid>
                             <Grid container>
                                 <Grid container spacing={1} alignItems="flex-end" justify="center">
                                     <Grid item>
@@ -353,6 +357,7 @@ export default function Account() {
                                         </FormControl>
                                     </Grid>
                                 </Grid>
+                                <Grid className={classes.spacingBetweenDifferentFields}></Grid>
                                 <Grid container spacing={1} alignItems="flex-end" justify="center">
                                     <Grid item>
                                         <PhoneIcon />
@@ -397,10 +402,8 @@ export default function Account() {
                                             onInput={e => setAddress(e.target.value)}
                                         />
                                     </Grid>
-                                    <Grid>
-                                    </Grid>
                                 </Grid>
-                                <Grid className={classes.spacingBetweenFields}></Grid>
+                                <Grid className={classes.spacingBetweenDifferentFields}></Grid>
                                 <Grid container spacing={1} alignItems="flex-end" justify="center">
                                     <Grid item>
                                         <EjectIcon />
@@ -408,7 +411,10 @@ export default function Account() {
                                     <Grid item>
                                         <FormControl className={classes.formControl}>
                                             <InputLabel id="levelSelect">Level</InputLabel>
-                                            <Tooltip title={levelSelection[_.invert(levelSelectionMap)[selectedLevel] || 'Not Selected']}>
+                                            <Tooltip
+                                                placement="right"
+                                                title={levelSelection[_.invert(levelSelectionMap)[selectedLevel || user.level] || 'Not Selected']}
+                                            >
                                                 <Select
                                                     labelId="levelSelect"
                                                     id="levelSelect-id"
@@ -453,6 +459,7 @@ export default function Account() {
                                     Credential Information
                                 </Typography>
                             </Grid>
+                            <Grid className={classes.spacingBetweenFields}></Grid>
                             <Grid container>
                                 <Grid container spacing={1} alignItems="flex-end" justify="center">
                                     <Grid item>

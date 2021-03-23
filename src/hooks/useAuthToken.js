@@ -11,6 +11,8 @@ export const useAuthToken = () => {
       localStorage.setItem('email', user.email);
       localStorage.setItem('id', user.id);
       localStorage.setItem('role', user.role);
+      localStorage.setItem('firstName', user.firstName);
+      localStorage.setItem('lastName', user.lastName);
     }
   };
   const removeAuthToken = () => cookies.remove(TOKEN_NAME);
