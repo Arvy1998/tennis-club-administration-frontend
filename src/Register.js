@@ -20,6 +20,7 @@ import VpnKey from '@material-ui/icons/VpnKey';
 import TextFieldsIcon from '@material-ui/icons/TextFields';
 import WcIcon from '@material-ui/icons/Wc';
 import PhoneIcon from '@material-ui/icons/Phone';
+import GroupWorkIcon from '@material-ui/icons/GroupWork';
 
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
@@ -91,6 +92,11 @@ const genderSelection = [
     'Not Selected',
 ];
 
+const roleSelection = [
+    'Player',
+    'Trenner',
+];
+
 const Register = () => {
     const classes = useStyles();
     const history = useHistory();
@@ -110,6 +116,7 @@ const Register = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [selectedGender, setSelectedGender] = useState('');
+    const [selectedRole, setSelectedRole] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
 
     const [registerActionDone, setRegisterActionDone] = useState(false);
@@ -125,6 +132,10 @@ const Register = () => {
     function handleGenderSelect(event) {
         setSelectedGender(event.target.value.toUpperCase());
     };
+
+    function handleRoleSelect(event) {
+        setSelectedRole(event.target.value.toUpperCase());
+    }
 
     function getStyles(gender, selectedGender, theme) {
         return {
@@ -149,6 +160,7 @@ const Register = () => {
                     phoneNumber,
                     email,
                     password,
+                    role: selectedRole,
                 }),
             },
         });
@@ -251,6 +263,34 @@ const Register = () => {
                                     name="phoneNumber"
                                     onInput={e => setPhoneNumber(e.target.value)}
                                 />
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={1} alignItems="flex-end" justify="center">
+                            <Grid item>
+                                <GroupWorkIcon />
+                            </Grid>
+                            <Grid item>
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel id="roleSelect">Register As:</InputLabel>
+                                    <Select
+                                        labelId="roleSelect"
+                                        id="roleSelect-id"
+                                        defaultValue={'Player'}
+                                        style={{ width: 300 }}
+                                        onChange={handleRoleSelect}
+                                        input={<Input />}
+                                        MenuProps={MenuProps}
+                                        required={true}
+                                    >
+                                        {roleSelection.map((role) => (
+                                            <MenuItem key={role} value={role} style={
+                                                getStyles(role, selectedRole, theme)
+                                            }>
+                                                {role}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
                             </Grid>
                         </Grid>
                         <Grid container spacing={1} alignItems="flex-end" justify="center">
