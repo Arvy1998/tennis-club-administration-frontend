@@ -14,6 +14,7 @@ const GET_USER = gql`
             email
             city
             role
+            userProfilePhoto
         }
     }
 `;

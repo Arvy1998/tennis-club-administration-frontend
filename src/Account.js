@@ -26,6 +26,7 @@ import EjectIcon from '@material-ui/icons/Eject';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import Avatar from '@material-ui/core/Avatar';
 
 import Navigation from './Navigation';
 
@@ -40,7 +41,6 @@ import { useQuery } from "@apollo/react-hooks";
 import {
     GET_USER,
 } from './gql/queries/queries';
-
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -100,7 +100,14 @@ const useStyles = makeStyles((theme) => ({
     },
     spacingBetweenDifferentFields: {
         padding: theme.spacing(0.2),
-    }
+    },
+    input: {
+        display: 'none',
+    },
+    large: {
+        width: theme.spacing(7),
+        height: theme.spacing(7),
+    },
 }));
 
 const MenuProps = {
@@ -176,6 +183,8 @@ export default function Account() {
     const [newPassword, setNewPassword] = useState('');
     const [newEmail, setNewEmail] = useState('');
     const [selectedLevel, setSelectedLevel] = useState('');
+    const [userProfilePhoto, setUserProfilePhoto] = useState('');
+    const [fileName, setFileName] = useState('');
 
     const [selectedGender, setSelectedGender] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
@@ -260,12 +269,29 @@ export default function Account() {
                     password,
                     newPassword,
                     newEmail,
+                    userProfilePhoto,
                 }),
             },
         });
 
         setUpdated(false);
         setIsLoading(false);
+    }
+
+    function fileToBase64(fileUploadEvent) {
+        fileUploadEvent.preventDefault();
+
+        const selectedFile = fileUploadEvent.target.files[0];
+        setFileName(selectedFile.name);
+
+        const blob = new Blob([selectedFile], { type: selectedFile.type });
+
+        let reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.onloadend = function () {
+            let base64String = reader.result;
+            setUserProfilePhoto(base64String);
+        };
     }
 
     if (!updateUserData && updated) {
@@ -276,6 +302,8 @@ export default function Account() {
         );
     }
 
+    console.log({userProfilePhoto});
+
     return (
         <div className={classes.root}>
             <Navigation />
@@ -283,23 +311,58 @@ export default function Account() {
                 <div className={classes.centeredForms} />
                 <Container className={classes.container}>
                     <Grid container spacing={3} alignItems="flex-end" justify="center">
-                        <form className={classes.form} onSubmit={handleInformationSubmit}>
-                            <Grid container spacing={1} alignItems="flex-end" justify="center">
-                                <Typography
-                                    component="h1"
-                                    variant="h5"
-                                    className={classes.contactInformationText}
-                                >
-                                    Contact Information
+                        <Grid container spacing={1} alignItems="flex" justify="center">
+                            <Typography
+                                component="h1"
+                                variant="h5"
+                                className={classes.contactInformationText}
+                            >
+                                Contact Information
                                 </Typography>
-                            </Grid>
+                        </Grid>
+                        <form className={classes.form} onSubmit={handleInformationSubmit}>
                             <Grid className={classes.spacingBetweenFields}></Grid>
                             <Grid container>
+                                <Grid container spacing={1} alignItems="center" justify="center" flexWrap="wrap">
+                                    <Grid item>
+                                        <Avatar
+                                            id="avatar"
+                                            sizes="100px"
+                                            alt={`${firstName} ${lastName}`}
+                                            src={userProfilePhoto || loadedUserData.getUser.userProfilePhoto}
+                                            className={classes.large}
+                                        />
+                                    </Grid>
+                                    <Grid item>
+                                        <input
+                                            accept="image/*"
+                                            className={classes.input}
+                                            onChange={fileToBase64}
+                                            id="contained-button-file"
+                                            multiple
+                                            type="file"
+                                        />
+                                        <label htmlFor="contained-button-file">
+                                            <Button
+                                                variant="outlined"
+                                                color="secondary"
+                                                component="span"
+                                                type="submit"
+                                            >
+                                                Upload Photo
+                                            </Button>
+                                        </label>
+                                    </Grid>
+                                    <Grid item>
+                                        <div>{fileName || ''}</div>
+                                    </Grid>
+                                </Grid>
+                                <Grid className={classes.spacingBetweenFields}></Grid>
                                 <Grid container spacing={1} alignItems="flex-end" justify="center">
                                     <Grid item>
                                         <TextFieldsIcon />
                                     </Grid>
-                                    <Grid item >
+                                    <Grid item>
                                         <TextField
                                             autoComplete="fname"
                                             name="firstName"
@@ -315,7 +378,7 @@ export default function Account() {
                                         <Grid item>
                                             <TextFieldsIcon />
                                         </Grid>
-                                        <Grid item >
+                                        <Grid item>
                                             <TextField
                                                 required
                                                 style={{ width: 300 }}
@@ -362,7 +425,7 @@ export default function Account() {
                                     <Grid item>
                                         <PhoneIcon />
                                     </Grid>
-                                    <Grid item >
+                                    <Grid item>
                                         <TextField
                                             style={{ width: 300 }}
                                             id="phoneNumber"
@@ -481,7 +544,7 @@ export default function Account() {
                                     <Grid item>
                                         <AlternateEmail />
                                     </Grid>
-                                    <Grid item >
+                                    <Grid item>
                                         <TextField
                                             style={{ width: 300 }}
                                             id="newEmail"

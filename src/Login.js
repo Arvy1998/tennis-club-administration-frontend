@@ -107,6 +107,8 @@ const Login = () => {
     }
 
     if (loginData && loginData.loginUser) {
+        setAuthToken(loginData.loginUser.token);
+        setUser(loginData.loginUser);
         history.push('/home');
     }
 

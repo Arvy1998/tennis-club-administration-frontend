@@ -167,6 +167,8 @@ const Register = () => {
     }
 
     if (registerData && registerData.registerUser) {
+        setAuthToken(registerData.registerUser.token);
+        setUser(registerData.registerUser);
         history.push('/home');
     }
 
@@ -280,7 +282,7 @@ const Register = () => {
                                         onChange={handleRoleSelect}
                                         input={<Input />}
                                         MenuProps={MenuProps}
-                                        required={true}
+                                        required
                                     >
                                         {roleSelection.map((role) => (
                                             <MenuItem key={role} value={role} style={
