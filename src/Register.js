@@ -170,6 +170,7 @@ const Register = () => {
         setAuthToken(registerData.registerUser.token);
         setUser(registerData.registerUser);
         history.push('/home');
+        window.location.reload(true);
     }
 
     return (

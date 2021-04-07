@@ -311,7 +311,7 @@ export default function Account() {
                 <div className={classes.centeredForms} />
                 <Container className={classes.container}>
                     <Grid container spacing={3} alignItems="flex-end" justify="center">
-                        <Grid container spacing={1} alignItems="flex" justify="center">
+                        <Grid container spacing={1} justify="center">
                             <Typography
                                 component="h1"
                                 variant="h5"

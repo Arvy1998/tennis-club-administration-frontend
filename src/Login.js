@@ -110,6 +110,7 @@ const Login = () => {
         setAuthToken(loginData.loginUser.token);
         setUser(loginData.loginUser);
         history.push('/home');
+        window.location.reload(true);
     }
 
     return (

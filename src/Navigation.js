@@ -105,6 +105,8 @@ export default function Home() {
 
   const [open, setOpen] = React.useState(true);
 
+  const [firstTimeReload, setFirstTimeReload] = React.useState(true);
+
   const [_, removeAuthToken, clearUser] = useAuthToken();
 
   const handleDrawerOpen = () => {

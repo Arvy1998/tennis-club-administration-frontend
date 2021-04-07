@@ -17,6 +17,10 @@ import TableChartIcon from '@material-ui/icons/TableChart';
 import AnnouncementIcon from '@material-ui/icons/Announcement';
 import InfoIcon from '@material-ui/icons/Info';
 import ContactSupportIcon from '@material-ui/icons/ContactSupport';
+import GroupIcon from '@material-ui/icons/Group';
+import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
+
+console.log({c: localStorage.getItem('role')});
 
 export const mainListItems = (
     <div>
@@ -56,6 +60,24 @@ export const mainListItems = (
             </ListItemIcon>
             <ListItemText primary="Your Account" />
         </ListItem>
+        {
+            localStorage.getItem('role') !== 'null' && localStorage.getItem('role') !== 'PLAYER' ? (
+                <div>
+                    <ListItem button component={Link} to="/accounts">
+                        <ListItemIcon>
+                            <SupervisorAccountIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Player Accounts" />
+                    </ListItem>
+                    <ListItem button component={Link} to="/club">
+                        <ListItemIcon>
+                            <GroupIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Club" />
+                    </ListItem>
+                </div>
+            ) : ''
+        }
     </div>
 );
 
