@@ -15,6 +15,14 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
+import Avatar from '@material-ui/core/Avatar';
+import Rating from '@material-ui/lab/Rating';
+
+import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied';
+import SentimentDissatisfiedIcon from '@material-ui/icons/SentimentDissatisfied';
+import SentimentSatisfiedIcon from '@material-ui/icons/SentimentSatisfied';
+import SentimentSatisfiedAltIcon from '@material-ui/icons/SentimentSatisfiedAltOutlined';
+import SentimentVerySatisfiedIcon from '@material-ui/icons/SentimentVerySatisfied';
 
 import Navigation from './Navigation';
 
@@ -22,14 +30,15 @@ import clsx from 'clsx';
 
 import Toolbar from '@material-ui/core/Toolbar';
 import Paper from '@material-ui/core/Paper';
-import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import DeleteIcon from '@material-ui/icons/Delete';
+import PhotoIcon from '@material-ui/icons/Photo';
 import FilterListIcon from '@material-ui/icons/FilterList';
+
 import { Typography } from '@material-ui/core';
 
 import { useQuery } from "@apollo/react-hooks";
@@ -98,20 +107,72 @@ const useStyles = makeStyles((theme) => ({
     spacingBetweenFields: {
         padding: theme.spacing(1),
     },
+    media: {
+        width: theme.spacing(16),
+        height: theme.spacing(9),
+    },
 }));
 
 const headCells = [
-    { id: 'title', numeric: false, disablePadding: true, label: 'Title' },
-    { id: 'city', numeric: true, disablePadding: false, label: 'City' },
-    { id: 'cost', numeric: true, disablePadding: false, label: 'Cost' },
-    { id: 'courtType', numeric: true, disablePadding: false, label: 'Court Type' },
-    { id: 'courtFloorType', numeric: true, disablePadding: false, label: 'Floor Type' },
-    { id: 'rating', numeric: true, disablePadding: false, label: 'Rating' },
-    { id: 'playFieldPhoto', numeric: false, dissablePadding: false, label: 'Photo' },
+    { id: 'title', disablePadding: true, label: 'Title' },
+    { id: 'city', disablePadding: false, label: 'City' },
+    { id: 'cost', disablePadding: false, label: 'Cost' },
+    { id: 'courtType', disablePadding: false, label: 'Court Type' },
+    { id: 'courtFloorType', disablePadding: false, label: 'Floor Type' },
+    { id: 'rating', disablePadding: false, label: 'Rating' },
+    { id: 'playFieldPhoto', dissablePadding: false, label: 'Photo' },
 ];
 
+const customIcons = {
+    '0.5': {
+        icon: <SentimentVeryDissatisfiedIcon />,
+        label: 'Very Dissatisfied',
+    },
+    1: {
+        icon: <SentimentVeryDissatisfiedIcon />,
+        label: 'Very Dissatisfied',
+    },
+    '1.5': {
+        icon: <SentimentDissatisfiedIcon />,
+        label: 'Dissatisfied',
+    },
+    2: {
+        icon: <SentimentDissatisfiedIcon />,
+        label: 'Dissatisfied',
+    },
+    '2.5': {
+        icon: <SentimentSatisfiedIcon />,
+        label: 'Neutral',
+    },
+    3: {
+        icon: <SentimentSatisfiedIcon />,
+        label: 'Neutral',
+    },
+    '3.5': {
+        icon: <SentimentSatisfiedAltIcon />,
+        label: 'Satisfied',
+    },
+    4: {
+        icon: <SentimentSatisfiedAltIcon />,
+        label: 'Satisfied',
+    },
+    '4.5': {
+        icon: <SentimentVerySatisfiedIcon />,
+        label: 'Very Satisfied',
+    },
+    5: {
+        icon: <SentimentVerySatisfiedIcon />,
+        label: 'Very Satisfied',
+    },
+};
+
+function IconContainer(props) {
+    const { value, ...other } = props;
+    return <span {...other}>{customIcons[value].icon}</span>;
+}
+
 function EnhancedTableHead(props) {
-    const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
+    const { classes, order, orderBy, onRequestSort } = props;
     const createSortHandler = (property) => (event) => {
         onRequestSort(event, property);
     };
@@ -119,33 +180,28 @@ function EnhancedTableHead(props) {
     return (
         <TableHead>
             <TableRow>
-                <TableCell padding="checkbox">
-                    <Checkbox
-                        indeterminate={numSelected > 0 && numSelected < rowCount}
-                        checked={rowCount > 0 && numSelected === rowCount}
-                        onChange={onSelectAllClick}
-                        inputProps={{ 'aria-label': 'select all desserts' }}
-                    />
-                </TableCell>
                 {headCells.map((headCell) => (
                     <TableCell
                         key={headCell.id}
-                        align={headCell.numeric ? 'right' : 'left'}
                         padding={headCell.disablePadding ? 'none' : 'default'}
                         sortDirection={orderBy === headCell.id ? order : false}
                     >
-                        <TableSortLabel
-                            active={orderBy === headCell.id}
-                            direction={orderBy === headCell.id ? order : 'asc'}
-                            onClick={createSortHandler(headCell.id)}
-                        >
-                            {headCell.label}
-                            {orderBy === headCell.id ? (
-                                <span className={classes.visuallyHidden}>
-                                    {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                                </span>
-                            ) : null}
-                        </TableSortLabel>
+                        { headCell.id === "playFieldPhoto" ? (
+                            headCell.label
+                        ) : (
+                            <TableSortLabel
+                                active={orderBy === headCell.id}
+                                direction={orderBy === headCell.id ? order : 'asc'}
+                                onClick={createSortHandler(headCell.id)}
+                            >
+                                {headCell.label}
+                                {orderBy === headCell.id ? (
+                                    <span className={classes.visuallyHidden}>
+                                        {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                                    </span>
+                                ) : null}
+                            </TableSortLabel>
+                        )}
                     </TableCell>
                 ))}
             </TableRow>
@@ -164,7 +220,6 @@ export default function PlayFields() {
 
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('title');
-    const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -209,33 +264,9 @@ export default function PlayFields() {
         setOrderBy(property);
     };
 
-    const handleSelectAllClick = (event) => {
-        if (event.target.checked) {
-            const newSelecteds = rows.map((title) => title.name);
-            setSelected(newSelecteds);
-            return;
-        }
-        setSelected([]);
-    };
-
-    const handleClick = (event, name) => {
-        const selectedIndex = selected.indexOf(name);
-        let newSelected = [];
-
-        if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, name);
-        } else if (selectedIndex === 0) {
-            newSelected = newSelected.concat(selected.slice(1));
-        } else if (selectedIndex === selected.length - 1) {
-            newSelected = newSelected.concat(selected.slice(0, -1));
-        } else if (selectedIndex > 0) {
-            newSelected = newSelected.concat(
-                selected.slice(0, selectedIndex),
-                selected.slice(selectedIndex + 1),
-            );
-        }
-
-        setSelected(newSelected);
+    const handleClick = (event, id) => {
+        // EDIT PLAYFIED
+        console.log({ id });
     };
 
     const handleChangePage = (event, newPage) => {
@@ -246,8 +277,6 @@ export default function PlayFields() {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
-
-    const isSelected = (name) => selected.indexOf(name) !== -1;
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
@@ -266,32 +295,17 @@ export default function PlayFields() {
                         </Button>
                     <Toolbar
                         className={clsx(classes.root, {
-                            [classes.highlight]: selected.length > 0,
+                            [classes.highlight]: false,
                         })}
                     >
-                        {selected.length > 0 ? (
-                            <Typography className={classes.title} color="inherit" variant="subtitle1" component="div">
-                                {selected.length} selected
-                            </Typography>
-                        ) : (
-                            <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
-                                Play Fields
-                            </Typography>
-                        )}
-
-                        {selected.length > 0 ? (
-                            <Tooltip title="Delete">
-                                <IconButton aria-label="delete">
-                                    <DeleteIcon />
-                                </IconButton>
-                            </Tooltip>
-                        ) : (
-                            <Tooltip title="Filter list">
-                                <IconButton aria-label="filter list">
-                                    <FilterListIcon />
-                                </IconButton>
-                            </Tooltip>
-                        )}
+                        <Typography className={classes.title}>
+                            Filter Play Fields
+                        </Typography>
+                        <Tooltip title="Filter list">
+                            <IconButton aria-label="filter list">
+                                <FilterListIcon />
+                            </IconButton>
+                        </Tooltip>
                     </Toolbar>
                 </Grid>
                 <Grid className={classes.spacingBetweenFields}></Grid>
@@ -304,10 +318,8 @@ export default function PlayFields() {
                         >
                             <EnhancedTableHead
                                 classes={classes}
-                                numSelected={selected.length}
                                 order={order}
                                 orderBy={orderBy}
-                                onSelectAllClick={handleSelectAllClick}
                                 onRequestSort={handleRequestSort}
                                 rowCount={rows.length}
                             />
@@ -315,42 +327,44 @@ export default function PlayFields() {
                                 {stableSort(rows, getComparator(order, orderBy))
                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                     .map((row, index) => {
-                                        const isItemSelected = isSelected(row.name);
-                                        const labelId = `enhanced-table-checkbox-${index}`;
-
                                         return (
                                             <TableRow
                                                 hover
-                                                onClick={(event) => handleClick(event, row.name)}
-                                                role="checkbox"
-                                                aria-checked={isItemSelected}
+                                                onClick={(event) => handleClick(event, row.id)}
                                                 tabIndex={-1}
                                                 key={row.name}
-                                                selected={isItemSelected}
+                                                selected={false}
                                             >
-                                                <TableCell padding="checkbox">
-                                                    <Checkbox
-                                                        checked={isItemSelected}
-                                                        inputProps={{ 'aria-labelledby': labelId }}
+                                                <TableCell>{row.title}</TableCell>
+                                                <TableCell>{row.city}</TableCell>
+                                                <TableCell>{row.cost}</TableCell>
+                                                <TableCell>{row.courtType}</TableCell>
+                                                <TableCell>{row.courtFloorType}</TableCell>
+                                                <TableCell>
+                                                    <Rating
+                                                        precision={0.5}
+                                                        size="large"
+                                                        name="playfield-rating-bar"
+                                                        IconContainerComponent={IconContainer}
+                                                        disabled={true}
+                                                        value={row.rating}
                                                     />
                                                 </TableCell>
-                                                <TableCell component="th" id={labelId} scope="row" padding="none">
-                                                    {row.name}
+                                                <TableCell>
+                                                    <Avatar
+                                                        id="avatar-tennis"
+                                                        sizes="100px"
+                                                        alt="tennis-court"
+                                                        src={row.playFieldPhoto}
+                                                        variant="square"
+                                                        className={classes.media}
+                                                    >
+                                                        <PhotoIcon />
+                                                    </Avatar>
                                                 </TableCell>
-                                                <TableCell align="right">{row.title}</TableCell>
-                                                <TableCell align="right">{row.city}</TableCell>
-                                                <TableCell align="right">{row.cost}</TableCell>
-                                                <TableCell align="right">{row.courtType}</TableCell>
-                                                <TableCell align="right">{row.rating}</TableCell>
-                                                <TableCell align="right">{row.playFieldPhoto}</TableCell>
                                             </TableRow>
                                         );
                                     })}
-                                {emptyRows > 0 && (
-                                    <TableRow style={{ height: 53 * emptyRows }}>
-                                        <TableCell colSpan={6} />
-                                    </TableRow>
-                                )}
                             </TableBody>
                         </Table>
                     </TableContainer>

@@ -26,6 +26,7 @@ const GET_PLAYFIELDS = gql`
             title
             address
             cost
+            city
             ownerPhoneNumber
             ownerEmailAddress
             courtsNumber
@@ -48,6 +49,7 @@ const GET_PLAYFIELD = gql`
             title
             address
             cost
+            city
             ownerPhoneNumber
             ownerEmailAddress
             courtsNumber
