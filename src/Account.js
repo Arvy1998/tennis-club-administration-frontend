@@ -71,11 +71,13 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
     },
     formContainer: {
-        marginTop: theme.spacing(10),
+        marginTop: theme.spacing(15),
     },
     container: {
-        paddingTop: theme.spacing(4),
-        paddingBottom: theme.spacing(4),
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-around',
+        alignContent: 'center',
     },
     contactInformationText: {
         display: 'flex',
@@ -85,7 +87,7 @@ const useStyles = makeStyles((theme) => ({
         marginTop: theme.spacing(1),
     },
     spacingBetween: {
-        padding: theme.spacing(5),
+        padding: theme.spacing(2),
     },
     spacingBetweenFields: {
         padding: theme.spacing(0.5),
@@ -302,291 +304,197 @@ export default function Account() {
         );
     }
 
-    console.log({userProfilePhoto});
-
     return (
         <div className={classes.root}>
             <Navigation />
-            <main className={classes.formContainer}>
-                <div className={classes.centeredForms} />
-                <Container className={classes.container}>
-                    <Grid container spacing={3} alignItems="flex-end" justify="center">
-                        <Grid container spacing={1} justify="center">
-                            <Typography
-                                component="h1"
-                                variant="h5"
-                                className={classes.contactInformationText}
-                            >
-                                Contact Information
+            <Container className={classes.formContainer}>
+                <Grid container spacing={3} alignItems="flex-end" justify="center">
+                    <Grid container spacing={1} justify="center">
+                        <Typography
+                            component="h1"
+                            variant="h5"
+                            className={classes.contactInformationText}
+                        >
+                            Contact Information
                                 </Typography>
-                        </Grid>
-                        <form className={classes.form} onSubmit={handleInformationSubmit}>
-                            <Grid className={classes.spacingBetweenFields}></Grid>
-                            <Grid container>
-                                <Grid container spacing={1} alignItems="center" justify="center" flexWrap="wrap">
-                                    <Grid item>
-                                        <Avatar
-                                            id="avatar"
-                                            sizes="100px"
-                                            alt={`${firstName} ${lastName}`}
-                                            src={userProfilePhoto || loadedUserData.getUser.userProfilePhoto}
-                                            className={classes.large}
-                                        />
-                                    </Grid>
-                                    <Grid item>
-                                        <input
-                                            accept="image/*"
-                                            className={classes.input}
-                                            onChange={fileToBase64}
-                                            id="contained-button-file"
-                                            multiple
-                                            type="file"
-                                        />
-                                        <label htmlFor="contained-button-file">
-                                            <Button
-                                                variant="outlined"
-                                                color="secondary"
-                                                component="span"
-                                                type="submit"
-                                            >
-                                                Upload Photo
-                                            </Button>
-                                        </label>
-                                    </Grid>
-                                    <Grid item>
-                                        <div>{fileName || ''}</div>
-                                    </Grid>
+                    </Grid>
+                    <form className={classes.form} onSubmit={handleInformationSubmit}>
+                        <Grid className={classes.spacingBetweenFields}></Grid>
+                        <Grid container>
+                            <Grid container spacing={1} alignItems="center" justify="center">
+                                <Grid item>
+                                    <Avatar
+                                        id="avatar"
+                                        sizes="100px"
+                                        alt={`${firstName} ${lastName}`}
+                                        src={userProfilePhoto || loadedUserData.getUser.userProfilePhoto}
+                                        className={classes.large}
+                                    />
                                 </Grid>
-                                <Grid className={classes.spacingBetweenFields}></Grid>
+                                <Grid item>
+                                    <input
+                                        accept="image/*"
+                                        className={classes.input}
+                                        onChange={fileToBase64}
+                                        id="contained-button-file"
+                                        multiple
+                                        type="file"
+                                    />
+                                    <label htmlFor="contained-button-file">
+                                        <Button
+                                            variant="outlined"
+                                            color="secondary"
+                                            component="span"
+                                            type="submit"
+                                        >
+                                            Upload Photo
+                                            </Button>
+                                    </label>
+                                </Grid>
+                                <Grid item>
+                                    <div>{fileName || ''}</div>
+                                </Grid>
+                            </Grid>
+                            <Grid className={classes.spacingBetweenFields}></Grid>
+                            <Grid container spacing={1} alignItems="flex-end" justify="center">
+                                <Grid item>
+                                    <TextFieldsIcon />
+                                </Grid>
+                                <Grid item>
+                                    <TextField
+                                        autoComplete="fname"
+                                        name="firstName"
+                                        defaultValue={user.firstName}
+                                        required
+                                        style={{ width: 300 }}
+                                        id="firstName"
+                                        label="First Name"
+                                        onInput={e => setFirstName(e.target.value)}
+                                    />
+                                </Grid>
                                 <Grid container spacing={1} alignItems="flex-end" justify="center">
                                     <Grid item>
                                         <TextFieldsIcon />
                                     </Grid>
                                     <Grid item>
                                         <TextField
-                                            autoComplete="fname"
-                                            name="firstName"
-                                            defaultValue={user.firstName}
                                             required
                                             style={{ width: 300 }}
-                                            id="firstName"
-                                            label="First Name"
-                                            onInput={e => setFirstName(e.target.value)}
-                                        />
-                                    </Grid>
-                                    <Grid container spacing={1} alignItems="flex-end" justify="center">
-                                        <Grid item>
-                                            <TextFieldsIcon />
-                                        </Grid>
-                                        <Grid item>
-                                            <TextField
-                                                required
-                                                style={{ width: 300 }}
-                                                defaultValue={user.lastName}
-                                                id="lastName"
-                                                label="Last Name"
-                                                name="lastName"
-                                                autoComplete="lname"
-                                                onInput={e => setLastName(e.target.value)}
-                                            />
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
-                                <Grid className={classes.spacingBetweenFields}></Grid>
-                                <Grid container spacing={1} alignItems="flex-end" justify="center">
-                                    <Grid item>
-                                        <WcIcon />
-                                    </Grid>
-                                    <Grid item>
-                                        <FormControl className={classes.formControl}>
-                                            <InputLabel id="genderSelect">Gender</InputLabel>
-                                            <Select
-                                                labelId="genderSelect"
-                                                id="genderSelect-id"
-                                                defaultValue={genderMap[user.sex] || 'Not Selected'}
-                                                style={{ width: 300 }}
-                                                onChange={handleGenderSelect}
-                                                input={<Input />}
-                                                MenuProps={MenuProps}
-                                            >
-                                                {genderSelection.map((gender) => (
-                                                    <MenuItem key={gender} value={gender} style={
-                                                        getStyles(gender, selectedGender, theme)
-                                                    }>
-                                                        {gender}
-                                                    </MenuItem>
-                                                ))}
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-                                </Grid>
-                                <Grid className={classes.spacingBetweenDifferentFields}></Grid>
-                                <Grid container spacing={1} alignItems="flex-end" justify="center">
-                                    <Grid item>
-                                        <PhoneIcon />
-                                    </Grid>
-                                    <Grid item>
-                                        <TextField
-                                            style={{ width: 300 }}
-                                            id="phoneNumber"
-                                            label="Phone Number"
-                                            name="phoneNumber"
-                                            defaultValue={user.phoneNumber}
-                                            onInput={e => setPhoneNumber(e.target.value)}
+                                            defaultValue={user.lastName}
+                                            id="lastName"
+                                            label="Last Name"
+                                            name="lastName"
+                                            autoComplete="lname"
+                                            onInput={e => setLastName(e.target.value)}
                                         />
                                     </Grid>
                                 </Grid>
-                                <Grid container spacing={1} alignItems="flex-end" justify="center">
-                                    <Grid item>
-                                        <HomeIcon />
-                                    </Grid>
-                                    <Grid item>
-                                        <TextField
-                                            style={{ width: 300 }}
-                                            id="city"
-                                            label="City"
-                                            name="city"
-                                            defaultValue={user.city}
-                                            onInput={e => setCity(e.target.value)}
-                                        />
-                                    </Grid>
-                                </Grid>
-                                <Grid container spacing={1} alignItems="flex-end" justify="center">
-                                    <Grid item>
-                                        <StreetviewIcon />
-                                    </Grid>
-                                    <Grid item>
-                                        <TextField
-                                            style={{ width: 300 }}
-                                            id="address"
-                                            label="Address"
-                                            name="address"
-                                            defaultValue={user.address}
-                                            onInput={e => setAddress(e.target.value)}
-                                        />
-                                    </Grid>
-                                </Grid>
-                                <Grid className={classes.spacingBetweenDifferentFields}></Grid>
-                                <Grid container spacing={1} alignItems="flex-end" justify="center">
-                                    <Grid item>
-                                        <EjectIcon />
-                                    </Grid>
-                                    <Grid item>
-                                        <FormControl className={classes.formControl}>
-                                            <InputLabel id="levelSelect">Level</InputLabel>
-                                            <Tooltip
-                                                placement="right"
-                                                title={levelSelection[_.invert(levelSelectionMap)[selectedLevel || user.level] || 'Not Selected']}
-                                            >
-                                                <Select
-                                                    labelId="levelSelect"
-                                                    id="levelSelect-id"
-                                                    defaultValue={_.invert(levelSelectionMap)[user.level] || 'Not Selected'}
-                                                    style={{ width: 300 }}
-                                                    onChange={handleLevelSelect}
-                                                    input={<Input />}
-                                                    MenuProps={MenuProps}
-                                                >
-                                                    {Object.keys(levelSelection).map((key) => (
-                                                        <MenuItem key={key} value={key} style={
-                                                            getLevelSelectionStyles(key, selectedLevel, theme)
-                                                        }>
-                                                            {key}
-                                                        </MenuItem>
-                                                    ))}
-                                                </Select>
-                                            </Tooltip>
-                                        </FormControl>
-                                    </Grid>
-                                </Grid>
-                                <Grid container justify="center">
-                                    <Button
-                                        type="submit"
-                                        variant="outlined"
-                                        color="secondary"
-                                        className={classes.buttonBox}
-                                    >
-                                        Save
-                                </Button>
-                                </Grid>
-                            </Grid>
-                        </form>
-                        <Grid className={classes.spacingBetween}></Grid>
-                        <form className={classes.form} onSubmit={handleInformationSubmit}>
-                            <Grid container spacing={1} alignItems="flex-end" justify="center">
-                                <Typography
-                                    component="h1"
-                                    variant="h5"
-                                    className={classes.contactInformationText}
-                                >
-                                    Credential Information
-                                </Typography>
                             </Grid>
                             <Grid className={classes.spacingBetweenFields}></Grid>
-                            <Grid container>
-                                <Grid container spacing={1} alignItems="flex-end" justify="center">
-                                    <Grid item>
-                                        <AlternateEmail />
-                                    </Grid>
-                                    <Grid item>
-                                        <TextField
-                                            disabled={true}
-                                            style={{ width: 300 }}
-                                            id="email"
-                                            label="Old Email Address"
-                                            defaultValue={user.email}
-                                            name="email"
-                                            autoComplete="email"
-                                            onInput={e => setEmail(e.target.value)}
-                                        />
-                                    </Grid>
-                                    <Grid container spacing={1} alignItems="flex-end" justify="center"></Grid>
-                                    <Grid item>
-                                        <AlternateEmail />
-                                    </Grid>
-                                    <Grid item>
-                                        <TextField
-                                            style={{ width: 300 }}
-                                            id="newEmail"
-                                            label="New Email Address"
-                                            name="newEmail"
-                                            autoComplete="email"
-                                            onInput={e => setNewEmail(e.target.value)}
-                                        />
-                                    </Grid>
-                                </Grid>
-                            </Grid>
                             <Grid container spacing={1} alignItems="flex-end" justify="center">
                                 <Grid item>
-                                    <VpnKey />
+                                    <WcIcon />
+                                </Grid>
+                                <Grid item>
+                                    <FormControl className={classes.formControl}>
+                                        <InputLabel id="genderSelect">Gender</InputLabel>
+                                        <Select
+                                            labelId="genderSelect"
+                                            id="genderSelect-id"
+                                            defaultValue={genderMap[user.sex] || 'Not Selected'}
+                                            style={{ width: 300 }}
+                                            onChange={handleGenderSelect}
+                                            input={<Input />}
+                                            MenuProps={MenuProps}
+                                        >
+                                            {genderSelection.map((gender) => (
+                                                <MenuItem key={gender} value={gender} style={
+                                                    getStyles(gender, selectedGender, theme)
+                                                }>
+                                                    {gender}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                            </Grid>
+                            <Grid className={classes.spacingBetweenDifferentFields}></Grid>
+                            <Grid container spacing={1} alignItems="flex-end" justify="center">
+                                <Grid item>
+                                    <PhoneIcon />
                                 </Grid>
                                 <Grid item>
                                     <TextField
-                                        required
                                         style={{ width: 300 }}
-                                        name="password"
-                                        label="Old Password"
-                                        type="password"
-                                        id="password"
-                                        autoComplete="current-password"
-                                        onInput={e => setPassword(e.target.value)}
+                                        id="phoneNumber"
+                                        label="Phone Number"
+                                        name="phoneNumber"
+                                        defaultValue={user.phoneNumber}
+                                        onInput={e => setPhoneNumber(e.target.value)}
                                     />
                                 </Grid>
-                                <Grid container spacing={1} alignItems="flex-end" justify="center">
-                                    <Grid item>
-                                        <VpnKey />
-                                    </Grid>
-                                    <Grid item>
-                                        <TextField
-                                            style={{ width: 300 }}
-                                            name="newPassword"
-                                            label="New Password"
-                                            type="password"
-                                            id="newPassword"
-                                            autoComplete="current-password"
-                                            onInput={e => setNewPassword(e.target.value)}
-                                        />
-                                    </Grid>
+                            </Grid>
+                            <Grid container spacing={1} alignItems="flex-end" justify="center">
+                                <Grid item>
+                                    <HomeIcon />
+                                </Grid>
+                                <Grid item>
+                                    <TextField
+                                        style={{ width: 300 }}
+                                        id="city"
+                                        label="City"
+                                        name="city"
+                                        defaultValue={user.city}
+                                        onInput={e => setCity(e.target.value)}
+                                    />
+                                </Grid>
+                            </Grid>
+                            <Grid container spacing={1} alignItems="flex-end" justify="center">
+                                <Grid item>
+                                    <StreetviewIcon />
+                                </Grid>
+                                <Grid item>
+                                    <TextField
+                                        style={{ width: 300 }}
+                                        id="address"
+                                        label="Address"
+                                        name="address"
+                                        defaultValue={user.address}
+                                        onInput={e => setAddress(e.target.value)}
+                                    />
+                                </Grid>
+                            </Grid>
+                            <Grid className={classes.spacingBetweenDifferentFields}></Grid>
+                            <Grid container spacing={1} alignItems="flex-end" justify="center">
+                                <Grid item>
+                                    <EjectIcon />
+                                </Grid>
+                                <Grid item>
+                                    <FormControl className={classes.formControl}>
+                                        <InputLabel id="levelSelect">Level</InputLabel>
+                                        <Tooltip
+                                            placement="right"
+                                            title={levelSelection[_.invert(levelSelectionMap)[selectedLevel || user.level] || 'Not Selected']}
+                                        >
+                                            <Select
+                                                labelId="levelSelect"
+                                                id="levelSelect-id"
+                                                defaultValue={_.invert(levelSelectionMap)[user.level] || 'Not Selected'}
+                                                style={{ width: 300 }}
+                                                onChange={handleLevelSelect}
+                                                input={<Input />}
+                                                MenuProps={MenuProps}
+                                            >
+                                                {Object.keys(levelSelection).map((key) => (
+                                                    <MenuItem key={key} value={key} style={
+                                                        getLevelSelectionStyles(key, selectedLevel, theme)
+                                                    }>
+                                                        {key}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </Tooltip>
+                                    </FormControl>
                                 </Grid>
                             </Grid>
                             <Grid container justify="center">
@@ -599,10 +507,99 @@ export default function Account() {
                                     Save
                                 </Button>
                             </Grid>
-                        </form>
-                    </Grid>
-                </Container>
-            </main>
+                        </Grid>
+                    </form>
+                    <Grid className={classes.spacingBetween}></Grid>
+                    <form className={classes.form} onSubmit={handleInformationSubmit}>
+                        <Grid container spacing={1} alignItems="flex-end" justify="center">
+                            <Typography
+                                component="h1"
+                                variant="h5"
+                                className={classes.contactInformationText}
+                            >
+                                Credential Information
+                                </Typography>
+                        </Grid>
+                        <Grid className={classes.spacingBetweenFields}></Grid>
+                        <Grid container>
+                            <Grid container spacing={1} alignItems="flex-end" justify="center">
+                                <Grid item>
+                                    <AlternateEmail />
+                                </Grid>
+                                <Grid item>
+                                    <TextField
+                                        disabled={true}
+                                        style={{ width: 300 }}
+                                        id="email"
+                                        label="Old Email Address"
+                                        defaultValue={user.email}
+                                        name="email"
+                                        autoComplete="email"
+                                        onInput={e => setEmail(e.target.value)}
+                                    />
+                                </Grid>
+                                <Grid container spacing={1} alignItems="flex-end" justify="center"></Grid>
+                                <Grid item>
+                                    <AlternateEmail />
+                                </Grid>
+                                <Grid item>
+                                    <TextField
+                                        style={{ width: 300 }}
+                                        id="newEmail"
+                                        label="New Email Address"
+                                        name="newEmail"
+                                        autoComplete="email"
+                                        onInput={e => setNewEmail(e.target.value)}
+                                    />
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={1} alignItems="flex-end" justify="center">
+                            <Grid item>
+                                <VpnKey />
+                            </Grid>
+                            <Grid item>
+                                <TextField
+                                    required
+                                    style={{ width: 300 }}
+                                    name="password"
+                                    label="Old Password"
+                                    type="password"
+                                    id="password"
+                                    autoComplete="current-password"
+                                    onInput={e => setPassword(e.target.value)}
+                                />
+                            </Grid>
+                            <Grid container spacing={1} alignItems="flex-end" justify="center">
+                                <Grid item>
+                                    <VpnKey />
+                                </Grid>
+                                <Grid item>
+                                    <TextField
+                                        style={{ width: 300 }}
+                                        name="newPassword"
+                                        label="New Password"
+                                        type="password"
+                                        id="newPassword"
+                                        autoComplete="current-password"
+                                        onInput={e => setNewPassword(e.target.value)}
+                                    />
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                        <Grid container justify="center">
+                            <Button
+                                type="submit"
+                                variant="outlined"
+                                color="secondary"
+                                className={classes.buttonBox}
+                            >
+                                Save
+                                </Button>
+                        </Grid>
+                    </form>
+                </Grid>
+            </Container>
         </div >
     );
 }
