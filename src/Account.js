@@ -22,6 +22,7 @@ import PhoneIcon from '@material-ui/icons/Phone';
 import HomeIcon from '@material-ui/icons/Home';
 import StreetviewIcon from '@material-ui/icons/Streetview';
 import EjectIcon from '@material-ui/icons/Eject';
+import InfoIcon from '@material-ui/icons/Info';
 
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
@@ -345,9 +346,8 @@ export default function Account() {
                                             variant="outlined"
                                             color="secondary"
                                             component="span"
-                                            type="submit"
                                         >
-                                            Upload Photo
+                                            Select Photo
                                             </Button>
                                     </label>
                                 </Grid>
@@ -480,7 +480,7 @@ export default function Account() {
                                                 labelId="levelSelect"
                                                 id="levelSelect-id"
                                                 defaultValue={_.invert(levelSelectionMap)[user.level] || 'Not Selected'}
-                                                style={{ width: 300 }}
+                                                style={{ width: 265 }}
                                                 onChange={handleLevelSelect}
                                                 input={<Input />}
                                                 MenuProps={MenuProps}
@@ -495,6 +495,14 @@ export default function Account() {
                                             </Select>
                                         </Tooltip>
                                     </FormControl>
+                                </Grid>
+                                <Grid item>
+                                    <Tooltip
+                                        placement="right"
+                                        title="General Characteristics of NTRP Playing Levels."
+                                    >
+                                        <InfoIcon />
+                                    </Tooltip>
                                 </Grid>
                             </Grid>
                             <Grid container justify="center">

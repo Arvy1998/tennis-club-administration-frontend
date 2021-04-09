@@ -33,8 +33,8 @@ const GET_PLAYFIELDS = gql`
             courtFloorType
             additionalInformation
             webpage
-            workHours
             rating
+            playFieldPhoto
             createdAt
             updatedAt
         }
@@ -55,8 +55,8 @@ const GET_PLAYFIELD = gql`
             courtFloorType
             additionalInformation
             webpage
-            workHours
             rating
+            playFieldPhoto
             createdAt
             updatedAt
         }

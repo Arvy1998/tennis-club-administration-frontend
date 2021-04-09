@@ -46,8 +46,8 @@ const UPDATE_USER = gql`
 `;
 
 const CREATE_PLAYFIELD = gql`
-    mutation editUser($playFieldInput: PlayFieldInput!) {
-        editUser(playFieldInput: $playFieldInput) {
+    mutation createPlayField($playFieldInput: PlayFieldInput!) {
+        createPlayField(playFieldInput: $playFieldInput) {
             id
             title
             address
@@ -59,8 +59,8 @@ const CREATE_PLAYFIELD = gql`
             courtFloorType
             additionalInformation
             webpage
-            workHours
             rating
+            playFieldPhoto
             createdAt
             updatedAt
         }
@@ -68,8 +68,8 @@ const CREATE_PLAYFIELD = gql`
 `;
 
 const UPDATE_PLAYFIELD = gql`
-    mutation editUser($id: ID!, $playFieldInput: PlayFieldInput!) {
-        editUser(id: $id, playFieldInput: $playFieldInput) {
+    mutation updatePlayField($id: ID!, $playFieldInput: PlayFieldInput!) {
+        updatePlayField(id: $id, playFieldInput: $playFieldInput) {
             id
             title
             address
@@ -81,10 +81,18 @@ const UPDATE_PLAYFIELD = gql`
             courtFloorType
             additionalInformation
             webpage
-            workHours
             rating
+            playFieldPhoto
             createdAt
             updatedAt
+        }
+    }
+`;
+
+const DELETE_PLAYFIELD = gql`
+    mutation deletePlayField($id: ID!) {
+        deletePlayField(id: $id) {
+            id
         }
     }
 `;
@@ -95,4 +103,5 @@ export {
     REGISTER_USER,
     CREATE_PLAYFIELD,
     UPDATE_PLAYFIELD,
+    DELETE_PLAYFIELD,
 }
