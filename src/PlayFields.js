@@ -25,6 +25,7 @@ import SentimentSatisfiedAltIcon from '@material-ui/icons/SentimentSatisfiedAltO
 import SentimentVerySatisfiedIcon from '@material-ui/icons/SentimentVerySatisfied';
 
 import Navigation from './Navigation';
+import Modal from '@material-ui/core/Modal';
 
 import clsx from 'clsx';
 
@@ -72,6 +73,15 @@ function stableSort(array, comparator) {
     return stabilizedThis.map((element) => element[0]);
 }
 
+function getModalStyle() {
+    const bottom = 60;
+
+    return {
+        bottom: `${bottom}%`,
+        margin: 'auto',
+    };
+}
+
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
@@ -110,6 +120,14 @@ const useStyles = makeStyles((theme) => ({
     media: {
         width: theme.spacing(16),
         height: theme.spacing(9),
+    },
+    paper: {
+        position: 'absolute',
+        width: 400,
+        backgroundColor: theme.palette.background.paper,
+        border: '2px solid #000',
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing(2, 4, 3),
     },
 }));
 
@@ -223,6 +241,9 @@ export default function PlayFields() {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
+    const [modalStyle] = React.useState(getModalStyle);
+    const [open, setOpen] = React.useState(false);
+
     const initialQuery = [];
 
     const { loading, error, data } = useQuery(GET_PLAYFIELDS, {
@@ -264,9 +285,8 @@ export default function PlayFields() {
         setOrderBy(property);
     };
 
-    const handleClick = (event, id) => {
-        // EDIT PLAYFIED
-        console.log({ id });
+    const handleEditDetails = (event, id) => {
+        history.push(`/playfields/edit/${id}`);
     };
 
     const handleChangePage = (event, newPage) => {
@@ -278,7 +298,25 @@ export default function PlayFields() {
         setPage(0);
     };
 
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+    const handleFilterModal = (event) => {
+        event.preventDefault();
+
+        console.log('CLICK!!')
+        setOpen(true);
+    }
+
+    const handleClose = (value) => {
+        setOpen(false);
+        // setSelectedValue(value);
+    };
+
+    const body = (
+        <div style={modalStyle} className={classes.paper}>
+            <Typography className={classes.title}>
+                Select Filters:
+            </Typography>
+        </div>
+    );
 
     return (
         <div className={classes.root}>
@@ -302,10 +340,26 @@ export default function PlayFields() {
                             Filter Play Fields
                         </Typography>
                         <Tooltip title="Filter list">
-                            <IconButton aria-label="filter list">
+                            <IconButton
+                                aria-label="filter list"
+                                onClick={handleFilterModal}
+                            >
                                 <FilterListIcon />
                             </IconButton>
                         </Tooltip>
+                        <Modal
+                            open={open}
+                            onClose={handleClose}
+                            aria-labelledby="modal-title"
+                            aria-describedby="modal-description"
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            {body}
+                        </Modal>
                     </Toolbar>
                 </Grid>
                 <Grid className={classes.spacingBetweenFields}></Grid>
@@ -330,9 +384,9 @@ export default function PlayFields() {
                                         return (
                                             <TableRow
                                                 hover
-                                                onClick={(event) => handleClick(event, row.id)}
+                                                onClick={(event) => handleEditDetails(event, row.id)}
                                                 tabIndex={-1}
-                                                key={row.name}
+                                                key={`${new Date()} ${row.title}`}
                                                 selected={false}
                                             >
                                                 <TableCell>{row.title}</TableCell>

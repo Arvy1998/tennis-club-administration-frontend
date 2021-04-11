@@ -6,6 +6,7 @@ import Home from './Home';
 import Account from './Account';
 import PlayFields from './PlayFields';
 import PlayFieldsAddForm from './PlayFieldsAddForm';
+import PlayFieldsEditForm from './PlayFieldsEditForm';
 
 import {
     BrowserRouter as Router,
@@ -27,6 +28,7 @@ const App = () => {
                         <Route path="/login" component={Login} />
                         <Route path="/home" component={Home} />
                         <Route path="/account" component={Account} />
+                        <Route path="/playfields/edit/:id" component={PlayFieldsEditForm} />
                         <Route path="/playfields/add" component={PlayFieldsAddForm} />
                         <Route path="/playfields" component={PlayFields} />
                     </Switch>
