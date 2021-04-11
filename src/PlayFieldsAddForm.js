@@ -348,7 +348,7 @@ export default function PlayFieldsAddForm() {
                                 <Grid item>
                                     <TextField
                                         style={{ width: 300 }}
-                                        id="ownerEmailAddress"
+                                        id="email"
                                         required
                                         label="Owner's Email Address"
                                         name="ownerEmailAddress"

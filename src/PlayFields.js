@@ -244,11 +244,24 @@ export default function PlayFields() {
     const [modalStyle] = React.useState(getModalStyle);
     const [open, setOpen] = React.useState(false);
 
-    const initialQuery = [];
+    const { loading, error, data } = useQuery(GET_PLAYFIELDS);
 
-    const { loading, error, data } = useQuery(GET_PLAYFIELDS, {
-        variables: { playFieldQueryInput: initialQuery },
-    });
+    /* Filtering state */
+    const [title, setTitle] = useState(null);
+    const [city, setCity] = useState(null);
+    const [cost, setCost] = useState(null);
+    const [courtType, setCourtType] = useState(null);
+    const [courtFloorType, setCourtFloorType] = useState(null);
+    const [rating, setRating] = useState(null);
+
+    let filters = {
+        title,
+        city,
+        cost,
+        courtType,
+        courtFloorType,
+        rating,
+    };
 
     useEffect(() => {
         if (loading) {
@@ -300,8 +313,6 @@ export default function PlayFields() {
 
     const handleFilterModal = (event) => {
         event.preventDefault();
-
-        console.log('CLICK!!')
         setOpen(true);
     }
 

@@ -417,7 +417,7 @@ export default function PlayFieldsEditForm({ match }) {
                                 <Grid item>
                                     <TextField
                                         style={{ width: 300 }}
-                                        id="ownerEmailAddress"
+                                        id="email"
                                         required
                                         defaultValue={playField.ownerEmailAddress}
                                         label="Owner's Email Address"
