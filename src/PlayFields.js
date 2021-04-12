@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 
-import { lighten, makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 
 import { useHistory } from 'react-router';
-import Button from '@material-ui/core/Button';
+
+import _ from 'lodash';
 
 import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -17,28 +17,33 @@ import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Avatar from '@material-ui/core/Avatar';
 import Rating from '@material-ui/lab/Rating';
-
-import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied';
-import SentimentDissatisfiedIcon from '@material-ui/icons/SentimentDissatisfied';
-import SentimentSatisfiedIcon from '@material-ui/icons/SentimentSatisfied';
-import SentimentSatisfiedAltIcon from '@material-ui/icons/SentimentSatisfiedAltOutlined';
-import SentimentVerySatisfiedIcon from '@material-ui/icons/SentimentVerySatisfied';
+import Button from '@material-ui/core/Button';
 
 import Navigation from './Navigation';
 import Modal from '@material-ui/core/Modal';
 
 import clsx from 'clsx';
 
+import TextField from '@material-ui/core/TextField';
+import Grid from '@material-ui/core/Grid';
+import Select from '@material-ui/core/Select';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
+import MenuItem from '@material-ui/core/MenuItem';
+
 import Toolbar from '@material-ui/core/Toolbar';
-import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import DeleteIcon from '@material-ui/icons/Delete';
 import PhotoIcon from '@material-ui/icons/Photo';
+import InfoIcon from '@material-ui/icons/Info';
 import FilterListIcon from '@material-ui/icons/FilterList';
+
+import TextFieldsIcon from '@material-ui/icons/TextFields';
+import HomeIcon from '@material-ui/icons/Home';
+import EuroSymbolIcon from '@material-ui/icons/EuroSymbol';
+import StarIcon from '@material-ui/icons/Star';
 
 import { Typography } from '@material-ui/core';
 
@@ -46,6 +51,12 @@ import { useQuery } from "@apollo/react-hooks";
 import {
     GET_PLAYFIELDS,
 } from './gql/queries/queries';
+
+import customRatingIcons from '../utils/customRatingIcons';
+import ratingLabels from '../utils/ratingLabels';
+import areFiltersSelected from '../utils/areFiltersSelected';
+
+import MenuProps from '../utils/props/MenuProps';
 
 function descendingComparator(curr, next, orderBy) {
     if (next[orderBy] < curr[orderBy]) {
@@ -74,7 +85,7 @@ function stableSort(array, comparator) {
 }
 
 function getModalStyle() {
-    const bottom = 60;
+    const bottom = 30;
 
     return {
         bottom: `${bottom}%`,
@@ -129,6 +140,19 @@ const useStyles = makeStyles((theme) => ({
         boxShadow: theme.shadows[5],
         padding: theme.spacing(2, 4, 3),
     },
+    ratingGrid: {
+        paddingRight: theme.spacing(6),
+    },
+    spacingBetweenRatingStars: {
+        padding: theme.spacing(1),
+    },
+    spacingBetweenFields: {
+        padding: theme.spacing(0.5),
+    },
+    buttonBox: {
+        justifyContent: 'center',
+        margin: theme.spacing(3, 0, 2),
+    },
 }));
 
 const headCells = [
@@ -141,52 +165,9 @@ const headCells = [
     { id: 'playFieldPhoto', dissablePadding: false, label: 'Photo' },
 ];
 
-const customIcons = {
-    '0.5': {
-        icon: <SentimentVeryDissatisfiedIcon />,
-        label: 'Very Dissatisfied',
-    },
-    1: {
-        icon: <SentimentVeryDissatisfiedIcon />,
-        label: 'Very Dissatisfied',
-    },
-    '1.5': {
-        icon: <SentimentDissatisfiedIcon />,
-        label: 'Dissatisfied',
-    },
-    2: {
-        icon: <SentimentDissatisfiedIcon />,
-        label: 'Dissatisfied',
-    },
-    '2.5': {
-        icon: <SentimentSatisfiedIcon />,
-        label: 'Neutral',
-    },
-    3: {
-        icon: <SentimentSatisfiedIcon />,
-        label: 'Neutral',
-    },
-    '3.5': {
-        icon: <SentimentSatisfiedAltIcon />,
-        label: 'Satisfied',
-    },
-    4: {
-        icon: <SentimentSatisfiedAltIcon />,
-        label: 'Satisfied',
-    },
-    '4.5': {
-        icon: <SentimentVerySatisfiedIcon />,
-        label: 'Very Satisfied',
-    },
-    5: {
-        icon: <SentimentVerySatisfiedIcon />,
-        label: 'Very Satisfied',
-    },
-};
-
 function IconContainer(props) {
     const { value, ...other } = props;
-    return <span {...other}>{customIcons[value].icon}</span>;
+    return <span {...other}>{customRatingIcons[value].icon}</span>;
 }
 
 function EnhancedTableHead(props) {
@@ -229,39 +210,32 @@ function EnhancedTableHead(props) {
 
 export default function PlayFields() {
     const classes = useStyles();
-
+    const theme = useTheme();
     const history = useHistory();
 
     const [loadedPlayfieldsData, setLoadedPlayfieldsData] = useState(null);
+    const [filteredPlayFieldsData, setFilteredPlayFieldsData] = useState(null);
     const [isLoading, setIsLoading] = useState(null);
     const [isError, setIsError] = useState(null);
 
-    const [order, setOrder] = React.useState('asc');
-    const [orderBy, setOrderBy] = React.useState('title');
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    const [order, setOrder] = useState('asc');
+    const [orderBy, setOrderBy] = useState('title');
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
 
-    const [modalStyle] = React.useState(getModalStyle);
-    const [open, setOpen] = React.useState(false);
+    const [modalStyle] = useState(getModalStyle);
+    const [open, setOpen] = useState(false);
 
     const { loading, error, data } = useQuery(GET_PLAYFIELDS);
 
     /* Filtering state */
-    const [title, setTitle] = useState(null);
-    const [city, setCity] = useState(null);
-    const [cost, setCost] = useState(null);
-    const [courtType, setCourtType] = useState(null);
-    const [courtFloorType, setCourtFloorType] = useState(null);
-    const [rating, setRating] = useState(null);
-
-    let filters = {
-        title,
-        city,
-        cost,
-        courtType,
-        courtFloorType,
-        rating,
-    };
+    const [title, setTitle] = useState('');
+    const [city, setCity] = useState('Not Selected');
+    const [cost, setCost] = useState(0);
+    const [courtType, setCourtType] = useState('Not Selected');
+    const [courtFloorType, setCourtFloorType] = useState('Not Selected');
+    const [rating, setRating] = useState(0);
+    const [hover, setHover] = useState(-1);
 
     useEffect(() => {
         if (loading) {
@@ -292,6 +266,15 @@ export default function PlayFields() {
         rows = loadedPlayfieldsData.listPlayFields;
     }
 
+    let availableCities = _.uniq(rows.map(row => row.city));
+    availableCities.push('Not Selected');
+
+    let availableCourtTypes = _.uniq(rows.map(row => row.courtType));
+    availableCourtTypes.push('Not Selected');
+
+    let availableCourtFloorTypes = _.uniq(rows.map(row => row.courtFloorType));
+    availableCourtFloorTypes.push('Not Selected');
+
     const handleRequestSort = (event, property) => {
         const isAscending = orderBy === property && order === 'asc';
         setOrder(isAscending ? 'desc' : 'asc');
@@ -300,6 +283,18 @@ export default function PlayFields() {
 
     const handleEditDetails = (event, id) => {
         history.push(`/playfields/edit/${id}`);
+    };
+
+    function handleCitySelect(event) {
+        setCity(event.target.value);
+    };
+
+    function handleCourtTypeSelect(event) {
+        setCourtType(event.target.value);
+    };
+
+    function handleCourtFloorTypeSelect(event) {
+        setCourtFloorType(event.target.value);
     };
 
     const handleChangePage = (event, newPage) => {
@@ -311,14 +306,88 @@ export default function PlayFields() {
         setPage(0);
     };
 
-    const handleFilterModal = (event) => {
+    function handleFilterModal(event) {
         event.preventDefault();
         setOpen(true);
-    }
+    };
 
     const handleClose = (value) => {
         setOpen(false);
-        // setSelectedValue(value);
+    };
+
+    function handleFilterSubmit(event) {
+        event.preventDefault();
+
+        let filteredData = loadedPlayfieldsData.listPlayFields;
+
+        if (title) {
+            filteredData = filteredData.filter(
+                data => data.title.includes(title),
+            );
+        }
+
+        if (city !== 'Not Selected') {
+            filteredData = filteredData.filter(
+                data => data.city === city,
+            );
+        }
+
+        if (cost !== 0) {
+            filteredData = filteredData.filter(
+                data => data.cost <= cost,
+            );
+        }
+
+        if (rating !== 0) {
+            filteredData = filteredData.filter(
+                data => data.rating >= rating,
+            );
+        }
+
+        if (courtType !== 'Not Selected') {
+            filteredData = filteredData.filter(
+                data => data.courtType === courtType,
+            );
+        }
+
+        if (courtFloorType !== 'Not Selected') {
+            filteredData = filteredData.filter(
+                data => data.courtFloorType === courtFloorType,
+            );
+        }
+
+        setFilteredPlayFieldsData(filteredData);
+        setOpen(false);
+    };
+
+    function handleFilterClear(event) {
+        event.preventDefault();
+
+        setTitle('');
+        setCity('Not Selected');
+        setCost(0);
+        setCourtType('Not Selected');
+        setCourtFloorType('Not Selected');
+        setRating(0);
+
+        setFilteredPlayFieldsData(loadedPlayfieldsData.listPlayFields);
+    }
+
+    if (!rows) {
+        return (
+            <div className={classes.loadingBarContainer}>
+                <LinearProgress color="secondary" />
+            </div>
+        );
+    }
+
+    function getStyles(element, selectedElement, theme) {
+        return {
+            fontWeight:
+                selectedElement.indexOf(element) === -1
+                    ? theme.typography.fontWeightRegular
+                    : theme.typography.fontWeightMedium,
+        };
     };
 
     const body = (
@@ -326,6 +395,200 @@ export default function PlayFields() {
             <Typography className={classes.title}>
                 Select Filters:
             </Typography>
+            <form className={classes.form} onSubmit={handleFilterSubmit}>
+                <Grid container>
+                    <Grid container spacing={1} alignItems="flex-end" justify="center">
+                        <Grid item>
+                            <TextFieldsIcon />
+                        </Grid>
+                        <Grid item>
+                            <TextField
+                                autoComplete="title"
+                                defaultValue={title}
+                                name="title"
+                                style={{ width: 200 }}
+                                id="title"
+                                label="Title"
+                                onInput={e => setTitle(e.target.value)}
+                            />
+                        </Grid>
+                    </Grid>
+                    <Grid container spacing={1} alignItems="flex-end" justify="center">
+                        <Grid item>
+                            <HomeIcon />
+                        </Grid>
+                        <Grid item>
+                            <FormControl className={classes.formControl}>
+                                <InputLabel id="city">City</InputLabel>
+                                <Select
+                                    labelId="city"
+                                    id="city"
+                                    defaultValue='Not Selected'
+                                    style={{ width: 200 }}
+                                    onChange={handleCitySelect}
+                                    input={<Input />}
+                                    MenuProps={MenuProps}
+                                >
+                                    {availableCities.map((cityToSelect) => (
+                                        <MenuItem key={cityToSelect} value={cityToSelect} style={
+                                            getStyles(cityToSelect, city, theme)
+                                        }>
+                                            {cityToSelect}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                    </Grid>
+                    <Grid className={classes.spacingBetweenFields}></Grid>
+                    <Grid container spacing={1} alignItems="flex-end" justify="center">
+                        <Grid item>
+                            <EuroSymbolIcon />
+                        </Grid>
+                        <Grid item>
+                            <TextField
+                                style={{ width: 175 }}
+                                id="cost"
+                                defaultValue={cost}
+                                label="Reservation Cost"
+                                name="cost"
+                                autoComplete="cost"
+                                onInput={e => setCost(e.target.value)}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <Tooltip
+                                placement="right"
+                                title="Approximate reservation cost per hour in euros. Filtered values are less or equal to the entered value."
+                            >
+                                <InfoIcon />
+                            </Tooltip>
+                        </Grid>
+                    </Grid>
+                    <Grid className={classes.spacingBetweenFields}></Grid>
+                    <Grid container spacing={1} alignItems="flex-end" justify="center">
+                        <Grid item>
+                            <TextFieldsIcon />
+                        </Grid>
+                        <Grid item>
+                            <FormControl className={classes.formControl}>
+                                <InputLabel id="courtType">Court Type</InputLabel>
+                                <Select
+                                    labelId="courtType"
+                                    id="courtType"
+                                    defaultValue='Not Selected'
+                                    style={{ width: 200 }}
+                                    onChange={handleCourtTypeSelect}
+                                    input={<Input />}
+                                    MenuProps={MenuProps}
+                                >
+                                    {availableCourtTypes.map((courtTypeToSelect) => (
+                                        <MenuItem key={courtTypeToSelect} value={courtTypeToSelect} style={
+                                            getStyles(courtTypeToSelect, courtType, theme)
+                                        }>
+                                            {courtTypeToSelect}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                    </Grid>
+                    <Grid className={classes.spacingBetweenFields}></Grid>
+                    <Grid container spacing={1} alignItems="flex-end" justify="center">
+                        <Grid item>
+                            <TextFieldsIcon />
+                        </Grid>
+                        <Grid item>
+                            <FormControl className={classes.formControl}>
+                                <InputLabel id="courtFloorType">Court Floor Type</InputLabel>
+                                <Select
+                                    labelId="courtFloorType"
+                                    id="courtFloorType"
+                                    defaultValue='Not Selected'
+                                    style={{ width: 200 }}
+                                    onChange={handleCourtFloorTypeSelect}
+                                    input={<Input />}
+                                    MenuProps={MenuProps}
+                                >
+                                    {availableCourtFloorTypes.map((courtFloorTypeToSelect) => (
+                                        <MenuItem key={courtFloorTypeToSelect} value={courtFloorTypeToSelect} style={
+                                            getStyles(courtFloorTypeToSelect, courtFloorType, theme)
+                                        }>
+                                            {courtFloorTypeToSelect}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                    </Grid>
+                    <Grid className={classes.spacingBetweenRatingStars}></Grid>
+                    <Grid
+                        container
+                        spacing={1}
+                        alignItems="center"
+                        justify="center"
+                        className={classes.ratingGrid}
+                    >
+                        <Grid item>
+                            <StarIcon />
+                        </Grid>
+                        <Grid item>
+                            <Tooltip
+                                placement="bottom"
+                                title={rating !== null && ratingLabels[hover !== -1 ? hover : rating]}
+                            >
+                                <Rating
+                                    precision={0.5}
+                                    size="large"
+                                    name="filter-rating-bar"
+                                    defaultValue={rating}
+                                    getLabelText={(value) => { customRatingIcons[value].label }}
+                                    IconContainerComponent={IconContainer}
+                                    onChangeActive={(event, newHover) => {
+                                        setHover(newHover || 0);
+                                    }}
+                                    onChange={(event, newValue) => {
+                                        setRating(newValue || 0);
+                                    }}
+                                />
+                            </Tooltip>
+                        </Grid>
+                        <Grid item>
+                            <Tooltip
+                                placement="right"
+                                title="What is global rating between 1 and 5? Filtered ratings are higher or equal to the selected value."
+                            >
+                                <InfoIcon />
+                            </Tooltip>
+                        </Grid>
+                    </Grid>
+                    <Grid className={classes.spacingBetweenFields}></Grid>
+                    <Grid container alignItems="center" justify="space-between">
+                        <Button
+                            onClick={handleFilterClear}
+                            variant="outlined"
+                            color="secondary"
+                            className={classes.buttonBox}
+                            disabled={!areFiltersSelected({
+                                title, city, cost, courtType, courtFloorType, rating,
+                            })}
+                        >
+                            Clear Filters
+                        </Button>
+                        <Button
+                            type="submit"
+                            variant="outlined"
+                            color="secondary"
+                            className={classes.buttonBox}
+                            disabled={!areFiltersSelected({
+                                title, city, cost, courtType, courtFloorType, rating,
+                            })}
+                        >
+                            Filter
+                        </Button>
+                    </Grid>
+                </Grid>
+            </form>
         </div>
     );
 
@@ -334,14 +597,18 @@ export default function PlayFields() {
             <Navigation />
             <Container className={classes.listContainer}>
                 <Grid container spacing={3} alignItems="center" justify="space-between">
-                    <Button
-                        variant="outlined"
-                        color="secondary"
-                        component="span"
-                        onClick={() => { history.push('/playfields/add') }}
-                    >
-                        New Play Field
-                        </Button>
+                    {
+                        localStorage.getItem('role') !== 'null' && localStorage.getItem('role') !== 'PLAYER' ? (
+                            <Button
+                                variant="outlined"
+                                color="secondary"
+                                component="span"
+                                onClick={() => { history.push('/playfields/add') }}
+                            >
+                                New Play Field
+                            </Button>
+                        ) : ''
+                    }
                     <Toolbar
                         className={clsx(classes.root, {
                             [classes.highlight]: false,
@@ -389,7 +656,7 @@ export default function PlayFields() {
                                 rowCount={rows.length}
                             />
                             <TableBody>
-                                {stableSort(rows, getComparator(order, orderBy))
+                                {stableSort(filteredPlayFieldsData || rows, getComparator(order, orderBy))
                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                     .map((row, index) => {
                                         return (
@@ -402,7 +669,7 @@ export default function PlayFields() {
                                             >
                                                 <TableCell>{row.title}</TableCell>
                                                 <TableCell>{row.city}</TableCell>
-                                                <TableCell>{row.cost}</TableCell>
+                                                <TableCell>{row.cost} €</TableCell>
                                                 <TableCell>{row.courtType}</TableCell>
                                                 <TableCell>{row.courtFloorType}</TableCell>
                                                 <TableCell>

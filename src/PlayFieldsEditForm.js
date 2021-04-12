@@ -30,12 +30,6 @@ import StarIcon from '@material-ui/icons/Star';
 import LanguageIcon from '@material-ui/icons/Language';
 import PhotoIcon from '@material-ui/icons/Photo';
 
-import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied';
-import SentimentDissatisfiedIcon from '@material-ui/icons/SentimentDissatisfied';
-import SentimentSatisfiedIcon from '@material-ui/icons/SentimentSatisfied';
-import SentimentSatisfiedAltIcon from '@material-ui/icons/SentimentSatisfiedAltOutlined';
-import SentimentVerySatisfiedIcon from '@material-ui/icons/SentimentVerySatisfied';
-
 import Typography from '@material-ui/core/Typography';
 import CardMedia from '@material-ui/core/CardMedia';
 import Box from '@material-ui/core/Box';
@@ -49,6 +43,10 @@ import Navigation from './Navigation';
 
 import filterNotEnteredEntries from '../utils/filterNotEnteredEntries';
 import validateEmail from '../utils/validateEmail';
+import isDisabled from '../utils/isDisabled';
+
+import customRatingIcons from '../utils/customRatingIcons';
+import ratingLabels from '../utils/ratingLabels';
 
 import { useMutation, useQuery } from "@apollo/react-hooks";
 
@@ -141,66 +139,9 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const customIcons = {
-    '0.5': {
-        icon: <SentimentVeryDissatisfiedIcon />,
-        label: 'Very Dissatisfied',
-    },
-    1: {
-        icon: <SentimentVeryDissatisfiedIcon />,
-        label: 'Very Dissatisfied',
-    },
-    '1.5': {
-        icon: <SentimentDissatisfiedIcon />,
-        label: 'Dissatisfied',
-    },
-    2: {
-        icon: <SentimentDissatisfiedIcon />,
-        label: 'Dissatisfied',
-    },
-    '2.5': {
-        icon: <SentimentSatisfiedIcon />,
-        label: 'Neutral',
-    },
-    3: {
-        icon: <SentimentSatisfiedIcon />,
-        label: 'Neutral',
-    },
-    '3.5': {
-        icon: <SentimentSatisfiedAltIcon />,
-        label: 'Satisfied',
-    },
-    4: {
-        icon: <SentimentSatisfiedAltIcon />,
-        label: 'Satisfied',
-    },
-    '4.5': {
-        icon: <SentimentVerySatisfiedIcon />,
-        label: 'Very Satisfied',
-    },
-    5: {
-        icon: <SentimentVerySatisfiedIcon />,
-        label: 'Very Satisfied',
-    },
-};
-
-const labels = {
-    0: 'Not Selected',
-    0.5: 'Useless',
-    1: 'Useless+',
-    1.5: 'Poor',
-    2: 'Poor+',
-    2.5: 'Ok',
-    3: 'Ok+',
-    3.5: 'Good',
-    4: 'Good+',
-    4.5: 'Excellent',
-    5: 'Excellent+',
-};
-
 function IconContainer(props) {
     const { value, ...other } = props;
-    return <span {...other}>{customIcons[value].icon}</span>;
+    return <span {...other}>{customRatingIcons[value].icon}</span>;
 }
 
 export default function PlayFieldsEditForm({ match }) {
@@ -346,8 +287,6 @@ export default function PlayFieldsEditForm({ match }) {
         );
     }
 
-    console.log({bb: ownerEmailAddress})
-
     return (
         <div className={classes.root}>
             <Navigation />
@@ -373,6 +312,7 @@ export default function PlayFieldsEditForm({ match }) {
                                         autoComplete="title"
                                         name="title"
                                         required
+                                        disabled={isDisabled()}
                                         defaultValue={playField.title}
                                         style={{ width: 300 }}
                                         id="title"
@@ -390,6 +330,7 @@ export default function PlayFieldsEditForm({ match }) {
                                         required
                                         style={{ width: 300 }}
                                         id="city"
+                                        disabled={isDisabled()}
                                         defaultValue={playField.city}
                                         label="City"
                                         name="city"
@@ -407,6 +348,7 @@ export default function PlayFieldsEditForm({ match }) {
                                         required
                                         style={{ width: 300 }}
                                         id="address"
+                                        disabled={isDisabled()}
                                         defaultValue={playField.address}
                                         label="Address"
                                         name="address"
@@ -424,6 +366,7 @@ export default function PlayFieldsEditForm({ match }) {
                                         style={{ width: 300 }}
                                         id="email"
                                         required
+                                        disabled={isDisabled()}
                                         defaultValue={playField.ownerEmailAddress}
                                         label="Owner's Email Address"
                                         name="ownerEmailAddress"
@@ -442,6 +385,7 @@ export default function PlayFieldsEditForm({ match }) {
                                     <TextField
                                         style={{ width: 300 }}
                                         id="ownerPhoneNumber"
+                                        disabled={isDisabled()}
                                         defaultValue={playField.ownerPhoneNumber}
                                         label="Owner's Phone Number"
                                         name="ownerPhoneNumber"
@@ -458,6 +402,7 @@ export default function PlayFieldsEditForm({ match }) {
                                         required
                                         style={{ width: 265 }}
                                         id="cost"
+                                        disabled={isDisabled()}
                                         defaultValue={playField.cost}
                                         label="Reservation Cost"
                                         name="cost"
@@ -468,7 +413,7 @@ export default function PlayFieldsEditForm({ match }) {
                                 <Grid item>
                                     <Tooltip
                                         placement="right"
-                                        title="Approximate reservation cost per hour."
+                                        title="Approximate reservation cost per hour in euros."
                                     >
                                         <InfoIcon />
                                     </Tooltip>
@@ -484,6 +429,7 @@ export default function PlayFieldsEditForm({ match }) {
                                         style={{ width: 300 }}
                                         id="courtsNumber"
                                         label="Courts Number"
+                                        disabled={isDisabled()}
                                         defaultValue={playField.courtsNumber}
                                         name="courtsNumber"
                                         autoComplete="courtsNumber"
@@ -500,6 +446,7 @@ export default function PlayFieldsEditForm({ match }) {
                                         required
                                         style={{ width: 265 }}
                                         id="courtType"
+                                        disabled={isDisabled()}
                                         defaultValue={playField.courtType}
                                         label="Court Type"
                                         name="courtType"
@@ -524,6 +471,7 @@ export default function PlayFieldsEditForm({ match }) {
                                     <TextField
                                         required
                                         style={{ width: 265 }}
+                                        disabled={isDisabled()}
                                         defaultValue={playField.courtFloorType}
                                         id="courtFloorType"
                                         label="Court Floor Type"
@@ -550,6 +498,7 @@ export default function PlayFieldsEditForm({ match }) {
                                         style={{ width: 300 }}
                                         id="webpage"
                                         label="Webpage"
+                                        disabled={isDisabled()}
                                         defaultValue={playField.webpage}
                                         name="webpage"
                                         autoComplete="webpage"
@@ -571,15 +520,16 @@ export default function PlayFieldsEditForm({ match }) {
                                 <Grid item>
                                     <Tooltip
                                         placement="bottom"
-                                        title={rating !== null && labels[hover !== -1 ? hover : rating]}
+                                        title={rating !== null && ratingLabels[hover !== -1 ? hover : rating]}
                                     >
                                         <Rating
                                             required
                                             precision={0.5}
                                             size="large"
+                                            disabled={isDisabled()}
                                             defaultValue={playField.rating}
                                             name="playfield-rating-bar"
-                                            getLabelText={(value) => { customIcons[value].label }}
+                                            getLabelText={(value) => { customRatingIcons[value].label }}
                                             IconContainerComponent={IconContainer}
                                             onChangeActive={(event, newHover) => {
                                                 setHover(newHover || 0);
@@ -606,7 +556,7 @@ export default function PlayFieldsEditForm({ match }) {
                                         id="avatar-tennis"
                                         sizes="100px"
                                         alt="tennis-court"
-                                        src={playFieldPhoto || playField.playFieldPhoto }
+                                        src={playFieldPhoto || playField.playFieldPhoto}
                                         variant="square"
                                         className={classes.media}
                                     >
@@ -614,23 +564,27 @@ export default function PlayFieldsEditForm({ match }) {
                                     </Avatar>
                                 </Grid>
                                 <Grid item>
-                                    <input
-                                        accept="image/*"
-                                        className={classes.input}
-                                        onChange={fileToBase64}
-                                        id="contained-button-file-playfield"
-                                        multiple
-                                        type="file"
-                                    />
-                                    <label htmlFor="contained-button-file-playfield">
-                                        <Button
-                                            variant="outlined"
-                                            color="secondary"
-                                            component="span"
-                                        >
-                                            Select Photo
-                                            </Button>
-                                    </label>
+                                    {localStorage.getItem('role') !== 'null' && localStorage.getItem('role') !== 'PLAYER' ? (
+                                        <Grid>
+                                            <input
+                                                accept="image/*"
+                                                className={classes.input}
+                                                onChange={fileToBase64}
+                                                id="contained-button-file-playfield"
+                                                multiple
+                                                type="file"
+                                            />
+                                            <label htmlFor="contained-button-file-playfield">
+                                                <Button
+                                                    variant="outlined"
+                                                    color="secondary"
+                                                    component="span"
+                                                >
+                                                    Select Photo
+                                                </Button>
+                                            </label>
+                                        </Grid>
+                                    ) : ''}
                                 </Grid>
                                 <Grid item>
                                     <div>{fileName || ''}</div>
@@ -638,24 +592,28 @@ export default function PlayFieldsEditForm({ match }) {
                             </Grid>
                         </Grid>
                         <Grid container justify="center">
-                            <Button
-                                type="submit"
-                                variant="outlined"
-                                color="secondary"
-                                className={classes.buttonBox}
-                                disabled={!(validateEmail(ownerEmailAddress))}
-                            >
-                                Update
-                                </Button>
-                            <Grid className={classes.spacingBetweenRatingStars}></Grid>
-                            <Button
-                                variant="contained"
-                                color="secondary"
-                                className={classes.buttonBox}
-                                onClick={triggerDeleteAction}
-                            >
-                                Delete
-                            </Button>
+                            { localStorage.getItem('role') !== 'null' && localStorage.getItem('role') !== 'PLAYER' ? (
+                                <Grid container alignItems="center" justify="center">
+                                    <Button
+                                        type="submit"
+                                        variant="outlined"
+                                        color="secondary"
+                                        className={classes.buttonBox}
+                                        disabled={!(validateEmail(ownerEmailAddress))}
+                                    >
+                                        Update
+                                    </Button>
+                                    <Grid className={classes.spacingBetweenRatingStars}></Grid>
+                                    <Button
+                                        variant="contained"
+                                        color="secondary"
+                                        className={classes.buttonBox}
+                                        onClick={triggerDeleteAction}
+                                    >
+                                        Delete
+                                    </Button>
+                                </Grid>
+                            ) : ''}
                         </Grid>
                     </form>
                 </Grid>

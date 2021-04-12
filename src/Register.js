@@ -39,8 +39,7 @@ import { useAuthToken } from './hooks/useAuthToken';
 import filterNotEnteredEntries from '../utils/filterNotEnteredEntries';
 import validateEmail from '../utils/validateEmail';
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
+import MenuProps from '../utils/props/MenuProps';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -77,15 +76,6 @@ const useStyles = makeStyles((theme) => ({
         },
     },
 }));
-
-const MenuProps = {
-    PaperProps: {
-        style: {
-            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-            width: 250,
-        },
-    },
-};
 
 const genderSelection = [
     'Male',

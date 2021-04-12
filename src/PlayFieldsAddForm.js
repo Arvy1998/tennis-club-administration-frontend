@@ -13,28 +13,18 @@ import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Tooltip from '@material-ui/core/Tooltip';
-import Paper from '@material-ui/core/Paper';
 
 import AlternateEmail from '@material-ui/icons/AlternateEmail';
-import VpnKey from '@material-ui/icons/VpnKey';
 import TextFieldsIcon from '@material-ui/icons/TextFields';
-import WcIcon from '@material-ui/icons/Wc';
 import PhoneIcon from '@material-ui/icons/Phone';
 import HomeIcon from '@material-ui/icons/Home';
 import StreetviewIcon from '@material-ui/icons/Streetview';
-import EjectIcon from '@material-ui/icons/Eject';
 import EuroSymbolIcon from '@material-ui/icons/EuroSymbol';
 import BorderHorizontalIcon from '@material-ui/icons/BorderHorizontal';
 import InfoIcon from '@material-ui/icons/Info';
 import StarIcon from '@material-ui/icons/Star';
 import LanguageIcon from '@material-ui/icons/Language';
 import PhotoIcon from '@material-ui/icons/Photo';
-
-import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied';
-import SentimentDissatisfiedIcon from '@material-ui/icons/SentimentDissatisfied';
-import SentimentSatisfiedIcon from '@material-ui/icons/SentimentSatisfied';
-import SentimentSatisfiedAltIcon from '@material-ui/icons/SentimentSatisfiedAltOutlined';
-import SentimentVerySatisfiedIcon from '@material-ui/icons/SentimentVerySatisfied';
 
 import Typography from '@material-ui/core/Typography';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -49,6 +39,9 @@ import Navigation from './Navigation';
 
 import filterNotEnteredEntries from '../utils/filterNotEnteredEntries';
 import validateEmail from '../utils/validateEmail';
+
+import customRatingIcons from '../utils/customRatingIcons';
+import ratingLabels from '../utils/ratingLabels';
 
 import { useMutation } from "@apollo/react-hooks";
 import {
@@ -135,66 +128,9 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const customIcons = {
-    '0.5': {
-        icon: <SentimentVeryDissatisfiedIcon />,
-        label: 'Very Dissatisfied',
-    },
-    1: {
-        icon: <SentimentVeryDissatisfiedIcon />,
-        label: 'Very Dissatisfied',
-    },
-    '1.5': {
-        icon: <SentimentDissatisfiedIcon />,
-        label: 'Dissatisfied',
-    },
-    2: {
-        icon: <SentimentDissatisfiedIcon />,
-        label: 'Dissatisfied',
-    },
-    '2.5': {
-        icon: <SentimentSatisfiedIcon />,
-        label: 'Neutral',
-    },
-    3: {
-        icon: <SentimentSatisfiedIcon />,
-        label: 'Neutral',
-    },
-    '3.5': {
-        icon: <SentimentSatisfiedAltIcon />,
-        label: 'Satisfied',
-    },
-    4: {
-        icon: <SentimentSatisfiedAltIcon />,
-        label: 'Satisfied',
-    },
-    '4.5': {
-        icon: <SentimentVerySatisfiedIcon />,
-        label: 'Very Satisfied',
-    },
-    5: {
-        icon: <SentimentVerySatisfiedIcon />,
-        label: 'Very Satisfied',
-    },
-};
-
-const labels = {
-    0: 'Not Selected',
-    0.5: 'Useless',
-    1: 'Useless+',
-    1.5: 'Poor',
-    2: 'Poor+',
-    2.5: 'Ok',
-    3: 'Ok+',
-    3.5: 'Good',
-    4: 'Good+',
-    4.5: 'Excellent',
-    5: 'Excellent+',
-};
-
 function IconContainer(props) {
     const { value, ...other } = props;
-    return <span {...other}>{customIcons[value].icon}</span>;
+    return <span {...other}>{customRatingIcons[value].icon}</span>;
 }
 
 export default function PlayFieldsAddForm() {
@@ -205,7 +141,7 @@ export default function PlayFieldsAddForm() {
     const [isLoading, setIsLoading] = useState(null);
     const [isError, setIsError] = useState(null);
 
-    const [hover, setHover] = React.useState(-1);
+    const [hover, setHover] = useState(-1);
 
     const [addPlayField, { data: createPlayField }] = useMutation(CREATE_PLAYFIELD);
 
@@ -392,7 +328,7 @@ export default function PlayFieldsAddForm() {
                                 <Grid item>
                                     <Tooltip
                                         placement="right"
-                                        title="Approximate reservation cost per hour."
+                                        title="Approximate reservation cost per hour in euros."
                                     >
                                         <InfoIcon />
                                     </Tooltip>
@@ -491,14 +427,14 @@ export default function PlayFieldsAddForm() {
                                 <Grid item>
                                     <Tooltip
                                         placement="bottom"
-                                        title={rating !== null && labels[hover !== -1 ? hover : rating]}
+                                        title={rating !== null && ratingLabels[hover !== -1 ? hover : rating]}
                                     >
                                         <Rating
                                             required
                                             precision={0.5}
                                             size="large"
                                             name="playfield-rating-bar"
-                                            getLabelText={(value) => { customIcons[value].label }}
+                                            getLabelText={(value) => { customRatingIcons[value].label }}
                                             IconContainerComponent={IconContainer}
                                             onChangeActive={(event, newHover) => {
                                                 setHover(newHover || 0);
