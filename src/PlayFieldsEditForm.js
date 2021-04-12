@@ -48,6 +48,7 @@ import Rating from '@material-ui/lab/Rating';
 import Navigation from './Navigation';
 
 import filterNotEnteredEntries from '../utils/filterNotEnteredEntries';
+import validateEmail from '../utils/validateEmail';
 
 import { useMutation, useQuery } from "@apollo/react-hooks";
 
@@ -251,6 +252,8 @@ export default function PlayFieldsEditForm({ match }) {
         if (data) {
             setLoadedPlayfieldData(data);
             setIsLoading(false);
+
+            setOwnerEmailAddress(data.getPlayField.ownerEmailAddress)
         }
     }, [loading, error, data]);
 
@@ -343,6 +346,8 @@ export default function PlayFieldsEditForm({ match }) {
         );
     }
 
+    console.log({bb: ownerEmailAddress})
+
     return (
         <div className={classes.root}>
             <Navigation />
@@ -423,6 +428,8 @@ export default function PlayFieldsEditForm({ match }) {
                                         label="Owner's Email Address"
                                         name="ownerEmailAddress"
                                         autoComplete="ownerEmailAddress"
+                                        error={ownerEmailAddress ? !validateEmail(ownerEmailAddress) : false}
+                                        helperText={ownerEmailAddress && !validateEmail(ownerEmailAddress) ? 'Invalid email address' : null}
                                         onInput={e => setOwnerEmailAddress(e.target.value)}
                                     />
                                 </Grid>
@@ -636,6 +643,7 @@ export default function PlayFieldsEditForm({ match }) {
                                 variant="outlined"
                                 color="secondary"
                                 className={classes.buttonBox}
+                                disabled={!(validateEmail(ownerEmailAddress))}
                             >
                                 Update
                                 </Button>

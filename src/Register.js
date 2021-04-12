@@ -35,7 +35,9 @@ import {
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 
 import { useAuthToken } from './hooks/useAuthToken';
+
 import filterNotEnteredEntries from '../utils/filterNotEnteredEntries';
+import validateEmail from '../utils/validateEmail';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -307,6 +309,8 @@ const Register = () => {
                                     id="email"
                                     label="Email Address"
                                     name="email"
+                                    error={email ? !validateEmail(email) : false}
+                                    helperText={email && !validateEmail(email) ? 'Invalid email address' : null}
                                     autoComplete="email"
                                     onInput={e => setEmail(e.target.value)}
                                 />
@@ -336,6 +340,7 @@ const Register = () => {
                             variant="outlined"
                             color="secondary"
                             className={classes.buttonBox}
+                            disabled={!validateEmail(email)}
                         >
                             Register
                     </Button>

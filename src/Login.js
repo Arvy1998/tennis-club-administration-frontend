@@ -27,7 +27,9 @@ import {
 } from './gql/mutations/mutations';
 
 import { useAuthToken } from './hooks/useAuthToken';
+
 import filterNotEnteredEntries from '../utils/filterNotEnteredEntries';
+import validateEmail from '../utils/validateEmail';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -134,7 +136,7 @@ const Login = () => {
                 <Typography component="h1" variant="h5" className={classes.welcomeText}>
                     Welcome back! Please login to your account.
                 </Typography>
-                <form className={classes.form} onSubmit={handleSubmit}>
+                <form className={classes.form} onSubmit={handleSubmit} >
                     <Grid container spacing={1} alignItems="flex-end" justify="center">
                         <Grid item>
                             <AlternateEmail />
@@ -146,6 +148,8 @@ const Login = () => {
                                 id="email"
                                 label="Email Address"
                                 name="email"
+                                error={email ? !validateEmail(email) : false}
+                                helperText={email && !validateEmail(email) ? 'Invalid email address' : null}
                                 autoComplete="email"
                                 onInput={e => setEmail(e.target.value)}
                             />
@@ -186,6 +190,7 @@ const Login = () => {
                             variant="outlined"
                             color="secondary"
                             className={classes.buttonBox}
+                            disabled={!validateEmail(email)}
                         >
                             Sign In
                     </Button>
