@@ -40,6 +40,7 @@ import validateGameFields from '../utils/validateGameFields'
 import Navigation from './Navigation';
 
 import filterNotEnteredEntries from '../utils/filterNotEnteredEntries';
+import isEmpty from '../utils/isEmpty';
 
 import MenuProps from '../utils/props/MenuProps';
 import getDropdownStyles from '../utils/props/getDropdownStyles';
@@ -214,20 +215,15 @@ export default function GamesAddForm() {
 
     let users = loadedUsersData;
 
-    console.log({ users });
-
     function handleFirstTeamFirstPlayerSelect(event) {
         setFirstTeamFirstPlayerId(event.target.value);
     }
-
     function handleFirstTeamSecondPlayerSelect(event) {
         setFirstTeamSecondPlayerId(event.target.value);
     }
-
     function handleSecondTeamFirstPlayerSelect(event) {
         setSecondTeamFirstPlayerId(event.target.value);
     }
-
     function handleSecondTeamSecondPlayerSelect(event) {
         setSecondTeamSecondPlayerId(event.target.value);
     }
@@ -287,6 +283,8 @@ export default function GamesAddForm() {
                                             onChange={handleFirstTeamFirstPlayerSelect}
                                             input={<Input />}
                                             MenuProps={MenuProps}
+                                            // error={isEmpty(firstTeamFirstPlayerId)}
+                                            // helperText={isEmpty(secondTeamFirstPlayerId) ? 'Cannot be empty' : null}
                                         >
                                             {users.map((user) => (
                                                 <MenuItem key={user.id} value={user.id} style={
@@ -308,7 +306,7 @@ export default function GamesAddForm() {
                                             labelId="firstTeamSecondPlayer"
                                             id="firstTeamSecondPlayer-id"
                                             defaultValue={'Not Selected'}
-                                            style={{ width: 300 }}
+                                            style={{ width: 265 }}
                                             onChange={handleFirstTeamSecondPlayerSelect}
                                             input={<Input />}
                                             MenuProps={MenuProps}
@@ -322,6 +320,14 @@ export default function GamesAddForm() {
                                             ))}
                                         </Select>
                                     </FormControl>
+                                </Grid>
+                                <Grid item>
+                                    <Tooltip
+                                        placement="right"
+                                        title="If only two players are playing, it is not required to enter second played of the team."
+                                    >
+                                        <InfoIcon />
+                                    </Tooltip>
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -352,6 +358,8 @@ export default function GamesAddForm() {
                                             onChange={handleSecondTeamFirstPlayerSelect}
                                             input={<Input />}
                                             MenuProps={MenuProps}
+                                            // error={isEmpty(secondTeamFirstPlayerId)}
+                                            // helperText={isEmpty(secondTeamFirstPlayerId) ? 'Cannot be empty' : null}
                                         >
                                             {users.map((user) => (
                                                 <MenuItem key={user.id} value={user.id} style={
@@ -373,7 +381,7 @@ export default function GamesAddForm() {
                                             labelId="secondTeamSecondPlayer"
                                             id="secondTeamSecondPlayer-id"
                                             defaultValue={'Not Selected'}
-                                            style={{ width: 300 }}
+                                            style={{ width: 265 }}
                                             onChange={handleSecondTeamSecondPlayerSelect}
                                             input={<Input />}
                                             MenuProps={MenuProps}
@@ -387,6 +395,14 @@ export default function GamesAddForm() {
                                             ))}
                                         </Select>
                                     </FormControl>
+                                </Grid>
+                                <Grid item>
+                                    <Tooltip
+                                        placement="right"
+                                        title="If only two players are playing, it is not required to enter second played of the team."
+                                    >
+                                        <InfoIcon />
+                                    </Tooltip>
                                 </Grid>
                             </Grid>
                         </Grid>
