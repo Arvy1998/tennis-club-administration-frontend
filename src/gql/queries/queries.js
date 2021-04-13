@@ -15,6 +15,44 @@ const GET_USER = gql`
             city
             role
             userProfilePhoto
+            games {
+                id
+                date
+                firstTeamFirstPlayer {
+                    id
+                    firstName
+                    lastName
+                }
+                firstTeamSecondPlayer {
+                    id
+                    firstName
+                    lastName
+                }
+                secondTeamFirstPlayer {
+                    id
+                    firstName
+                    lastName
+                }
+                secondTeamSecondPlayer {
+                    id
+                    firstName
+                    lastName
+                }
+                matches {
+                    firstTeamScore
+                    secondTeamScore
+                }
+            }
+        }
+    }
+`;
+
+const ALL_USERS = gql`
+    query allUsers {
+        allUsers {
+            id
+            firstName
+            lastName
         }
     }
 `;
@@ -40,7 +78,7 @@ const GET_PLAYFIELDS = gql`
             updatedAt
         }
     }
-`
+`;
 
 const GET_PLAYFIELD = gql`
     query getPlayField($id: ID!) {
@@ -63,10 +101,79 @@ const GET_PLAYFIELD = gql`
             updatedAt
         }
     }
-`
+`;
+
+const LIST_GAMES = gql`
+    query listGames {
+        listGames {
+            id
+            date
+            firstTeamFirstPlayer {
+                id
+                firstName
+                lastName
+            }
+            firstTeamSecondPlayer {
+                id
+                firstName
+                lastName
+            }
+            secondTeamFirstPlayer {
+                id
+                firstName
+                lastName
+            }
+            secondTeamSecondPlayer {
+                id
+                firstName
+                lastName
+            }
+            matches {
+                firstTeamScore
+                secondTeamScore
+            }
+        }
+    }
+`;
+
+const GET_GAME = gql`
+    query getGame($id: ID!) {
+        getGame(id: $id) {
+            id
+            date
+            firstTeamFirstPlayer {
+                id
+                firstName
+                lastName
+            }
+            firstTeamSecondPlayer {
+                id
+                firstName
+                lastName
+            }
+            secondTeamFirstPlayer {
+                id
+                firstName
+                lastName
+            }
+            secondTeamSecondPlayer {
+                id
+                firstName
+                lastName
+            }
+            matches {
+                firstTeamScore
+                secondTeamScore
+            }
+        }
+    }
+`;
 
 export {
     GET_USER,
+    ALL_USERS,
     GET_PLAYFIELDS,
     GET_PLAYFIELD,
+    LIST_GAMES,
+    GET_GAME,
 }

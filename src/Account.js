@@ -46,6 +46,8 @@ import {
 import levelSelection from '../utils/levelSelection';
 import levelSelectionMap from '../utils/levelSelectionMap';
 
+import getDropdownStyles from '../utils/props/getDropdownStyles';
+
 import MenuProps from '../utils/props/MenuProps';
 
 const useStyles = makeStyles((theme) => ({
@@ -195,24 +197,6 @@ export default function Account() {
     function handleLevelSelect(event) {
         setSelectedLevel(levelSelectionMap[event.target.value] || null);
     };
-
-    function getStyles(gender, selectedGender, theme) {
-        return {
-            fontWeight:
-                selectedGender.indexOf(gender) === -1
-                    ? theme.typography.fontWeightRegular
-                    : theme.typography.fontWeightMedium,
-        };
-    }
-
-    function getLevelSelectionStyles(level, selectedLevel, theme) {
-        return {
-            fontWeight:
-                selectedLevel.indexOf(level) === -1
-                    ? theme.typography.fontWeightRegular
-                    : theme.typography.fontWeightMedium,
-        };
-    }
 
     function handleInformationSubmit(event) {
         event.preventDefault();
@@ -372,7 +356,7 @@ export default function Account() {
                                         >
                                             {genderSelection.map((gender) => (
                                                 <MenuItem key={gender} value={gender} style={
-                                                    getStyles(gender, selectedGender, theme)
+                                                    getDropdownStyles(gender, selectedGender, theme)
                                                 }>
                                                     {gender}
                                                 </MenuItem>
@@ -450,7 +434,7 @@ export default function Account() {
                                             >
                                                 {Object.keys(levelSelection).map((key) => (
                                                     <MenuItem key={key} value={key} style={
-                                                        getLevelSelectionStyles(key, selectedLevel, theme)
+                                                        getDropdownStyles(key, selectedLevel, theme)
                                                     }>
                                                         {key}
                                                     </MenuItem>

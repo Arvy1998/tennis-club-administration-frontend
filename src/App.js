@@ -8,6 +8,9 @@ import PlayFields from './PlayFields';
 import PlayFieldsAddForm from './PlayFieldsAddForm';
 import PlayFieldsEditForm from './PlayFieldsEditForm';
 import Reservations from './Reservations';
+import Games from './Games';
+import GamesAddForm from './GamesAddForm';
+import GamesEditForm from './GamesEditForm';
 
 import {
     BrowserRouter as Router,
@@ -29,6 +32,9 @@ const App = () => {
                         <Route path="/login" component={Login} />
                         <Route path="/home" component={Home} />
                         <Route path="/account" component={Account} />
+                        <Route path="/games/edit/:id" component={GamesEditForm} />
+                        <Route path="/games/add" component={GamesAddForm} />
+                        <Route path="/games" component={Games} />
                         <Route path="/reservations" component={Reservations} />
                         <Route path="/playfields/edit/:id" component={PlayFieldsEditForm} />
                         <Route path="/playfields/add" component={PlayFieldsAddForm} />

@@ -57,41 +57,12 @@ import ratingLabels from '../utils/ratingLabels';
 import areFiltersSelected from '../utils/areFiltersSelected';
 
 import MenuProps from '../utils/props/MenuProps';
+import getDropdownStyles from '../utils/props/getDropdownStyles';
+import getModalStyle from '../utils/props/getModalStyle';
 
-function descendingComparator(curr, next, orderBy) {
-    if (next[orderBy] < curr[orderBy]) {
-        return -1;
-    }
-    if (next[orderBy] > curr[orderBy]) {
-        return 1;
-    }
-    return 0;
-}
-
-function getComparator(order, orderBy) {
-    return order === 'desc'
-        ? (curr, next) => descendingComparator(curr, next, orderBy)
-        : (curr, next) => -descendingComparator(curr, next, orderBy);
-}
-
-function stableSort(array, comparator) {
-    const stabilizedThis = array.map((element, index) => [element, index]);
-    stabilizedThis.sort((next, curr) => {
-        const order = comparator(next[0], curr[0]);
-        if (order !== 0) return order;
-        return next[1] - curr[1];
-    });
-    return stabilizedThis.map((element) => element[0]);
-}
-
-function getModalStyle() {
-    const bottom = 30;
-
-    return {
-        bottom: `${bottom}%`,
-        margin: 'auto',
-    };
-}
+import stableSort from '../utils/comparators/stableSort';
+import getComparator from '../utils/comparators/getComparator';
+import playFieldsHeadCells from '../utils/cells/playFieldsHeadCells';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -153,17 +124,10 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'center',
         margin: theme.spacing(3, 0, 2),
     },
+    spacingBetweenPagination: {
+        padding: theme.spacing(1.5),
+    }
 }));
-
-const headCells = [
-    { id: 'title', disablePadding: true, label: 'Title' },
-    { id: 'city', disablePadding: false, label: 'City' },
-    { id: 'cost', disablePadding: false, label: 'Cost' },
-    { id: 'courtType', disablePadding: false, label: 'Court Type' },
-    { id: 'courtFloorType', disablePadding: false, label: 'Floor Type' },
-    { id: 'rating', disablePadding: false, label: 'Rating' },
-    { id: 'playFieldPhoto', dissablePadding: false, label: 'Photo' },
-];
 
 function IconContainer(props) {
     const { value, ...other } = props;
@@ -179,7 +143,7 @@ function EnhancedTableHead(props) {
     return (
         <TableHead>
             <TableRow>
-                {headCells.map((headCell) => (
+                {playFieldsHeadCells.map((headCell) => (
                     <TableCell
                         key={headCell.id}
                         padding={headCell.disablePadding ? 'none' : 'default'}
@@ -381,15 +345,6 @@ export default function PlayFields() {
         );
     }
 
-    function getStyles(element, selectedElement, theme) {
-        return {
-            fontWeight:
-                selectedElement.indexOf(element) === -1
-                    ? theme.typography.fontWeightRegular
-                    : theme.typography.fontWeightMedium,
-        };
-    };
-
     const body = (
         <div style={modalStyle} className={classes.paper}>
             <Typography className={classes.title}>
@@ -431,7 +386,7 @@ export default function PlayFields() {
                                 >
                                     {availableCities.map((cityToSelect) => (
                                         <MenuItem key={cityToSelect} value={cityToSelect} style={
-                                            getStyles(cityToSelect, city, theme)
+                                            getDropdownStyles(cityToSelect, city, theme)
                                         }>
                                             {cityToSelect}
                                         </MenuItem>
@@ -484,7 +439,7 @@ export default function PlayFields() {
                                 >
                                     {availableCourtTypes.map((courtTypeToSelect) => (
                                         <MenuItem key={courtTypeToSelect} value={courtTypeToSelect} style={
-                                            getStyles(courtTypeToSelect, courtType, theme)
+                                            getDropdownStyles(courtTypeToSelect, courtType, theme)
                                         }>
                                             {courtTypeToSelect}
                                         </MenuItem>
@@ -512,7 +467,7 @@ export default function PlayFields() {
                                 >
                                     {availableCourtFloorTypes.map((courtFloorTypeToSelect) => (
                                         <MenuItem key={courtFloorTypeToSelect} value={courtFloorTypeToSelect} style={
-                                            getStyles(courtFloorTypeToSelect, courtFloorType, theme)
+                                            getDropdownStyles(courtFloorTypeToSelect, courtFloorType, theme)
                                         }>
                                             {courtFloorTypeToSelect}
                                         </MenuItem>
@@ -701,7 +656,7 @@ export default function PlayFields() {
                         </Table>
                     </TableContainer>
                 </Grid>
-                <Grid className={classes.spacingBetweenFields}></Grid>
+                <Grid className={classes.spacingBetweenPagination}></Grid>
                 <Grid container spacing={3} alignItems="center" justify="space-between">
                     <TablePagination
                         rowsPerPageOptions={[5, 10, 15, 20, 25, 50, 100]}

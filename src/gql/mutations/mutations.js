@@ -97,6 +97,72 @@ const DELETE_PLAYFIELD = gql`
     }
 `;
 
+const CREATE_GAME = gql`
+    mutation createGame($gameInput: GameInput!) {
+        createGame(gameInput: $gameInput) {
+            id
+            date
+            firstTeamFirstPlayer {
+                id
+                firstName
+                lastName
+            }
+            firstTeamSecondPlayer {
+                id
+                firstName
+                lastName
+            }
+            secondTeamFirstPlayer {
+                id
+                firstName
+                lastName
+            }
+            secondTeamSecondPlayer {
+                id
+                firstName
+                lastName
+            }
+            matches {
+                firstTeamScore
+                secondTeamScore
+            }
+        }
+    }
+`;
+
+const UPDATE_GAME = gql`
+    mutation updateGame($id: ID!, $gameInput: GameInput!) {
+        updateGame(id: $id, gameInput: $gameInput) {
+            id
+            date
+            firstTeamFirstPlayer {
+                id
+                firstName
+                lastName
+            }
+            firstTeamSecondPlayer {
+                id
+                firstName
+                lastName
+            }
+            secondTeamFirstPlayer {
+                id
+                firstName
+                lastName
+            }
+            secondTeamSecondPlayer {
+                id
+                firstName
+                lastName
+            }
+            matches {
+                firstTeamScore
+                secondTeamScore
+            }
+        }
+    }
+`;
+
 export {
     LOGIN_USER,
     UPDATE_USER,
@@ -104,4 +170,6 @@ export {
     CREATE_PLAYFIELD,
     UPDATE_PLAYFIELD,
     DELETE_PLAYFIELD,
+    CREATE_GAME,
+    UPDATE_GAME,
 }

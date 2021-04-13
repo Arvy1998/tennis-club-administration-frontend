@@ -40,6 +40,7 @@ import filterNotEnteredEntries from '../utils/filterNotEnteredEntries';
 import validateEmail from '../utils/validateEmail';
 
 import MenuProps from '../utils/props/MenuProps';
+import getDropdownStyles from '../utils/props/getDropdownStyles';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -127,15 +128,6 @@ const Register = () => {
 
     function handleRoleSelect(event) {
         setSelectedRole(event.target.value.toUpperCase());
-    }
-
-    function getStyles(gender, selectedGender, theme) {
-        return {
-            fontWeight:
-                selectedGender.indexOf(gender) === -1
-                    ? theme.typography.fontWeightRegular
-                    : theme.typography.fontWeightMedium,
-        };
     }
 
     function handleSubmit(event) {
@@ -237,7 +229,7 @@ const Register = () => {
                                     >
                                         {genderSelection.map((gender) => (
                                             <MenuItem key={gender} value={gender} style={
-                                                getStyles(gender, selectedGender, theme)
+                                                getDropdownStyles(gender, selectedGender, theme)
                                             }>
                                                 {gender}
                                             </MenuItem>
@@ -279,7 +271,7 @@ const Register = () => {
                                     >
                                         {roleSelection.map((role) => (
                                             <MenuItem key={role} value={role} style={
-                                                getStyles(role, selectedRole, theme)
+                                                getDropdownStyles(role, selectedRole, theme)
                                             }>
                                                 {role}
                                             </MenuItem>
