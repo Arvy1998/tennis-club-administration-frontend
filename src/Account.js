@@ -23,6 +23,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import StreetviewIcon from '@material-ui/icons/Streetview';
 import EjectIcon from '@material-ui/icons/Eject';
 import InfoIcon from '@material-ui/icons/Info';
+import PanToolIcon from '@material-ui/icons/PanTool';
 
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
@@ -124,6 +125,12 @@ const genderSelection = [
     'Not Selected',
 ];
 
+const handSelection = [
+    'Left',
+    'Right',
+    'Not Selected',
+];
+
 const genderMap = {
     'MALE': 'Male',
     'FEMALE': 'Female',
@@ -150,6 +157,9 @@ export default function Account() {
     const [city, setCity] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [newEmail, setNewEmail] = useState('');
+    const [mainHand, setMainHand] = useState('');
+    const [details, setDetails] = useState('');
+
     const [selectedLevel, setSelectedLevel] = useState('');
     const [userProfilePhoto, setUserProfilePhoto] = useState('');
     const [fileName, setFileName] = useState('');
@@ -198,6 +208,10 @@ export default function Account() {
         setSelectedLevel(levelSelectionMap[event.target.value] || null);
     };
 
+    function handleHandSelect(event) {
+        setMainHand(event.target.value);
+    }
+
     function handleInformationSubmit(event) {
         event.preventDefault();
 
@@ -219,6 +233,8 @@ export default function Account() {
                     password,
                     newPassword,
                     newEmail,
+                    details,
+                    mainHand,
                     userProfilePhoto,
                 }),
             },
@@ -450,6 +466,48 @@ export default function Account() {
                                     >
                                         <InfoIcon />
                                     </Tooltip>
+                                </Grid>
+                            </Grid>
+                            <Grid container spacing={1} alignItems="flex-end" justify="center">
+                                <Grid item>
+                                    <PanToolIcon />
+                                </Grid>
+                                <Grid item>
+                                    <FormControl className={classes.formControl}>
+                                        <InputLabel id="handSelect">Gender</InputLabel>
+                                        <Select
+                                            labelId="handSelect"
+                                            id="handSelect-id"
+                                            defaultValue={user.mainHand || 'Not Selected'}
+                                            style={{ width: 300 }}
+                                            onChange={handleHandSelect}
+                                            input={<Input />}
+                                            MenuProps={MenuProps}
+                                        >
+                                            {handSelection.map((hand) => (
+                                                <MenuItem key={hand} value={hand} style={
+                                                    getDropdownStyles(hand, mainHand, theme)
+                                                }>
+                                                    {hand}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                            </Grid>
+                            <Grid container spacing={1} alignItems="flex-end" justify="center">
+                                <Grid item>
+                                    <InfoIcon />
+                                </Grid>
+                                <Grid item>
+                                    <TextField
+                                        style={{ width: 300 }}
+                                        id="details"
+                                        label="Tell more about yourself"
+                                        name="details"
+                                        defaultValue={user.details}
+                                        onInput={e => setDetails(e.target.value)}
+                                    />
                                 </Grid>
                             </Grid>
                             <Grid container justify="center">

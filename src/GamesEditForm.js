@@ -316,7 +316,7 @@ export default function GamesEditForm({ match }) {
                             variant="h5"
                             className={classes.contactInformationText}
                         >
-                           Game View
+                           Game Details
                         </Typography>
                     </Grid>
                     <form className={classes.form} onSubmit={handleGameSubmit}>

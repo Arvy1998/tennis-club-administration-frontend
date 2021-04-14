@@ -15,6 +15,8 @@ const GET_USER = gql`
             city
             role
             userProfilePhoto
+            mainHand
+            details
             games {
                 id
                 date
@@ -43,6 +45,27 @@ const GET_USER = gql`
                     secondTeamScore
                 }
             }
+        }
+    }
+`;
+
+const GET_PLAYERS = gql`
+    query getPlayers {
+        getPlayers {
+            id
+            firstName
+            lastName
+            city
+            address
+            sex
+            level
+            phoneNumber
+            email
+            city
+            role
+            userProfilePhoto
+            mainHand
+            details
         }
     }
 `;
@@ -176,4 +199,5 @@ export {
     GET_PLAYFIELD,
     LIST_GAMES,
     GET_GAME,
+    GET_PLAYERS,
 }
