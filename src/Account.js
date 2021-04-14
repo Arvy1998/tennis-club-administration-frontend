@@ -505,6 +505,7 @@ export default function Account() {
                                         id="details"
                                         label="Tell more about yourself"
                                         name="details"
+                                        multiline
                                         defaultValue={user.details}
                                         onInput={e => setDetails(e.target.value)}
                                     />
