@@ -44,6 +44,7 @@ import Navigation from './Navigation';
 import filterNotEnteredEntries from '../utils/filterNotEnteredEntries';
 import validateEmail from '../utils/validateEmail';
 import isDisabled from '../utils/isDisabled';
+import isNotPlayer from '../utils/isNotPlayer';
 
 import customRatingIcons from '../utils/customRatingIcons';
 import ratingLabels from '../utils/ratingLabels';
@@ -562,7 +563,7 @@ export default function PlayFieldsEditForm({ match }) {
                                     </Avatar>
                                 </Grid>
                                 <Grid item>
-                                    {localStorage.getItem('role') !== 'null' && localStorage.getItem('role') !== 'PLAYER' ? (
+                                    {isNotPlayer() ? (
                                         <Grid>
                                             <input
                                                 accept="image/*"
@@ -599,10 +600,10 @@ export default function PlayFieldsEditForm({ match }) {
                                 >
                                     Make Reservation
                                     </Button>
-                                {localStorage.getItem('role') !== 'null' && localStorage.getItem('role') !== 'PLAYER' ? (
+                                {isNotPlayer() ? (
                                     <Grid className={classes.spacingBetweenRatingStars}></Grid>
                                 ) : ''}
-                                {localStorage.getItem('role') !== 'null' && localStorage.getItem('role') !== 'PLAYER' ? (
+                                {isNotPlayer() ? (
                                     <Button
                                         type="submit"
                                         variant="outlined"
@@ -614,7 +615,7 @@ export default function PlayFieldsEditForm({ match }) {
                                     </Button>
                                 ) : ''}
                                 <Grid className={classes.spacingBetweenRatingStars}></Grid>
-                                {localStorage.getItem('role') !== 'null' && localStorage.getItem('role') !== 'PLAYER' ? (
+                                {isNotPlayer() ? (
                                     <Button
                                         variant="contained"
                                         color="secondary"

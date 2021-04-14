@@ -63,6 +63,7 @@ import getModalStyle from '../utils/props/getModalStyle';
 import stableSort from '../utils/comparators/stableSort';
 import getComparator from '../utils/comparators/getComparator';
 import playFieldsHeadCells from '../utils/cells/playFieldsHeadCells';
+import isNotPlayer from '../utils/isNotPlayer';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -553,7 +554,7 @@ export default function PlayFields() {
             <Container className={classes.listContainer}>
                 <Grid container spacing={3} alignItems="center" justify="space-between">
                     {
-                        localStorage.getItem('role') !== 'null' && localStorage.getItem('role') !== 'PLAYER' ? (
+                        isNotPlayer() ? (
                             <Button
                                 variant="outlined"
                                 color="secondary"

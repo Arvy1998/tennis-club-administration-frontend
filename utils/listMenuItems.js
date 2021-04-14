@@ -21,6 +21,8 @@ import GroupIcon from '@material-ui/icons/Group';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import AccessibilityNewIcon from '@material-ui/icons/AccessibilityNew';
 
+import isNotPlayer from './isNotPlayer';
+
 export const mainListItems = (
     <div>
         <ListItem button component={Link} to="/home">
@@ -66,7 +68,7 @@ export const mainListItems = (
             <ListItemText primary="Players Search" />
         </ListItem>
         {
-            localStorage.getItem('role') !== 'null' && localStorage.getItem('role') !== 'PLAYER' ? (
+            isNotPlayer() ? (
                 <div>
                     <ListItem button component={Link} to="/accounts">
                         <ListItemIcon>

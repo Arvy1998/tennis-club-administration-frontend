@@ -25,6 +25,7 @@ import Navigation from './Navigation';
 
 import filterNotEnteredEntries from '../utils/filterNotEnteredEntries';
 import isDisabled from '../utils/isDisabled';
+import isNotPlayer from '../utils/isNotPlayer';
 
 import MenuProps from '../utils/props/MenuProps';
 import getDropdownStyles from '../utils/props/getDropdownStyles';
@@ -557,7 +558,7 @@ export default function GamesEditForm({ match }) {
                             />
                         </Grid>
                         <Grid container justify="center">
-                            { localStorage.getItem('role') !== 'null' && localStorage.getItem('role') !== 'PLAYER' ? (
+                            { isNotPlayer() ? (
                                 <Grid container alignItems="center" justify="center">
                                     <Button
                                         type="submit"

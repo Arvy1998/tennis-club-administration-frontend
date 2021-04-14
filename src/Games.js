@@ -33,11 +33,10 @@ import {
     LIST_GAMES,
 } from './gql/queries/queries';
 
-import getHighModalStyle from '../utils/props/getHighModalStyle';
-
 import stableSort from '../utils/comparators/stableSort';
 import getComparator from '../utils/comparators/getComparator';
 import gamesHeadCells from '../utils/cells/gamesHeadCells';
+import isNotPlayer from '../utils/isNotPlayer';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -147,7 +146,6 @@ export default function Games() {
     const history = useHistory();
 
     const [loadedGamesData, setLoadedGamesData] = useState(null);
-    const [filteredGamesData, setFilteredGamesData] = useState(null);
     const [isLoading, setIsLoading] = useState(null);
     const [isError, setIsError] = useState(null);
 
@@ -156,10 +154,7 @@ export default function Games() {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
-    const [modalStyle] = useState(getHighModalStyle);
-    const [open, setOpen] = useState(false);
-
-    const { loading, error, data } = localStorage.getItem('role') !== 'null' && localStorage.getItem('role') !== 'PLAYER' ?
+    const { loading, error, data } = isNotPlayer() ?
      useQuery(LIST_GAMES) : useQuery(GET_USER, { variables: { email: localStorage.getItem('email') } });
 
     useEffect(() => {
@@ -228,7 +223,7 @@ export default function Games() {
             <Container className={classes.listContainer}>
                 <Grid container spacing={3} alignItems="center" justify="space-between">
                     {
-                        localStorage.getItem('role') !== 'null' && localStorage.getItem('role') !== 'PLAYER' ? (
+                        isNotPlayer() ? (
                             <Button
                                 variant="outlined"
                                 color="secondary"
@@ -262,7 +257,7 @@ export default function Games() {
                                 rowCount={rows.length}
                             />
                             <TableBody>
-                                {stableSort(filteredGamesData || rows, getComparator(order, orderBy))
+                                {stableSort(rows, getComparator(order, orderBy))
                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                     .map((row, index) => {
                                         return (
