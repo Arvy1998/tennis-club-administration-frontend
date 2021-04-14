@@ -163,6 +163,14 @@ const UPDATE_GAME = gql`
     }
 `;
 
+const DELETE_GAME = gql`
+    mutation deleteGame($id: ID!) {
+        deleteGame(id: $id) {
+            id
+        }
+    }
+`;
+
 export {
     LOGIN_USER,
     UPDATE_USER,
@@ -172,4 +180,5 @@ export {
     DELETE_PLAYFIELD,
     CREATE_GAME,
     UPDATE_GAME,
+    DELETE_GAME,
 }

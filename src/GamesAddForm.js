@@ -483,14 +483,6 @@ export default function GamesAddForm() {
                                 variant="outlined"
                                 color="secondary"
                                 className={classes.buttonBox}
-                                // disabled={
-                                //     !isNumber(firstScore) ||
-                                //     !isNumber(secondScore) ||
-                                //     !isNumber(thirdScore) ||
-                                //     !isNumber(fourthScore) ||
-                                //     !isNumber(fifthScore) ||
-                                //     !isNumber(sixthScore)
-                                // }
                             >
                                 Create
                                 </Button>

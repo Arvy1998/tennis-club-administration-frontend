@@ -147,7 +147,6 @@ function IconContainer(props) {
 export default function PlayFieldsEditForm({ match }) {
     const classes = useStyles();
     const history = useHistory();
-    const theme = useTheme();
 
     const [updated, setUpdated] = useState(null);
 
@@ -260,7 +259,6 @@ export default function PlayFieldsEditForm({ match }) {
         setIsLoading(false);
 
         history.push('/playfields');
-        window.location.reload(true);
     }
 
     function fileToBase64(fileUploadEvent) {
