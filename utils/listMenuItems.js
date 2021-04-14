@@ -19,6 +19,7 @@ import InfoIcon from '@material-ui/icons/Info';
 import ContactSupportIcon from '@material-ui/icons/ContactSupport';
 import GroupIcon from '@material-ui/icons/Group';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
+import AccessibilityNewIcon from '@material-ui/icons/AccessibilityNew';
 
 export const mainListItems = (
     <div>
@@ -58,6 +59,12 @@ export const mainListItems = (
             </ListItemIcon>
             <ListItemText primary="Your Account" />
         </ListItem>
+        <ListItem button component={Link} to="/players">
+            <ListItemIcon>
+                <AccessibilityNewIcon />
+            </ListItemIcon>
+            <ListItemText primary="Players Search" />
+        </ListItem>
         {
             localStorage.getItem('role') !== 'null' && localStorage.getItem('role') !== 'PLAYER' ? (
                 <div>
@@ -65,7 +72,7 @@ export const mainListItems = (
                         <ListItemIcon>
                             <SupervisorAccountIcon />
                         </ListItemIcon>
-                        <ListItemText primary="Player Accounts" />
+                        <ListItemText primary="Players Accounts" />
                     </ListItem>
                     <ListItem button component={Link} to="/club">
                         <ListItemIcon>

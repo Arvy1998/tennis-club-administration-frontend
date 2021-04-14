@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router';
 
 import _ from 'lodash';
+import moment from 'moment';
 
 import Container from '@material-ui/core/Container';
 import Table from '@material-ui/core/Table';
@@ -272,7 +273,7 @@ export default function Games() {
                                                 key={`${new Date()} ${row.date}`}
                                                 selected={false}
                                             >
-                                                <TableCell>{row.date}</TableCell>
+                                                <TableCell>{moment(row.date).format('YYYY-MM-DD HH:mm:ss')}</TableCell>
                                                 <TableCell>
                                                     {`${row.firstTeamFirstPlayer.firstName} ${row.firstTeamFirstPlayer.lastName}${row.firstTeamSecondPlayer ? ', ' : ' '}`}
                                                     {row.firstTeamSecondPlayer ? `${row.firstTeamSecondPlayer.firstName} ${row.firstTeamFirstPlayer.lastName}` : ''}
