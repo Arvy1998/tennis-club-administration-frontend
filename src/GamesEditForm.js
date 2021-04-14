@@ -24,6 +24,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import Navigation from './Navigation';
 
 import filterNotEnteredEntries from '../utils/filterNotEnteredEntries';
+import isDisabled from '../utils/isDisabled';
 
 import MenuProps from '../utils/props/MenuProps';
 import getDropdownStyles from '../utils/props/getDropdownStyles';
@@ -346,6 +347,7 @@ export default function GamesEditForm({ match }) {
                                             onChange={handleFirstTeamFirstPlayerSelect}
                                             input={<Input />}
                                             MenuProps={MenuProps}
+                                            disabled={isDisabled()}
                                         // error={isEmpty(firstTeamFirstPlayerId)}
                                         // helperText={isEmpty(secondTeamFirstPlayerId) ? 'Cannot be empty' : null}
                                         >
@@ -373,6 +375,7 @@ export default function GamesEditForm({ match }) {
                                             onChange={handleFirstTeamSecondPlayerSelect}
                                             input={<Input />}
                                             MenuProps={MenuProps}
+                                            disabled={isDisabled()}
                                         >
                                             {users.map((user) => (
                                                 <MenuItem key={user.id} value={user.id} style={
@@ -421,6 +424,7 @@ export default function GamesEditForm({ match }) {
                                             onChange={handleSecondTeamFirstPlayerSelect}
                                             input={<Input />}
                                             MenuProps={MenuProps}
+                                            disabled={isDisabled()}
                                         // error={isEmpty(secondTeamFirstPlayerId)}
                                         // helperText={isEmpty(secondTeamFirstPlayerId) ? 'Cannot be empty' : null}
                                         >
@@ -448,6 +452,7 @@ export default function GamesEditForm({ match }) {
                                             onChange={handleSecondTeamSecondPlayerSelect}
                                             input={<Input />}
                                             MenuProps={MenuProps}
+                                            disabled={isDisabled()}
                                         >
                                             {users.map((user) => (
                                                 <MenuItem key={user.id} value={user.id} style={
@@ -494,6 +499,7 @@ export default function GamesEditForm({ match }) {
                                 name="firstScore"
                                 defaultValue={game.matches[0].firstTeamScore}
                                 onInput={e => setFirstScore(e.target.value)}
+                                disabled={isDisabled()}
                             />
                             <Grid className={classes.spacingBetween}></Grid>
                             <TextField
@@ -502,6 +508,7 @@ export default function GamesEditForm({ match }) {
                                 name="thirdScore"
                                 defaultValue={game.matches[1].firstTeamScore}
                                 onInput={e => setThirdScore(e.target.value)}
+                                disabled={isDisabled()}
                             />
                             <Grid className={classes.spacingBetween}></Grid>
                             <TextField
@@ -510,6 +517,7 @@ export default function GamesEditForm({ match }) {
                                 name="fifthScore"
                                 defaultValue={game.matches[2] ? game.matches[2].firstTeamScore : ''}
                                 onInput={e => setFifthScore(e.target.value)}
+                                disabled={isDisabled()}
                             />
                         </Grid>
                         <Grid container spacing={1} alignItems="flex-end" justify="center">
@@ -527,6 +535,7 @@ export default function GamesEditForm({ match }) {
                                 name="secondScore"
                                 defaultValue={game.matches[0].secondTeamScore}
                                 onInput={e => setSecondScore(e.target.value)}
+                                disabled={isDisabled()}
                             />
                             <Grid className={classes.spacingBetween}></Grid>
                             <TextField
@@ -535,6 +544,7 @@ export default function GamesEditForm({ match }) {
                                 name="fourthScore"
                                 defaultValue={game.matches[1].secondTeamScore}
                                 onInput={e => setFourthScore(e.target.value)}
+                                disabled={isDisabled()}
                             />
                             <Grid className={classes.spacingBetween}></Grid>
                             <TextField
@@ -543,6 +553,7 @@ export default function GamesEditForm({ match }) {
                                 name="sixthScore"
                                 defaultValue={game.matches[2] ? game.matches[2].secondTeamScore : ''}
                                 onInput={e => setSixthScore(e.target.value)}
+                                disabled={isDisabled()}
                             />
                         </Grid>
                         <Grid container justify="center">
