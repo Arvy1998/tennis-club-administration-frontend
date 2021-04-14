@@ -41,6 +41,8 @@ const UPDATE_USER = gql`
             city
             role
             userProfilePhoto
+            mainHand
+            details
         }
     }
 `;
