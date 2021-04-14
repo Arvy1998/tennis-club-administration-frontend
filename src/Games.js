@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
 import { useHistory } from 'react-router';
 
@@ -18,19 +18,13 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Button from '@material-ui/core/Button';
 
 import Navigation from './Navigation';
-import Modal from '@material-ui/core/Modal';
 
 import clsx from 'clsx';
 
 import Grid from '@material-ui/core/Grid';
 
 import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import FilterListIcon from '@material-ui/icons/FilterList';
-
-import { Typography } from '@material-ui/core';
 
 import { useQuery } from "@apollo/react-hooks";
 import {
@@ -167,9 +161,6 @@ export default function Games() {
     const { loading, error, data } = localStorage.getItem('role') !== 'null' && localStorage.getItem('role') !== 'PLAYER' ?
      useQuery(LIST_GAMES) : useQuery(GET_USER, { variables: { email: localStorage.getItem('email') } });
 
-    /* Filtering state */
-    const [date, setDate] = useState('');
-
     useEffect(() => {
         if (loading) {
             setIsLoading(loading);
@@ -220,15 +211,6 @@ export default function Games() {
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
-    };
-
-    function handleFilterModal(event) {
-        event.preventDefault();
-        setOpen(true);
-    };
-
-    const handleClose = (value) => {
-        setOpen(false);
     };
 
     if (!rows) {
