@@ -590,8 +590,19 @@ export default function PlayFieldsEditForm({ match }) {
                             </Grid>
                         </Grid>
                         <Grid container justify="center">
-                            { localStorage.getItem('role') !== 'null' && localStorage.getItem('role') !== 'PLAYER' ? (
-                                <Grid container alignItems="center" justify="center">
+                            <Grid className={classes.spacingBetweenRatingStars}></Grid>
+                            <Grid container alignItems="center" justify="center">
+                                <Button
+                                    variant="outlined"
+                                    color="secondary"
+                                    className={classes.buttonBox}
+                                >
+                                    Make Reservation
+                                    </Button>
+                                {localStorage.getItem('role') !== 'null' && localStorage.getItem('role') !== 'PLAYER' ? (
+                                    <Grid className={classes.spacingBetweenRatingStars}></Grid>
+                                ) : ''}
+                                {localStorage.getItem('role') !== 'null' && localStorage.getItem('role') !== 'PLAYER' ? (
                                     <Button
                                         type="submit"
                                         variant="outlined"
@@ -601,7 +612,9 @@ export default function PlayFieldsEditForm({ match }) {
                                     >
                                         Update
                                     </Button>
-                                    <Grid className={classes.spacingBetweenRatingStars}></Grid>
+                                ) : ''}
+                                <Grid className={classes.spacingBetweenRatingStars}></Grid>
+                                {localStorage.getItem('role') !== 'null' && localStorage.getItem('role') !== 'PLAYER' ? (
                                     <Button
                                         variant="contained"
                                         color="secondary"
@@ -610,8 +623,8 @@ export default function PlayFieldsEditForm({ match }) {
                                     >
                                         Delete
                                     </Button>
-                                </Grid>
-                            ) : ''}
+                                ) : ''}
+                            </Grid>
                         </Grid>
                     </form>
                 </Grid>
