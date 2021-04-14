@@ -164,10 +164,8 @@ export default function Games() {
     const [modalStyle] = useState(getHighModalStyle);
     const [open, setOpen] = useState(false);
 
-    const { loading, error, data } = useQuery(
-        localStorage.getItem('role') === 'null' || localStorage.getItem('role') === 'PLAYER' ?
-            GET_USER : LIST_GAMES
-    );
+    const { loading, error, data } = localStorage.getItem('role') !== 'null' && localStorage.getItem('role') !== 'PLAYER' ?
+     useQuery(LIST_GAMES) : useQuery(GET_USER, { variables: { email: localStorage.getItem('email') } });
 
     /* Filtering state */
     const [date, setDate] = useState('');
