@@ -15,8 +15,6 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Avatar from '@material-ui/core/Avatar';
-import Rating from '@material-ui/lab/Rating';
 import Button from '@material-ui/core/Button';
 
 import Navigation from './Navigation';
@@ -24,26 +22,13 @@ import Modal from '@material-ui/core/Modal';
 
 import clsx from 'clsx';
 
-import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
-import Select from '@material-ui/core/Select';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
-import MenuItem from '@material-ui/core/MenuItem';
 
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import PhotoIcon from '@material-ui/icons/Photo';
-import InfoIcon from '@material-ui/icons/Info';
 import FilterListIcon from '@material-ui/icons/FilterList';
-
-import TextFieldsIcon from '@material-ui/icons/TextFields';
-import HomeIcon from '@material-ui/icons/Home';
-import EuroSymbolIcon from '@material-ui/icons/EuroSymbol';
-import StarIcon from '@material-ui/icons/Star';
 
 import { Typography } from '@material-ui/core';
 
@@ -53,12 +38,6 @@ import {
     LIST_GAMES,
 } from './gql/queries/queries';
 
-import customRatingIcons from '../utils/customRatingIcons';
-import ratingLabels from '../utils/ratingLabels';
-import areFiltersSelected from '../utils/areFiltersSelected';
-
-import MenuProps from '../utils/props/MenuProps';
-import getDropdownStyles from '../utils/props/getDropdownStyles';
 import getHighModalStyle from '../utils/props/getHighModalStyle';
 
 import stableSort from '../utils/comparators/stableSort';
@@ -145,7 +124,7 @@ function EnhancedTableHead(props) {
                         padding={headCell.disablePadding ? 'none' : 'default'}
                         sortDirection={orderBy === headCell.id ? order : false}
                     >
-                        { headCell.id === "players" && headCell.id === "matches" ? (
+                        { headCell.id === "players" || headCell.id === "matches" ? (
                             headCell.label
                         ) : (
                             <TableSortLabel
@@ -170,7 +149,6 @@ function EnhancedTableHead(props) {
 
 export default function Games() {
     const classes = useStyles();
-    const theme = useTheme();
     const history = useHistory();
 
     const [loadedGamesData, setLoadedGamesData] = useState(null);
@@ -255,39 +233,6 @@ export default function Games() {
         setOpen(false);
     };
 
-    function handleFilterSubmit(event) {
-        event.preventDefault();
-
-        let filteredData;
-        if (loadedGamesData && loadedGamesData.getUser && loadedGamesData.getUser.games) {
-            filteredData = loadedGamesData.getUser.games;
-        } else if (loadedGamesData.listGames) {
-            filteredData = loadedGamesData.listGames;
-        }
-
-        if (date) {
-
-        }
-
-        setFilteredGamesData(filteredData);
-        setOpen(false);
-    };
-
-    function handleFilterClear(event) {
-        event.preventDefault();
-
-        setDate('');
-
-        let filteredData;
-        if (loadedGamesData && loadedGamesData.getUser && loadedGamesData.getUser.games) {
-            filteredData = loadedGamesData.getUser.games;
-        } else if (loadedGamesData.listGames) {
-            filteredData = loadedGamesData.listGames;
-        }
-
-        setFilteredGamesData(filteredData);
-    }
-
     if (!rows) {
         return (
             <div className={classes.loadingBarContainer}>
@@ -295,17 +240,6 @@ export default function Games() {
             </div>
         );
     }
-
-    const body = (
-        <div style={modalStyle} className={classes.paper}>
-            <Typography className={classes.title}>
-                Select Filters:
-            </Typography>
-            <form className={classes.form} onSubmit={handleFilterSubmit}>
-                
-            </form>
-        </div>
-    );
 
     return (
         <div className={classes.root}>
@@ -329,30 +263,6 @@ export default function Games() {
                             [classes.highlight]: false,
                         })}
                     >
-                        <Typography className={classes.title}>
-                            Filter Games
-                        </Typography>
-                        <Tooltip title="Filter list">
-                            <IconButton
-                                aria-label="filter list"
-                                onClick={handleFilterModal}
-                            >
-                                <FilterListIcon />
-                            </IconButton>
-                        </Tooltip>
-                        <Modal
-                            open={open}
-                            onClose={handleClose}
-                            aria-labelledby="modal-title"
-                            aria-describedby="modal-description"
-                            style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                            }}
-                        >
-                            {body}
-                        </Modal>
                     </Toolbar>
                 </Grid>
                 <Grid className={classes.spacingBetweenFields}></Grid>
@@ -382,14 +292,19 @@ export default function Games() {
                                                 key={`${new Date()} ${row.date}`}
                                                 selected={false}
                                             >
-                                                <TableCell>
-                                                    {row.firstTeamFirstPlayer}
-                                                    {row.firstTeamSecondPlayer || 'No oponent'}
-                                                    {row.secondTeamFirstPlayer}
-                                                    {row.secondTeamSecondPlayer || 'No oponent'}
-                                                </TableCell>
-                                                <TableCell>{JSON.stringify(row.matches, null, 2)}</TableCell>
                                                 <TableCell>{row.date}</TableCell>
+                                                <TableCell>
+                                                    {`${row.firstTeamFirstPlayer.firstName} ${row.firstTeamFirstPlayer.lastName}${row.firstTeamSecondPlayer ? ', ' : ' '}`}
+                                                    {row.firstTeamSecondPlayer ? `${row.firstTeamSecondPlayer.firstName} ${row.firstTeamFirstPlayer.lastName}` : ''}
+                                                    <br/>
+                                                    {`${row.secondTeamFirstPlayer.firstName} ${row.secondTeamFirstPlayer.lastName}${row.secondTeamSecondPlayer ? ', ' : ' '}`}
+                                                    {row.secondTeamSecondPlayer ? `${row.secondTeamSecondPlayer.firstName} ${row.secondTeamSecondPlayer.lastName}` : ''}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {`${row.matches[0].firstTeamScore} ${row.matches[1].firstTeamScore} ${row.matches[2] ? row.matches[2].firstTeamScore : ''}`}
+                                                    <br/>
+                                                    {`${row.matches[0].secondTeamScore} ${row.matches[1].secondTeamScore} ${row.matches[2] ? row.matches[2].secondTeamScore : ''}`}
+                                                </TableCell>
                                             </TableRow>
                                         );
                                     })}

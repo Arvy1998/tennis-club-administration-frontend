@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
 
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { useHistory, useParams } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import Button from '@material-ui/core/Button';
 
 import TextField from '@material-ui/core/TextField';
@@ -14,33 +14,16 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Tooltip from '@material-ui/core/Tooltip';
 
-import AlternateEmail from '@material-ui/icons/AlternateEmail';
-import TextFieldsIcon from '@material-ui/icons/TextFields';
-import PhoneIcon from '@material-ui/icons/Phone';
-import HomeIcon from '@material-ui/icons/Home';
-import StreetviewIcon from '@material-ui/icons/Streetview';
-import EuroSymbolIcon from '@material-ui/icons/EuroSymbol';
-import BorderHorizontalIcon from '@material-ui/icons/BorderHorizontal';
 import InfoIcon from '@material-ui/icons/Info';
-import StarIcon from '@material-ui/icons/Star';
-import LanguageIcon from '@material-ui/icons/Language';
 import PersonIcon from '@material-ui/icons/Person';
 
 import Typography from '@material-ui/core/Typography';
-import CardMedia from '@material-ui/core/CardMedia';
-import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import Avatar from '@material-ui/core/Avatar';
-import Card from '@material-ui/core/Card';
-import Rating from '@material-ui/lab/Rating';
-
-import validateGameFields from '../utils/validateGameFields'
 
 import Navigation from './Navigation';
 
 import filterNotEnteredEntries from '../utils/filterNotEnteredEntries';
-import isEmpty from '../utils/isEmpty';
 
 import MenuProps from '../utils/props/MenuProps';
 import getDropdownStyles from '../utils/props/getDropdownStyles';
@@ -142,8 +125,6 @@ export default function GamesAddForm() {
     const [isLoading, setIsLoading] = useState(null);
     const [isError, setIsError] = useState(null);
 
-    const [hover, setHover] = useState(-1);
-
     const [addGame, { data: createGame }] = useMutation(CREATE_GAME);
 
     const [loadedUsersData, setLoadedUsersData] = useState(null);
@@ -186,10 +167,39 @@ export default function GamesAddForm() {
         );
     }
 
-    function handleInformationSubmit(event) {
+    function handleGameSubmit(event) {
         event.preventDefault();
 
         setIsLoading(true);
+
+        let matches;
+        if (fifthScore && sixthScore) {
+            matches = [
+                { 
+                    firstTeamScore: firstScore ? parseInt(firstScore) : 0, 
+                    secondTeamScore: secondScore ? parseInt(secondScore) : 0,
+                },
+                { 
+                    firstTeamScore: thirdScore ? parseInt(thirdScore) : 0, 
+                    secondTeamScore: fourthScore ? parseInt(fourthScore) : 0,
+                },
+                { 
+                    firstTeamScore: fifthScore ? parseInt(fifthScore) : 0, 
+                    secondTeamScore: sixthScore ? parseInt(sixthScore) : 0,
+                },
+            ]
+        } else {
+            matches = [
+                { 
+                    firstTeamScore: firstScore ? parseInt(firstScore) : 0, 
+                    secondTeamScore: secondScore ? parseInt(secondScore) : 0,
+                },
+                { 
+                    firstTeamScore: thirdScore ? parseInt(thirdScore) : 0, 
+                    secondTeamScore: fourthScore ? parseInt(fourthScore) : 0,
+                },
+            ]
+        }
 
         addGame({
             variables: {
@@ -198,11 +208,7 @@ export default function GamesAddForm() {
                     firstTeamSecondPlayerId,
                     secondTeamFirstPlayerId,
                     secondTeamSecondPlayerId,
-                    matches: [
-                        { firstTeamScore: firstScore, secondTeamScore: secondScore },
-                        { firstTeamScore: thirdScore, secondTeamScore: fourthScore },
-                        { firstTeamScore: fifthScore, secondTeamScore: sixthScore },
-                    ]
+                    matches,
                 }),
             },
         });
@@ -236,11 +242,6 @@ export default function GamesAddForm() {
         );
     }
 
-    console.log({
-        firstTeamFirstPlayerId,
-        firstTeamSecondPlayerId,
-    });
-
     return (
         <div className={classes.root}>
             <Navigation />
@@ -255,7 +256,7 @@ export default function GamesAddForm() {
                             Add New Game
                         </Typography>
                     </Grid>
-                    <form className={classes.form} onSubmit={handleInformationSubmit}>
+                    <form className={classes.form} onSubmit={handleGameSubmit}>
                         <Grid className={classes.spacingBetween}></Grid>
                         <Grid container spacing={1} justify="center">
                             <Typography
@@ -283,8 +284,8 @@ export default function GamesAddForm() {
                                             onChange={handleFirstTeamFirstPlayerSelect}
                                             input={<Input />}
                                             MenuProps={MenuProps}
-                                            // error={isEmpty(firstTeamFirstPlayerId)}
-                                            // helperText={isEmpty(secondTeamFirstPlayerId) ? 'Cannot be empty' : null}
+                                        // error={isEmpty(firstTeamFirstPlayerId)}
+                                        // helperText={isEmpty(secondTeamFirstPlayerId) ? 'Cannot be empty' : null}
                                         >
                                             {users.map((user) => (
                                                 <MenuItem key={user.id} value={user.id} style={
@@ -358,8 +359,8 @@ export default function GamesAddForm() {
                                             onChange={handleSecondTeamFirstPlayerSelect}
                                             input={<Input />}
                                             MenuProps={MenuProps}
-                                            // error={isEmpty(secondTeamFirstPlayerId)}
-                                            // helperText={isEmpty(secondTeamFirstPlayerId) ? 'Cannot be empty' : null}
+                                        // error={isEmpty(secondTeamFirstPlayerId)}
+                                        // helperText={isEmpty(secondTeamFirstPlayerId) ? 'Cannot be empty' : null}
                                         >
                                             {users.map((user) => (
                                                 <MenuItem key={user.id} value={user.id} style={
@@ -406,15 +407,90 @@ export default function GamesAddForm() {
                                 </Grid>
                             </Grid>
                         </Grid>
+                        <Grid className={classes.spacingBetween}></Grid>
+                        <Grid container spacing={1} justify="center">
+                            <Typography
+                                component="h1"
+                                variant="h5"
+                                className={classes.formHeaderH3}
+                            >
+                                Scores
+                            </Typography>
+                        </Grid>
+                        <Grid container spacing={1} alignItems="flex-end" justify="center">
+                            <Typography
+                                component="h1"
+                                variant="h5"
+                                className={classes.formHeaderH3}
+                            >
+                                1st Team Scores
+                            </Typography>
+                            <Grid className={classes.spacingBetween}></Grid>
+                            <TextField
+                                style={{ width: 25 }}
+                                id="firstScore"
+                                name="firstScore"
+                                onInput={e => setFirstScore(e.target.value)}
+                            />
+                            <Grid className={classes.spacingBetween}></Grid>
+                            <TextField
+                                style={{ width: 25 }}
+                                id="thirdScore"
+                                name="thirdScore"
+                                onInput={e => setThirdScore(e.target.value)}
+                            />
+                            <Grid className={classes.spacingBetween}></Grid>
+                            <TextField
+                                style={{ width: 25 }}
+                                id="fifthScore"
+                                name="fifthScore"
+                                onInput={e => setFifthScore(e.target.value)}
+                            />
+                        </Grid>
+                        <Grid container spacing={1} alignItems="flex-end" justify="center">
+                            <Typography
+                                component="h1"
+                                variant="h5"
+                                className={classes.formHeaderH3}
+                            >
+                                2st Team Scores
+                            </Typography>
+                            <Grid className={classes.spacingBetween}></Grid>
+                            <TextField
+                                style={{ width: 25 }}
+                                id="secondScore"
+                                name="secondScore"
+                                onInput={e => setSecondScore(e.target.value)}
+                            />
+                            <Grid className={classes.spacingBetween}></Grid>
+                            <TextField
+                                style={{ width: 25 }}
+                                id="fourthScore"
+                                name="fourthScore"
+                                onInput={e => setFourthScore(e.target.value)}
+                            />
+                            <Grid className={classes.spacingBetween}></Grid>
+                            <TextField
+                                style={{ width: 25 }}
+                                id="sixthScore"
+                                name="sixthScore"
+                                onInput={e => setSixthScore(e.target.value)}
+                            />
+                        </Grid>
                         <Grid container justify="center">
                             <Button
                                 type="submit"
                                 variant="outlined"
                                 color="secondary"
                                 className={classes.buttonBox}
-                                disabled={!validateGameFields({
-
-                                })}
+                                // disabled={
+                                //     !isNumber(firstScore) ||
+                                //     !isNumber(secondScore) ||
+                                //     !isNumber(thirdScore) ||
+                                //     !isNumber(fourthScore) ||
+                                //     !isNumber(fifthScore) ||
+                                //     !isNumber(sixthScore)
+                                // }
                             >
                                 Create
                                 </Button>
