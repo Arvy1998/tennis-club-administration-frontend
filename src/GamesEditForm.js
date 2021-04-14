@@ -526,7 +526,7 @@ export default function GamesEditForm({ match }) {
                                 variant="h5"
                                 className={classes.formHeaderH3}
                             >
-                                2st Team Scores
+                                2nd Team Scores
                             </Typography>
                             <Grid className={classes.spacingBetween}></Grid>
                             <TextField
