@@ -17,6 +17,7 @@ const GET_USER = gql`
             userProfilePhoto
             mainHand
             details
+            rating
             games {
                 id
                 date
@@ -66,6 +67,7 @@ const GET_PLAYERS = gql`
             userProfilePhoto
             mainHand
             details
+            rating
         }
     }
 `;

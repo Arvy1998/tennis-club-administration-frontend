@@ -474,7 +474,7 @@ export default function Account() {
                                 </Grid>
                                 <Grid item>
                                     <FormControl className={classes.formControl}>
-                                        <InputLabel id="handSelect">Gender</InputLabel>
+                                        <InputLabel id="handSelect">Main Hand</InputLabel>
                                         <Select
                                             labelId="handSelect"
                                             id="handSelect-id"
