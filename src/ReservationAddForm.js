@@ -89,7 +89,7 @@ const useStyles = makeStyles((theme) => ({
         marginTop: theme.spacing(1),
     },
     spacingBetween: {
-        padding: theme.spacing(2),
+        padding: theme.spacing(1),
     },
     spacingBetweenFields: {
         padding: theme.spacing(0.5),
@@ -332,6 +332,22 @@ export default function ReservationAddForm({ match }) {
                                 </Grid>
                             </Grid>
                         </Grid>
+                        <Grid className={classes.spacingBetween}></Grid>
+                        <Grid container spacing={1} alignItems="flex-end" justify="center">
+                            <Grid container spacing={1} justify="center">
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={isReccurring}
+                                            onChange={handleReccurringChange}
+                                            name="isReccurring"
+                                            color="secondary"
+                                        />
+                                    }
+                                    label="Is Reservation Reccuring"
+                                />
+                            </Grid>
+                        </Grid>
                         {/* reservation calendar */}
                         <Grid className={classes.spacingBetweenCalendar}></Grid>
                         <FullCalendar
@@ -349,21 +365,6 @@ export default function ReservationAddForm({ match }) {
                             events={choosenEvent ? [choosenEvent, ...currentEvents] : currentEvents}
                         />
                         <Grid className={classes.spacingBetweenCalendar}></Grid>
-                        <Grid container spacing={1} alignItems="flex-end" justify="center">
-                            <Grid container spacing={1} justify="center">
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            checked={isReccurring}
-                                            onChange={handleReccurringChange}
-                                            name="isReccurring"
-                                            color="secondary"
-                                        />
-                                    }
-                                    label="Is Reservation Reccuring"
-                                />
-                            </Grid>
-                        </Grid>
                         <Grid container justify="center">
                             <Button
                                 type="submit"
