@@ -271,7 +271,7 @@ export default function Games() {
                                                 <TableCell>{moment(row.date).format('YYYY-MM-DD HH:mm:ss')}</TableCell>
                                                 <TableCell>
                                                     {`${row.firstTeamFirstPlayer.firstName} ${row.firstTeamFirstPlayer.lastName}${row.firstTeamSecondPlayer ? ', ' : ' '}`}
-                                                    {row.firstTeamSecondPlayer ? `${row.firstTeamSecondPlayer.firstName} ${row.firstTeamFirstPlayer.lastName}` : ''}
+                                                    {row.firstTeamSecondPlayer ? `${row.firstTeamSecondPlayer.firstName} ${row.firstTeamSecondPlayer.lastName}` : ''}
                                                     <br/>
                                                     {`${row.secondTeamFirstPlayer.firstName} ${row.secondTeamFirstPlayer.lastName}${row.secondTeamSecondPlayer ? ', ' : ' '}`}
                                                     {row.secondTeamSecondPlayer ? `${row.secondTeamSecondPlayer.firstName} ${row.secondTeamSecondPlayer.lastName}` : ''}

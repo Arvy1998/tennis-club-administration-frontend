@@ -13,6 +13,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Tooltip from '@material-ui/core/Tooltip';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import InfoIcon from '@material-ui/icons/Info';
 import EventIcon from '@material-ui/icons/Event';
@@ -41,6 +43,9 @@ import {
     GET_RESERVATIONS_BY_PLAYFIELD_ID,
     GET_PLAYFIELD,
 } from './gql/queries/queries';
+
+import validationsActive from '../utils/calendar/validationsActive';
+import helperTextMap from '../utils/calendar/helperTextMap';
 
 const useStyles = makeStyles((theme) => ({
     avatar: {
@@ -141,6 +146,8 @@ export default function ReservationAddForm({ match }) {
     const [currentEvents, setCurrentEvents] = useState([]);
     const [choosenEvent, setChoosenEvent] = useState(null);
 
+    const [isReccurring, setIsReccurring] = useState(false);
+
     const [startDateTime, setStartDateTime] = useState('');
     const [endDateTime, setEndDateTime] = useState('');
 
@@ -187,12 +194,12 @@ export default function ReservationAddForm({ match }) {
 
     useEffect(() => {
         if (!!(startDateTime && endDateTime)) {
-            setChoosenEvent([{
+            setChoosenEvent({
                 id: createEventId(),
                 title: 'Reservation',
                 start: startDateTime + ':00',
                 end: endDateTime + ':00',
-            }]);
+            });
         }
     }, [startDateTime, endDateTime]);
 
@@ -251,6 +258,10 @@ export default function ReservationAddForm({ match }) {
         window.location.reload(true);
     }
 
+    function handleReccurringChange(event) {
+        setIsReccurring(event.target.checked);
+    }
+
     if (!createReservation && isLoading) {
         return (
             <div className={classes.loadingBarContainer}>
@@ -258,8 +269,6 @@ export default function ReservationAddForm({ match }) {
             </div>
         );
     }
-
-    console.log({ choosenEvent });
 
     return (
         <div className={classes.root}>
@@ -289,6 +298,8 @@ export default function ReservationAddForm({ match }) {
                                         type="datetime-local"
                                         onInput={e => setStartDateTime(e.target.value)}
                                         className={classes.textField}
+                                        error={choosenEvent ? validationsActive(choosenEvent) : false}
+                                        helperText={choosenEvent ? helperTextMap(choosenEvent) : null}
                                         InputLabelProps={{
                                             shrink: true,
                                         }}
@@ -303,6 +314,8 @@ export default function ReservationAddForm({ match }) {
                                         label="Reservation End Time"
                                         type="datetime-local"
                                         onInput={e => setEndDateTime(e.target.value)}
+                                        error={choosenEvent ? validationsActive(choosenEvent) : false}
+                                        helperText={choosenEvent ? helperTextMap(choosenEvent) : null}
                                         className={classes.textField}
                                         InputLabelProps={{
                                             shrink: true,
@@ -333,23 +346,31 @@ export default function ReservationAddForm({ match }) {
                             selectMirror={true}
                             dayMaxEvents={true}
                             weekends={weekendsVisible}
-                            events={choosenEvent ? [...choosenEvent, ...currentEvents] : currentEvents}
-                        // select={this.handleDateSelect}
-                        // eventContent={renderEventContent} // custom render function
-                        // eventClick={this.handleEventClick}
-                        //eventsSet={handleEvents} // called after events are initialized/added/changed/removed
-                        /* you can update a remote database when these fire:
-                            eventAdd={function(){}}
-                            eventChange={function(){}}
-                            eventRemove={function(){}}
-                        */
+                            events={choosenEvent ? [choosenEvent, ...currentEvents] : currentEvents}
                         />
+                        <Grid className={classes.spacingBetweenCalendar}></Grid>
+                        <Grid container spacing={1} alignItems="flex-end" justify="center">
+                            <Grid container spacing={1} justify="center">
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={isReccurring}
+                                            onChange={handleReccurringChange}
+                                            name="isReccurring"
+                                            color="secondary"
+                                        />
+                                    }
+                                    label="Is Reservation Reccuring"
+                                />
+                            </Grid>
+                        </Grid>
                         <Grid container justify="center">
                             <Button
                                 type="submit"
                                 variant="outlined"
                                 color="secondary"
                                 className={classes.buttonBox}
+                                disabled={choosenEvent ? validationsActive(choosenEvent) : true}
                             >
                                 Create
                                 </Button>

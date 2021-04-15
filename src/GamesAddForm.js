@@ -154,7 +154,7 @@ export default function GamesAddForm() {
         }
 
         if (data) {
-            setLoadedUsersData([...data.allUsers, { id: 'Not Selected' }]);
+            setLoadedUsersData(_.sortBy(data.allUsers, ['firstName', 'lastName']), { id: 'Not Selected' });
             setIsLoading(false);
         }
     }, [loading, error, data]);
