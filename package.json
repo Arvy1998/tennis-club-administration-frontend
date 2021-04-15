@@ -22,6 +22,13 @@
   "dependencies": {
     "@apollo/client": "^3.3.11",
     "@apollo/react-hooks": "^4.0.0",
+    "@babel/plugin-proposal-throw-expressions": "^7.12.13",
+    "@fullcalendar/core": "^5.6.0",
+    "@fullcalendar/daygrid": "^5.6.0",
+    "@fullcalendar/interaction": "^5.6.0",
+    "@fullcalendar/list": "^5.6.0",
+    "@fullcalendar/react": "^5.6.0",
+    "@fullcalendar/timegrid": "^5.6.0",
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",
@@ -29,14 +36,21 @@
     "apollo-client": "^2.6.10",
     "apollo-link-http": "^1.5.17",
     "clsx": "^1.1.1",
+    "css-loader": "^5.2.1",
+    "fullcalendar": "^5.6.0",
     "graphql": "^15.5.0",
+    "html-webpack-plugin": "^5.3.1",
+    "install": "^0.13.0",
     "lodash": "^4.17.21",
+    "mini-css-extract-plugin": "^1.4.1",
     "moment": "^2.29.1",
+    "npm": "^7.9.0",
     "react": "^17.0.1",
     "react-cookie": "^4.0.3",
     "react-dom": "^17.0.1",
     "react-final-form": "^6.5.3",
     "react-router": "^5.2.0",
-    "react-router-dom": "^5.2.0"
+    "react-router-dom": "^5.2.0",
+    "style-loader": "^2.0.0"
   }
 }

@@ -369,6 +369,7 @@ export default function PlayFields() {
                             />
                         </Grid>
                     </Grid>
+                    <Grid className={classes.spacingBetweenFields}></Grid>
                     <Grid container spacing={1} alignItems="flex-end" justify="center">
                         <Grid item>
                             <HomeIcon />

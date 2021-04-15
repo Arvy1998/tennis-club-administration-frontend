@@ -156,6 +156,7 @@ export default function PlayFieldsAddForm() {
     const [courtFloorType, setCourtFloorType] = useState('');
     const [webpage, setWebpage] = useState('');
     const [rating, setRating] = useState(0);
+    const [additionalInformation, setAdditionalInformation] = useState('');
 
     const [playFieldPhoto, setPlayFieldPhoto] = useState('');
     const [fileName, setFileName] = useState('');
@@ -179,6 +180,7 @@ export default function PlayFieldsAddForm() {
                     courtFloorType,
                     webpage,
                     rating,
+                    additionalInformation,
                     playFieldPhoto,
                 }),
             },
@@ -238,6 +240,7 @@ export default function PlayFieldsAddForm() {
                                     <TextField
                                         autoComplete="title"
                                         name="title"
+                                        multiline
                                         required
                                         style={{ width: 300 }}
                                         id="title"
@@ -410,6 +413,22 @@ export default function PlayFieldsAddForm() {
                                         name="webpage"
                                         autoComplete="webpage"
                                         onInput={e => setWebpage(e.target.value)}
+                                    />
+                                </Grid>
+                            </Grid>
+                            <Grid container spacing={1} alignItems="flex-end" justify="center">
+                                <Grid item>
+                                    <InfoIcon />
+                                </Grid>
+                                <Grid item>
+                                    <TextField
+                                        style={{ width: 300 }}
+                                        multiline
+                                        id="additionalInformation"
+                                        label="Additional Information"
+                                        name="additionalInformation"
+                                        autoComplete="additionalInformation"
+                                        onInput={e => setAdditionalInformation(e.target.value)}
                                     />
                                 </Grid>
                             </Grid>

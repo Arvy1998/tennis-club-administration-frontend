@@ -172,6 +172,7 @@ export default function PlayFieldsEditForm({ match }) {
     const [courtFloorType, setCourtFloorType] = useState('');
     const [webpage, setWebpage] = useState('');
     const [rating, setRating] = useState(0);
+    const [additionalInformation, setAdditionalInformation] = useState('');
 
     const [playFieldPhoto, setPlayFieldPhoto] = useState('');
     const [fileName, setFileName] = useState('');
@@ -232,6 +233,7 @@ export default function PlayFieldsEditForm({ match }) {
                     courtFloorType,
                     webpage,
                     rating,
+                    additionalInformation,
                     playFieldPhoto,
                 }),
             },
@@ -260,6 +262,10 @@ export default function PlayFieldsEditForm({ match }) {
         setIsLoading(false);
 
         history.push('/playfields');
+    }
+
+    function openReservationCreatePageAction() {
+        history.push(`/reservations/add/${match.params.id}`);
     }
 
     function fileToBase64(fileUploadEvent) {
@@ -311,6 +317,7 @@ export default function PlayFieldsEditForm({ match }) {
                                         autoComplete="title"
                                         name="title"
                                         required
+                                        multiline
                                         disabled={isDisabled()}
                                         defaultValue={playField.title}
                                         style={{ width: 300 }}
@@ -505,6 +512,24 @@ export default function PlayFieldsEditForm({ match }) {
                                     />
                                 </Grid>
                             </Grid>
+                            <Grid container spacing={1} alignItems="flex-end" justify="center">
+                                <Grid item>
+                                    <InfoIcon />
+                                </Grid>
+                                <Grid item>
+                                    <TextField
+                                        style={{ width: 300 }}
+                                        id="additionalInformation"
+                                        label="Additional Information"
+                                        name="additionalInformation"
+                                        defaultValue={playField.additionalInformation}
+                                        multiline
+                                        disabled={isDisabled()}
+                                        autoComplete="additionalInformation"
+                                        onInput={e => setAdditionalInformation(e.target.value)}
+                                    />
+                                </Grid>
+                            </Grid>
                             <Grid className={classes.spacingBetweenRatingStars}></Grid>
                             <Grid
                                 container
@@ -597,6 +622,7 @@ export default function PlayFieldsEditForm({ match }) {
                                     variant="outlined"
                                     color="secondary"
                                     className={classes.buttonBox}
+                                    onClick={openReservationCreatePageAction}
                                 >
                                     Make Reservation
                                     </Button>

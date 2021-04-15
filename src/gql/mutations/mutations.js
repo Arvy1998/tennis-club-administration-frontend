@@ -173,6 +173,29 @@ const DELETE_GAME = gql`
     }
 `;
 
+const CREATE_RESERVATION = gql`
+    mutation createReservation($reservationInput: ReservationInput!) {
+        createReservation(reservationInput: $reservationInput) {
+            id
+            startDateTime
+            endDateTime
+            user {
+                id
+            }
+            isRecurring
+            recurringDate
+            recurringPeriod
+            recurringEvery
+            playField {
+                id
+                cost
+            }
+            totalCost
+            paid
+        }
+    }
+`;
+
 export {
     LOGIN_USER,
     UPDATE_USER,
@@ -183,4 +206,5 @@ export {
     CREATE_GAME,
     UPDATE_GAME,
     DELETE_GAME,
+    CREATE_RESERVATION,
 }
