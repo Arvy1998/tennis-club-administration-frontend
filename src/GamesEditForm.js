@@ -262,6 +262,7 @@ export default function GamesEditForm({ match }) {
         setIsLoading(false);
 
         history.push('/games');
+        window.location.reload(true);
     }
 
     function triggerDeleteAction(event) {
