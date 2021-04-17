@@ -29,6 +29,8 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 
+import EuroSymbolIcon from '@material-ui/icons/EuroSymbol';
+
 import Navigation from './Navigation';
 
 import filterNotEnteredEntries from '../utils/filterNotEnteredEntries';
@@ -46,6 +48,7 @@ import {
 
 import validationsActive from '../utils/calendar/validationsActive';
 import helperTextMap from '../utils/calendar/helperTextMap';
+import getDatesDifferenceInHour from '../utils/calendar/getDatesDifferenceInHours';
 
 const useStyles = makeStyles((theme) => ({
     avatar: {
@@ -98,7 +101,7 @@ const useStyles = makeStyles((theme) => ({
         paddingBottom: theme.spacing(6),
     },
     spacingBetweenCalendar: {
-        paddingBottom: theme.spacing(2),
+        paddingBottom: theme.spacing(3),
     },
     centeredForms: {
         display: 'flex',
@@ -143,10 +146,7 @@ export default function ReservationAddForm({ match }) {
     const [loadedPlayFieldData, setLoadedPlayFieldData] = useState(null);
 
     const [weekendsVisible, setWeekendsVisible] = useState(true);
-    const [currentEvents, setCurrentEvents] = useState([]);
     const [choosenEvent, setChoosenEvent] = useState(null);
-
-    const [isReccurring, setIsReccurring] = useState(false);
 
     const [startDateTime, setStartDateTime] = useState('');
     const [endDateTime, setEndDateTime] = useState('');
@@ -236,6 +236,8 @@ export default function ReservationAddForm({ match }) {
         })
     }
 
+    console.log({reservations})
+
     function handleInformationSubmit(event) {
         event.preventDefault();
 
@@ -256,10 +258,6 @@ export default function ReservationAddForm({ match }) {
 
         history.push('/reservations');
         window.location.reload(true);
-    }
-
-    function handleReccurringChange(event) {
-        setIsReccurring(event.target.checked);
     }
 
     if (!createReservation && isLoading) {
@@ -298,8 +296,8 @@ export default function ReservationAddForm({ match }) {
                                         type="datetime-local"
                                         onInput={e => setStartDateTime(e.target.value)}
                                         className={classes.textField}
-                                        error={choosenEvent ? validationsActive(choosenEvent) : false}
-                                        helperText={choosenEvent ? helperTextMap(choosenEvent) : null}
+                                        error={choosenEvent ? validationsActive(choosenEvent, reservations) : false}
+                                        helperText={choosenEvent ? helperTextMap(choosenEvent, reservations) : null}
                                         InputLabelProps={{
                                             shrink: true,
                                         }}
@@ -314,8 +312,8 @@ export default function ReservationAddForm({ match }) {
                                         label="Reservation End Time"
                                         type="datetime-local"
                                         onInput={e => setEndDateTime(e.target.value)}
-                                        error={choosenEvent ? validationsActive(choosenEvent) : false}
-                                        helperText={choosenEvent ? helperTextMap(choosenEvent) : null}
+                                        error={choosenEvent ? validationsActive(choosenEvent, reservations) : false}
+                                        helperText={choosenEvent ? helperTextMap(choosenEvent, reservations) : null}
                                         className={classes.textField}
                                         InputLabelProps={{
                                             shrink: true,
@@ -334,18 +332,67 @@ export default function ReservationAddForm({ match }) {
                         </Grid>
                         <Grid className={classes.spacingBetween}></Grid>
                         <Grid container spacing={1} alignItems="flex-end" justify="center">
-                            <Grid container spacing={1} justify="center">
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            checked={isReccurring}
-                                            onChange={handleReccurringChange}
-                                            name="isReccurring"
-                                            color="secondary"
-                                        />
-                                    }
-                                    label="Is Reservation Reccuring"
+                            <Grid container spacing={1} alignItems="flex-end" justify="center">
+                                <TextField
+                                    style={{ width: 265 }}
+                                    id="playfieldtitle"
+                                    value={playField.title}
+                                    disabled={true}
+                                    multiline
+                                    label="Play Field Title"
+                                    name="playfieldtitle"
+                                    autoComplete="playfieldtitle"
                                 />
+                                <Grid className={classes.spacingBetween}></Grid>
+                                <TextField
+                                    style={{ width: 265 }}
+                                    id="address"
+                                    value={playField.address}
+                                    disabled={true}
+                                    label="Address"
+                                    name="address"
+                                    autoComplete="address"
+                                />
+                                <Grid className={classes.spacingBetween}></Grid>
+                                <TextField
+                                    style={{ width: 265 }}
+                                    id="city"
+                                    value={playField.city}
+                                    disabled={true}
+                                    label="City"
+                                    name="city"
+                                    autoComplete="city"
+                                />
+                                <Grid className={classes.spacingBetween}></Grid>
+                                <Grid item>
+                                    <EuroSymbolIcon />
+                                </Grid>
+                                <Grid item>
+                                    <TextField
+                                        style={{ width: 265 }}
+                                        id="cost"
+                                        value={
+                                            choosenEvent ?
+                                                playField.cost * getDatesDifferenceInHour(choosenEvent) :
+                                                'No Cost Applied'
+                                        }
+                                        disabled={true}
+                                        label="Reservation Cost"
+                                        name="cost"
+                                        autoComplete="cost"
+                                    />
+                                </Grid>
+                                <Grid item>
+                                    <Tooltip
+                                        placement="right"
+                                        title="Total reservation cost depending on your selected time."
+                                    >
+                                        <InfoIcon />
+                                    </Tooltip>
+                                </Grid>
+                            </Grid>
+                            <Grid container spacing={1} alignItems="flex-end" justify="center">
+
                             </Grid>
                         </Grid>
                         {/* reservation calendar */}
@@ -362,7 +409,7 @@ export default function ReservationAddForm({ match }) {
                             selectMirror={true}
                             dayMaxEvents={true}
                             weekends={weekendsVisible}
-                            events={choosenEvent ? [choosenEvent, ...currentEvents] : currentEvents}
+                            events={choosenEvent ? [choosenEvent, ...reservations] : reservations}
                         />
                         <Grid className={classes.spacingBetweenCalendar}></Grid>
                         <Grid container justify="center">
@@ -371,7 +418,7 @@ export default function ReservationAddForm({ match }) {
                                 variant="outlined"
                                 color="secondary"
                                 className={classes.buttonBox}
-                                disabled={choosenEvent ? validationsActive(choosenEvent) : true}
+                                disabled={choosenEvent ? validationsActive(choosenEvent, reservations) : true}
                             >
                                 Create
                                 </Button>
