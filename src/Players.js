@@ -282,9 +282,9 @@ export default function Players() {
         setOrderBy(property);
     };
 
-    // const handleMoreDetails = (event, id) => {
-    //     history.push(`/players/${id}`);
-    // };
+    const handleOpenDetails = (event, id) => {
+        history.push(`/players/${id}`);
+    };
 
     // function handleCitySelect(event) {
     //     setCity(event.target.value);
@@ -479,7 +479,7 @@ export default function Players() {
                                         return (
                                             <TableRow
                                                 hover
-                                                onClick={(event) => handleEditDetails(event, row.id)}
+                                                onClick={(event) => handleOpenDetails(event, row.id)}
                                                 tabIndex={-1}
                                                 key={`${new Date()} ${row.id}`}
                                                 selected={false}
