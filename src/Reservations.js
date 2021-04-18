@@ -641,7 +641,10 @@ export default function Reservations() {
                                                 tabIndex={-1}
                                                 key={`${new Date()} ${row.startDateTime} ${row.endDateTime}`}
                                                 selected={false}
-                                                style={Date.parse(row.endDateTime) < new Date() ? { backgroundColor: '#ffcccc', color: 'white' } : {}}
+                                                style={
+                                                    Date.parse(row.endDateTime) < new Date() || row.status === 'Canceled' ? 
+                                                    { backgroundColor: '#ffcccc', color: 'white' } : {}
+                                                }
                                             >
                                                 <TableCell>{row.playFieldTitle}</TableCell>
                                                 <TableCell>{row.playFieldCity}</TableCell>

@@ -211,6 +211,7 @@ const GET_RESERVATIONS_BY_PLAYFIELD_ID = gql`
                 id
             }
             totalCost
+            status
             paid
         }
     }

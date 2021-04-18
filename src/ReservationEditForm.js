@@ -263,6 +263,28 @@ export default function ReservationEditForm({ match }) {
         window.location.reload(true);
     }
 
+    function handleChangeReservationStatusAction(event) {
+        event.preventDefault();
+
+        setUpdated(true);
+        setIsLoading(true);
+
+        editReservation({
+            variables: {
+                id: match.params.reservationId,
+                reservationInput: filterNotEnteredEntries({
+                    status: editableReservation.status === 'Active' ? 'Canceled' : 'Active',
+                }),
+            },
+        });
+
+        setUpdated(false);
+        setIsLoading(false);
+
+        history.push('/reservations');
+        window.location.reload(true);
+    }
+
     function handleInformationSubmit(event) {
         event.preventDefault();
 
@@ -287,6 +309,8 @@ export default function ReservationEditForm({ match }) {
         history.push('/reservations');
         window.location.reload(true);
     }
+
+    console.log({editableReservation})
 
     if (!updateReservation && updated) {
         return (
@@ -460,7 +484,17 @@ export default function ReservationEditForm({ match }) {
                                 disabled={choosenEvent ? validationsActive(choosenEvent, reservations) : true}
                             >
                                 Update
-                                </Button>
+                            </Button>
+                            <Grid className={classes.spacingBetween}></Grid>
+                            <Button
+                                type="submit"
+                                variant="outlined"
+                                color="secondary"
+                                onClick={handleChangeReservationStatusAction}
+                                className={classes.buttonBox}
+                            >
+                                {editableReservation.status === 'Active' ? 'Cancel Reservation' : 'Re-cancel Reservation'}
+                            </Button>
                         </Grid>
                     </form>
                 </Grid>
