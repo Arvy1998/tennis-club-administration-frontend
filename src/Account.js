@@ -242,6 +242,9 @@ export default function Account() {
 
         setUpdated(false);
         setIsLoading(false);
+
+        history.push('/home');
+        window.location.reload(true);
     }
 
     function fileToBase64(fileUploadEvent) {

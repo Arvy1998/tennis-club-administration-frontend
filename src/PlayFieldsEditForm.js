@@ -262,6 +262,7 @@ export default function PlayFieldsEditForm({ match }) {
         setIsLoading(false);
 
         history.push('/playfields');
+        window.location.reload(true);
     }
 
     function openReservationCreatePageAction() {

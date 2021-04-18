@@ -310,8 +310,6 @@ export default function ReservationEditForm({ match }) {
         window.location.reload(true);
     }
 
-    console.log({editableReservation})
-
     if (!updateReservation && updated) {
         return (
             <div className={classes.loadingBarContainer}>
