@@ -653,7 +653,7 @@ export default function Reservations() {
                                                 <TableCell>{moment(row.startDateTime).format('YYYY-MM-DD HH:mm')}</TableCell>
                                                 <TableCell>{moment(row.endDateTime).format('YYYY-MM-DD HH:mm')}</TableCell>
                                                 <TableCell>{row.paid ? 'Paid' : 'Not Paid'}</TableCell>
-                                                <TableCell>{Date.parse(row.endDateTime) < new Date() ? 'Past' : row.status}</TableCell>
+                                                <TableCell>{row.status}</TableCell>
                                                 <TableCell>
                                                     {
                                                         Date.parse(row.endDateTime) < new Date() ? (

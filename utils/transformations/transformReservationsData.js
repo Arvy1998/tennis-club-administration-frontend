@@ -5,6 +5,7 @@ const transformReservationsData = (reservations) => {
             playFieldCity: reservation.playField.city,
             playFieldAddress: reservation.playField.address,
             ...reservation,
+            status: Date.parse(reservation.endDateTime) < new Date() ? 'Past' : reservation.status,
         }
     })
 }
