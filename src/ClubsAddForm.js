@@ -9,6 +9,7 @@ import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import TextFieldsIcon from '@material-ui/icons/TextFields';
 import HomeIcon from '@material-ui/icons/Home';
+import InfoIcon from '@material-ui/icons/Info';
 
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
@@ -234,7 +235,7 @@ export default function ClubsAddForm() {
                             <Grid className={classes.spacingBetweenFields}></Grid>
                             <Grid container spacing={1} alignItems="flex-end" justify="center">
                                 <Grid item>
-                                    <HomeIcon />
+                                    <InfoIcon />
                                 </Grid>
                                 <Grid item>
                                     <TextField
@@ -242,6 +243,7 @@ export default function ClubsAddForm() {
                                         id="description"
                                         label="Description"
                                         name="description"
+                                        multiline
                                         autoComplete="description"
                                         onInput={e => setDescription(e.target.value)}
                                     />

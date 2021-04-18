@@ -48,6 +48,7 @@ import { Typography } from '@material-ui/core';
 import { useQuery } from "@apollo/react-hooks";
 import {
     GET_PLAYERS,
+    LIST_CLUBS,
 } from './gql/queries/queries';
 
 import areFiltersSelected from '../utils/areFiltersSelected';
@@ -58,7 +59,7 @@ import getModalStyle from '../utils/props/getModalStyle';
 
 import stableSort from '../utils/comparators/stableSort';
 import getComparator from '../utils/comparators/getComparator';
-import playFieldsHeadCells from '../utils/cells/playFieldsHeadCells';
+import playersHeadCells from '../utils/cells/playersHeadCells';
 import isNotPlayer from '../utils/isNotPlayer';
 
 const useStyles = makeStyles((theme) => ({
@@ -135,28 +136,24 @@ function EnhancedTableHead(props) {
     return (
         <TableHead>
             <TableRow>
-                {playFieldsHeadCells.map((headCell) => (
+                {playersHeadCells.map((headCell) => (
                     <TableCell
                         key={headCell.id}
                         padding={headCell.disablePadding ? 'none' : 'default'}
                         sortDirection={orderBy === headCell.id ? order : false}
                     >
-                        { headCell.id === "playFieldPhoto" ? (
-                            headCell.label
-                        ) : (
-                            <TableSortLabel
-                                active={orderBy === headCell.id}
-                                direction={orderBy === headCell.id ? order : 'asc'}
-                                onClick={createSortHandler(headCell.id)}
-                            >
-                                {headCell.label}
-                                {orderBy === headCell.id ? (
-                                    <span className={classes.visuallyHidden}>
-                                        {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                                    </span>
-                                ) : null}
-                            </TableSortLabel>
-                        )}
+                        <TableSortLabel
+                            active={orderBy === headCell.id}
+                            direction={orderBy === headCell.id ? order : 'asc'}
+                            onClick={createSortHandler(headCell.id)}
+                        >
+                            {headCell.label}
+                            {orderBy === headCell.id ? (
+                                <span className={classes.visuallyHidden}>
+                                    {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                                </span>
+                            ) : null}
+                        </TableSortLabel>
                     </TableCell>
                 ))}
             </TableRow>
@@ -164,13 +161,16 @@ function EnhancedTableHead(props) {
     );
 }
 
-export default function PlayFields() {
+export default function Players() {
     const classes = useStyles();
     const theme = useTheme();
     const history = useHistory();
 
-    const [loadedPlayfieldsData, setLoadedPlayfieldsData] = useState(null);
-    const [filteredPlayFieldsData, setFilteredPlayFieldsData] = useState(null);
+    const [loadedPlayersData, setLoadedPlayersData] = useState(null);
+    const [filteredPlayersData, setFilteredPlayersData] = useState(null);
+
+    const [loadedClubsData, setLoadedClubsData] = useState(null);
+
     const [isLoading, setIsLoading] = useState(null);
     const [isError, setIsError] = useState(null);
 
@@ -182,34 +182,57 @@ export default function PlayFields() {
     const [modalStyle] = useState(getModalStyle);
     const [open, setOpen] = useState(false);
 
-    const { loading, error, data } = useQuery(GET_PLAYERS);
+    const { loading: playersLoading, error: playersError, data: playersData } = useQuery(GET_PLAYERS);
+    const { loading: clubsLoading, error: clubsError, data: clubsData } = useQuery(LIST_CLUBS)
 
     /* Filtering state */
-    const [title, setTitle] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [sex, setSex] = useState('Not Selected');
+    const [level, setLevel] = useState('Not Selected');
     const [city, setCity] = useState('Not Selected');
-    const [cost, setCost] = useState(0);
-    const [courtType, setCourtType] = useState('Not Selected');
-    const [courtFloorType, setCourtFloorType] = useState('Not Selected');
-    const [rating, setRating] = useState(0);
-    const [hover, setHover] = useState(-1);
+    const [mainHand, setMainHand] = useState('Not Selected');
+    const [clubTitle, setClubTitle] = useState('');
 
     useEffect(() => {
-        if (loading) {
-            setIsLoading(loading);
+        if (playersLoading) {
+            setIsLoading(playersLoading);
         }
 
-        if (error) {
-            setIsError(error);
+        if (playersError) {
+            setIsError(playersError);
             setIsLoading(false);
         }
 
-        if (data) {
-            setLoadedPlayfieldsData(data);
+        if (playersData) {
+            /* also remove yourself from seach results */
+            let alteredPlayers = playersData;
+            _.remove(alteredPlayers.getPlayers, {
+                id: localStorage.getItem('id'),
+            })
+
+            setLoadedPlayersData(alteredPlayers);
             setIsLoading(false);
         }
-    }, [loading, error, data]);
+    }, [playersLoading, playersError, playersData]);
 
-    if (!loadedPlayfieldsData || isLoading) {
+    useEffect(() => {
+        if (clubsLoading) {
+            setIsLoading(clubsLoading);
+        }
+
+        if (clubsError) {
+            setIsError(clubsError);
+            setIsLoading(false);
+        }
+
+        if (clubsData) {
+            setLoadedClubsData(clubsData);
+            setIsLoading(false);
+        }
+    }, [clubsLoading, clubsError, clubsData]);
+
+    if (!loadedPlayersData || isLoading) {
         return (
             <div className={classes.loadingBarContainer}>
                 <LinearProgress color="secondary" />
@@ -218,18 +241,40 @@ export default function PlayFields() {
     }
 
     let rows;
-    if (loadedPlayfieldsData) {
-        rows = loadedPlayfieldsData.listPlayFields;
+    if (loadedPlayersData) {
+        rows = loadedPlayersData.getPlayers;
     }
 
-    // let availableCities = _.uniq(rows.map(row => row.city));
-    // availableCities.push('Not Selected');
+    const availableHands = [
+        'Left',
+        'Right',
+        'Not Selected'
+    ];
 
-    // let availableCourtTypes = _.uniq(rows.map(row => row.courtType));
-    // availableCourtTypes.push('Not Selected');
+    const availableSex = [
+        'Male',
+        'Female',
+        'Other',
+        'Not Selected',
+    ];
 
-    // let availableCourtFloorTypes = _.uniq(rows.map(row => row.courtFloorType));
-    // availableCourtFloorTypes.push('Not Selected');
+    const availableLevels = [
+        'Level 1.5',
+        'Level 2.0',
+        'Level 2.5',
+        'Level 3.0',
+        'Level 3.5',
+        'Level 4.0',
+        'Level 4.5',
+        'Level 5.0',
+        'Level 5.5',
+        'Level 6.0 - 7.0',
+        'Level 7.0',
+        'Not Selected',
+    ];
+
+    let availableCities = _.uniq(rows.map(row => row.city));
+    availableCities.push('Not Selected');
 
     const handleRequestSort = (event, property) => {
         const isAscending = orderBy === property && order === 'asc';
@@ -237,21 +282,21 @@ export default function PlayFields() {
         setOrderBy(property);
     };
 
-    const handleMoreDetails = (event, id) => {
-        history.push(`/players/${id}`);
-    };
+    // const handleMoreDetails = (event, id) => {
+    //     history.push(`/players/${id}`);
+    // };
 
-    function handleCitySelect(event) {
-        setCity(event.target.value);
-    };
+    // function handleCitySelect(event) {
+    //     setCity(event.target.value);
+    // };
 
-    function handleCourtTypeSelect(event) {
-        setCourtType(event.target.value);
-    };
+    // function handleCourtTypeSelect(event) {
+    //     setCourtType(event.target.value);
+    // };
 
-    function handleCourtFloorTypeSelect(event) {
-        setCourtFloorType(event.target.value);
-    };
+    // function handleCourtFloorTypeSelect(event) {
+    //     setCourtFloorType(event.target.value);
+    // };
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -274,7 +319,7 @@ export default function PlayFields() {
     function handleFilterSubmit(event) {
         event.preventDefault();
 
-        let filteredData = loadedPlayfieldsData.listPlayFields;
+        let filteredData = loadedPlayersData.getPlayers;
 
         // if (title) {
         //     filteredData = filteredData.filter(
@@ -312,21 +357,22 @@ export default function PlayFields() {
         //     );
         // }
 
-        setFilteredPlayFieldsData(filteredData);
+        setFilteredPlayersData(filteredData);
         setOpen(false);
     };
 
     function handleFilterClear(event) {
         event.preventDefault();
 
-        // setTitle('');
-        // setCity('Not Selected');
-        // setCost(0);
-        // setCourtType('Not Selected');
-        // setCourtFloorType('Not Selected');
-        // setRating(0);
+        setFirstName('');
+        setLastName('');
+        setSex('Not Selected');
+        setLevel('Not Selected');
+        setCity('Not Selected');
+        setMainHand('Not Selected');
+        setClubTitle('');
 
-        setFilteredPlayFieldsData(loadedPlayfieldsData.listPlayFields);
+        setFilteredPlayersData(loadedPlayersData.getPlayers);
     }
 
     if (!rows) {
@@ -344,7 +390,7 @@ export default function PlayFields() {
             </Typography>
             <form className={classes.form} onSubmit={handleFilterSubmit}>
                 <Grid container>
-                    
+
                     <Grid className={classes.spacingBetweenFields}></Grid>
                     <Grid container alignItems="center" justify="space-between">
                         <Button
@@ -353,7 +399,7 @@ export default function PlayFields() {
                             color="secondary"
                             className={classes.buttonBox}
                             disabled={!areFiltersSelected({
-                                title, city, cost, courtType, courtFloorType, rating,
+                                firstName, lastName, sex, level, city, mainHand, clubTitle,
                             })}
                         >
                             Clear Filters
@@ -364,7 +410,7 @@ export default function PlayFields() {
                             color="secondary"
                             className={classes.buttonBox}
                             disabled={!areFiltersSelected({
-                                title, city, cost, courtType, courtFloorType, rating,
+                                firstName, lastName, sex, level, city, mainHand, clubTitle,
                             })}
                         >
                             Filter
@@ -380,25 +426,13 @@ export default function PlayFields() {
             <Navigation />
             <Container className={classes.listContainer}>
                 <Grid container spacing={3} alignItems="center" justify="space-between">
-                    {
-                        isNotPlayer() ? (
-                            <Button
-                                variant="outlined"
-                                color="secondary"
-                                component="span"
-                                onClick={() => { history.push('/playfields/add') }}
-                            >
-                                New Play Field
-                            </Button>
-                        ) : ''
-                    }
                     <Toolbar
                         className={clsx(classes.root, {
                             [classes.highlight]: false,
                         })}
                     >
                         <Typography className={classes.title}>
-                            Filter Play Fields
+                            Filter Players
                         </Typography>
                         <Tooltip title="Filter list">
                             <IconButton
@@ -439,7 +473,7 @@ export default function PlayFields() {
                                 rowCount={rows.length}
                             />
                             <TableBody>
-                                {stableSort(filteredPlayFieldsData || rows, getComparator(order, orderBy))
+                                {stableSort(filteredPlayersData || rows, getComparator(order, orderBy))
                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                     .map((row, index) => {
                                         return (
@@ -447,36 +481,16 @@ export default function PlayFields() {
                                                 hover
                                                 onClick={(event) => handleEditDetails(event, row.id)}
                                                 tabIndex={-1}
-                                                key={`${new Date()} ${row.title}`}
+                                                key={`${new Date()} ${row.id}`}
                                                 selected={false}
                                             >
-                                                <TableCell>{row.title}</TableCell>
+                                                <TableCell>{row.firstName}</TableCell>
+                                                <TableCell>{row.lastName}</TableCell>
+                                                <TableCell>{row.sex}</TableCell>
+                                                <TableCell>{row.level}</TableCell>
                                                 <TableCell>{row.city}</TableCell>
-                                                <TableCell>{row.cost} €</TableCell>
-                                                <TableCell>{row.courtType}</TableCell>
-                                                <TableCell>{row.courtFloorType}</TableCell>
-                                                <TableCell>
-                                                    <Rating
-                                                        precision={0.5}
-                                                        size="large"
-                                                        name="playfield-rating-bar"
-                                                        IconContainerComponent={IconContainer}
-                                                        disabled={true}
-                                                        value={row.rating}
-                                                    />
-                                                </TableCell>
-                                                <TableCell>
-                                                    <Avatar
-                                                        id="avatar-tennis"
-                                                        sizes="100px"
-                                                        alt="tennis-court"
-                                                        src={row.playFieldPhoto}
-                                                        variant="square"
-                                                        className={classes.media}
-                                                    >
-                                                        <PhotoIcon />
-                                                    </Avatar>
-                                                </TableCell>
+                                                <TableCell>{row.mainHand}</TableCell>
+                                                <TableCell>{row.clubTitle}</TableCell>
                                             </TableRow>
                                         );
                                     })}
