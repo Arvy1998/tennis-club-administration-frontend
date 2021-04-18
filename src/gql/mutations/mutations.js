@@ -227,6 +227,58 @@ const DELETE_RESERVATION = gql`
     }
 `;
 
+const CREATE_CLUB = gql`
+    mutation createClub($clubInput: ClubInput!) {
+        createClub(clubInput: $clubInput) {
+            id
+            title
+            description
+            clubLogo
+            creator {
+                id
+                firstName
+                lastName
+            }
+            users {
+                id
+                firstName
+                lastName
+                rating
+            }
+        }
+    }
+`;
+
+const UPDATE_CLUB = gql`
+    mutation updateClub($id: ID!, $clubInput: ClubInput!) {
+        updateClub(id: $id, clubInput: $clubInput) {
+            id
+            title
+            description
+            clubLogo
+            creator {
+                id
+                firstName
+                lastName
+            }
+            users {
+                id
+                firstName
+                lastName
+                rating
+            }
+        }
+    }
+`;
+
+const DELETE_CLUB = gql`
+    mutation deleteClub($id: ID!) {
+        deleteClub(id: $id) {
+            id
+        }
+    }
+`;
+
 export {
     LOGIN_USER,
     UPDATE_USER,
@@ -240,4 +292,7 @@ export {
     CREATE_RESERVATION,
     UPDATE_RESERVATION,
     DELETE_RESERVATION,
+    CREATE_CLUB,
+    UPDATE_CLUB,
+    DELETE_CLUB,
 }

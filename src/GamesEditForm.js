@@ -185,7 +185,10 @@ export default function GamesEditForm({ match }) {
         }
 
         if (usersData) {
-            setLoadedUsersData(_.sortBy(usersData.allUsers, ['firstName', 'lastName']), { id: 'Not Selected' });
+            setLoadedUsersData(_.sortBy(
+                [...data.allUsers, { id: 'Not Selected' }], 
+                ['firstName', 'lastName']
+            ), { id: 'Not Selected' });
             setIsLoading(false);
         }
     }, [usersLoading, usersError, usersData]);

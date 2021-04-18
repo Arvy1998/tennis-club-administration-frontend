@@ -14,6 +14,8 @@ import Games from './Games';
 import GamesAddForm from './GamesAddForm';
 import GamesEditForm from './GamesEditForm';
 import Players from './Players';
+import PlayerDetails from './PlayerDetails';
+import ClubsForm from './ClubsForm';
 
 import {
     BrowserRouter as Router,
@@ -35,9 +37,11 @@ const App = () => {
                         <Route path="/login" component={Login} />
                         <Route path="/home" component={Home} />
                         <Route path="/account" component={Account} />
+                        <Route path="/club" component={ClubsForm}/>
                         <Route path="/games/edit/:id" component={GamesEditForm} />
                         <Route path="/games/add" component={GamesAddForm} />
                         <Route path="/games" component={Games} />
+                        <Route path="/players/:id" component={PlayerDetails} />
                         <Route path="/players" component={Players} />
                         <Route path="/reservations/edit/:playFieldId/:reservationId" component={ReservationEditForm}/>
                         <Route path="/reservations/add/:playFieldId" component={ReservationAddForm}/>

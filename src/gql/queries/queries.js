@@ -18,6 +18,11 @@ const GET_USER = gql`
             mainHand
             details
             rating
+            club {
+                id
+                title
+                clubLogo
+            }
             games {
                 id
                 date
@@ -68,6 +73,11 @@ const GET_PLAYERS = gql`
             mainHand
             details
             rating
+            club {
+                id
+                title
+                clubLogo
+            }
         }
     }
 `;
@@ -243,6 +253,58 @@ const GET_RESERVATIONS_BY_USER_ID = gql`
     }
 `;
 
+const GET_CLUB = gql`
+    query getClub($id: ID!) {
+        getClub(id: $id) {
+            id
+            title
+            description
+            clubLogo
+            creator {
+                id
+                firstName
+                lastName
+            }
+            users {
+                id
+                firstName
+                lastName
+                rating
+            }
+        }
+    }
+`;
+
+const LIST_CLUBS = gql`
+    query listClubs {
+        listClubs {
+            id
+            title
+            description
+            clubLogo
+            creator {
+                id
+                firstName
+                lastName
+            }
+            users {
+                id
+                firstName
+                lastName
+                rating
+            }
+        }
+    }
+`;
+
+const GET_CLUB_BY_CREATOR_ID = gql`
+    query getClubByCreatorId($creatorId: ID!) {
+        getClubByCreatorId(creatorId: $creatorId) {
+            id
+        }
+    }
+`;
+
 export {
     GET_USER,
     ALL_USERS,
@@ -253,4 +315,7 @@ export {
     GET_PLAYERS,
     GET_RESERVATIONS_BY_PLAYFIELD_ID,
     GET_RESERVATIONS_BY_USER_ID,
+    GET_CLUB,
+    LIST_CLUBS,
+    GET_CLUB_BY_CREATOR_ID,
 }
