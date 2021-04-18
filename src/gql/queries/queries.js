@@ -216,6 +216,32 @@ const GET_RESERVATIONS_BY_PLAYFIELD_ID = gql`
     }
 `;
 
+const GET_RESERVATIONS_BY_USER_ID = gql`
+    query getReservationsByUserId($userId: ID!) {
+        getReservationsByUserId(userId: $userId) {
+            id
+            startDateTime
+            endDateTime
+            user {
+                id
+            }
+            isRecurring
+            recurringDate
+            recurringPeriod
+            recurringEvery
+            playField {
+                id
+                title
+                city
+                address
+            }
+            totalCost
+            status
+            paid
+        }
+    }
+`;
+
 export {
     GET_USER,
     ALL_USERS,
@@ -225,4 +251,5 @@ export {
     GET_GAME,
     GET_PLAYERS,
     GET_RESERVATIONS_BY_PLAYFIELD_ID,
+    GET_RESERVATIONS_BY_USER_ID,
 }

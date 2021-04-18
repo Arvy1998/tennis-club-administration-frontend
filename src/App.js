@@ -39,8 +39,8 @@ const App = () => {
                         <Route path="/games/add" component={GamesAddForm} />
                         <Route path="/games" component={Games} />
                         <Route path="/players" component={Players} />
+                        <Route path="/reservations/edit/:playFieldId/:reservationId" component={ReservationEditForm}/>
                         <Route path="/reservations/add/:playFieldId" component={ReservationAddForm}/>
-                        <Route path="/reservations/edit/:id" component={ReservationEditForm}/>
                         <Route path="/reservations" component={Reservations} />
                         <Route path="/playfields/edit/:id" component={PlayFieldsEditForm} />
                         <Route path="/playfields/add" component={PlayFieldsAddForm} />

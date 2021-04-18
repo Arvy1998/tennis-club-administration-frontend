@@ -7,29 +7,20 @@ import Button from '@material-ui/core/Button';
 
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
-import Select from '@material-ui/core/Select';
-import Input from '@material-ui/core/Input';
-import MenuItem from '@material-ui/core/MenuItem';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
 import Tooltip from '@material-ui/core/Tooltip';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import InfoIcon from '@material-ui/icons/Info';
 import EventIcon from '@material-ui/icons/Event';
+import EuroSymbolIcon from '@material-ui/icons/EuroSymbol';
 
 import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
-import FullCalendar, { formatDate } from '@fullcalendar/react';
+import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-
-import EuroSymbolIcon from '@material-ui/icons/EuroSymbol';
 
 import Navigation from './Navigation';
 
@@ -236,8 +227,6 @@ export default function ReservationAddForm({ match }) {
         })
     }
 
-    console.log({reservations})
-
     function handleInformationSubmit(event) {
         event.preventDefault();
 
@@ -250,6 +239,7 @@ export default function ReservationAddForm({ match }) {
                     userId: localStorage.getItem('id'),
                     startDateTime,
                     endDateTime,
+                    totalCost: playField.cost * getDatesDifferenceInHour(choosenEvent),
                 }),
             },
         });

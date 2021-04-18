@@ -1,5 +1,4 @@
 const doSelectedDatesIntersect = ({ start, end }, reservations) => {
-    console.log(reservations);
     const intersections = reservations.map(reservation => {
         if (reservation.start <= end && start <= reservation.end) return true;
         return false;

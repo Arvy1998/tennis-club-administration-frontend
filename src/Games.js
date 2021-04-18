@@ -268,7 +268,7 @@ export default function Games() {
                                                 key={`${new Date()} ${row.date}`}
                                                 selected={false}
                                             >
-                                                <TableCell>{moment(row.date).format('YYYY-MM-DD HH:mm:ss')}</TableCell>
+                                                <TableCell>{moment(row.date).format('YYYY-MM-DD HH:mm')}</TableCell>
                                                 <TableCell>
                                                     {`${row.firstTeamFirstPlayer.firstName} ${row.firstTeamFirstPlayer.lastName}${row.firstTeamSecondPlayer ? ', ' : ' '}`}
                                                     {row.firstTeamSecondPlayer ? `${row.firstTeamSecondPlayer.firstName} ${row.firstTeamSecondPlayer.lastName}` : ''}
