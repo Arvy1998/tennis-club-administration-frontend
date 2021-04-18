@@ -285,6 +285,10 @@ export default function ReservationEditForm({ match }) {
         window.location.reload(true);
     }
 
+    function handlePaymentAction(event) {
+        
+    }
+
     function handleInformationSubmit(event) {
         event.preventDefault();
 
@@ -482,6 +486,16 @@ export default function ReservationEditForm({ match }) {
                                 disabled={choosenEvent ? validationsActive(choosenEvent, reservations) : true}
                             >
                                 Update
+                            </Button>
+                            <Grid className={classes.spacingBetween}></Grid>
+                            <Button
+                                variant="outlined"
+                                color="secondary"
+                                onClick={handlePaymentAction}
+                                className={classes.buttonBox}
+                                disabled={editableReservation.paid}
+                            >
+                                Pay For Reservation
                             </Button>
                             <Grid className={classes.spacingBetween}></Grid>
                             <Button
