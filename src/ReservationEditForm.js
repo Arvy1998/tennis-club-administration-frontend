@@ -172,7 +172,13 @@ export default function ReservationEditForm({ match }) {
                 return reservation.id === match.params.reservationId
             })[0];
 
-            setLoadedReservationsData(reservationsData);
+            /* also remove editable reservation from seach results */
+            let alteredReservations = reservationsData;
+            _.remove(reservationsData.getReservationsByPlayfieldId, {
+                id: match.params.reservationId
+            })
+
+            setLoadedReservationsData(alteredReservations);
             setEditableReservation(currReservation);
             setChoosenEvent({
                 id: createEventId(),
@@ -286,7 +292,7 @@ export default function ReservationEditForm({ match }) {
     }
 
     function handlePaymentAction(event) {
-        
+
     }
 
     function handleInformationSubmit(event) {

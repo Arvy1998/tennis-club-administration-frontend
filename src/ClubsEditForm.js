@@ -207,7 +207,7 @@ export default function ClubsAddForm({ clubId }) {
                     title,
                     description,
                     clubLogo,
-                    userIds: formState.userIds || null,
+                    userIds: formState.userIds.length > 0 ? formState.userIds : club.users.map(user => user.id),
                 }),
             },
         });

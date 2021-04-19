@@ -62,6 +62,8 @@ import getComparator from '../utils/comparators/getComparator';
 import playersHeadCells from '../utils/cells/playersHeadCells';
 import isNotPlayer from '../utils/isNotPlayer';
 
+import transformUsersData from '../utils/transformations/transformUsersData';
+
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
@@ -240,9 +242,17 @@ export default function Players() {
         );
     }
 
+    if (!loadedClubsData || isLoading) {
+        return (
+            <div className={classes.loadingBarContainer}>
+                <LinearProgress color="secondary" />
+            </div>
+        );
+    }
+
     let rows;
     if (loadedPlayersData) {
-        rows = loadedPlayersData.getPlayers;
+        rows = transformUsersData(loadedPlayersData.getPlayers, loadedClubsData.listClubs);
     }
 
     const availableHands = [
@@ -319,7 +329,8 @@ export default function Players() {
     function handleFilterSubmit(event) {
         event.preventDefault();
 
-        let filteredData = loadedPlayersData.getPlayers;
+        console.log({ loadedClubsData });
+        let filteredData = transformUsersData(loadedPlayersData.getPlayers, loadedClubsData.listClubs);
 
         // if (title) {
         //     filteredData = filteredData.filter(
@@ -372,7 +383,7 @@ export default function Players() {
         setMainHand('Not Selected');
         setClubTitle('');
 
-        setFilteredPlayersData(loadedPlayersData.getPlayers);
+        setFilteredPlayersData(transformUsersData(loadedPlayersData.getPlayers, loadedClubsData.listClubs));
     }
 
     if (!rows) {
@@ -490,7 +501,25 @@ export default function Players() {
                                                 <TableCell>{row.level}</TableCell>
                                                 <TableCell>{row.city}</TableCell>
                                                 <TableCell>{row.mainHand}</TableCell>
-                                                <TableCell>{row.clubTitle}</TableCell>
+                                                <TableCell>
+                                                    {row.clubTitle !== '' ? (
+                                                        <Grid container spacing={1} alignItems="center">
+                                                            <Grid item>
+                                                                <Avatar
+                                                                    id="avatar"
+                                                                    sizes="100px"
+                                                                    alt={`${row.id}`}
+                                                                    src={row.clubLogo}
+                                                                    className={classes.large}
+                                                                />
+                                                            </Grid>
+                                                            <Grid item>
+                                                                {row.clubTitle}
+                                                            </Grid>
+                                                        </Grid>
+                                                    ) : ''}
+
+                                                </TableCell>
                                             </TableRow>
                                         );
                                     })}
