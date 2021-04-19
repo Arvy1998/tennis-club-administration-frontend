@@ -186,7 +186,7 @@ export default function GamesEditForm({ match }) {
 
         if (usersData) {
             setLoadedUsersData(_.sortBy(
-                [...data.allUsers, { id: 'Not Selected' }], 
+                [...usersData.allUsers, { id: 'Not Selected' }], 
                 ['firstName', 'lastName']
             ), { id: 'Not Selected' });
             setIsLoading(false);

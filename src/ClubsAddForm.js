@@ -240,10 +240,10 @@ export default function ClubsAddForm() {
                                 <Grid item>
                                     <TextField
                                         style={{ width: 300 }}
+                                        multiline
                                         id="description"
                                         label="Description"
                                         name="description"
-                                        multiline
                                         autoComplete="description"
                                         onInput={e => setDescription(e.target.value)}
                                     />

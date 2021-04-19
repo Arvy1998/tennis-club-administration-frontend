@@ -185,7 +185,7 @@ export default function Players() {
     const [open, setOpen] = useState(false);
 
     const { loading: playersLoading, error: playersError, data: playersData } = useQuery(GET_PLAYERS);
-    const { loading: clubsLoading, error: clubsError, data: clubsData } = useQuery(LIST_CLUBS)
+    const { loading: clubsLoading, error: clubsError, data: clubsData } = useQuery(LIST_CLUBS);
 
     /* Filtering state */
     const [firstName, setFirstName] = useState('');
@@ -285,6 +285,9 @@ export default function Players() {
 
     let availableCities = _.uniq(rows.map(row => row.city));
     availableCities.push('Not Selected');
+
+    let availableClubs = _.uniq(loadedClubsData.listClubs.map(club => club.title));
+    availableClubs.push('Not Selected');
 
     const handleRequestSort = (event, property) => {
         const isAscending = orderBy === property && order === 'asc';

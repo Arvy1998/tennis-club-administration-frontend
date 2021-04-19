@@ -31,6 +31,7 @@ import { useQuery } from "@apollo/react-hooks";
 import {
     GET_PLAYERS,
     GET_CLUB,
+    LIST_CLUBS,
 } from './gql/queries/queries';
 
 const useStyles = makeStyles((theme) => ({
@@ -124,6 +125,9 @@ export default function ClubsAddForm({ clubId }) {
 
     const [loadedClubsData, setLoadedClubsData] = useState(null);
     const [loadedUsersData, setLoadedUsersData] = useState(null);
+    const [loadedListData, setLoadedListData] = useState(null);
+
+    const { loading: listLoading, error: listError, data: listData } = useQuery(LIST_CLUBS);
 
     const [editClub, { data: updateClub }] = useMutation(UPDATE_CLUB);
 
@@ -158,6 +162,22 @@ export default function ClubsAddForm({ clubId }) {
     }, [clubsLoading, clubsError, clubsData]);
 
     useEffect(() => {
+        if (listLoading) {
+            setIsLoading(listLoading);
+        }
+
+        if (listError) {
+            setIsError(listError);
+            setIsLoading(false);
+        }
+
+        if (listData) {
+            setLoadedListData(listData);
+            setIsLoading(false);
+        }
+    }, [listLoading, listError, listData]);
+
+    useEffect(() => {
         if (usersLoading) {
             setIsLoading(usersLoading);
         }
@@ -167,11 +187,39 @@ export default function ClubsAddForm({ clubId }) {
             setIsLoading(false);
         }
 
-        if (usersData) {
-            setLoadedUsersData(_.sortBy(usersData.getPlayers, ['firstName', 'lastName']));
+        if (usersData && listData && clubsData) {
+            let users = _.sortBy(usersData.getPlayers, ['firstName', 'lastName']);
+
+            /* firstly exclude selected to edit club */
+            let clubs = listData.listClubs;
+            _.remove(clubs, {
+                id: clubsData.getClub.id,
+            });
+
+            /* we dont want to see users, which are part of the other club,
+               so we filter them */
+            let userIds = _.flattenDeep(clubs.map(club => {
+                return club.users.map(user => {
+                    return user.id;
+                });
+            }));
+
+            /* copying reference will end up with bug where users array
+               dinamically changes during its iteration */
+            let filteredUsers = _.clone(users);
+
+            users.map(user => {
+                if (userIds.includes(user.id)) {
+                    _.remove(filteredUsers, {
+                        id: user.id,
+                    });
+                }
+            });
+
+            setLoadedUsersData(filteredUsers);
             setIsLoading(false);
         }
-    }, [usersLoading, usersError, usersData]);
+    }, [usersLoading, usersError, usersData, listData, clubsData]);
 
     if (!loadedUsersData || isLoading) {
         return (
@@ -182,6 +230,14 @@ export default function ClubsAddForm({ clubId }) {
     }
 
     if (!loadedClubsData || isLoading) {
+        return (
+            <div className={classes.loadingBarContainer}>
+                <LinearProgress color="secondary" />
+            </div>
+        );
+    }
+
+    if (!loadedListData || isLoading) {
         return (
             <div className={classes.loadingBarContainer}>
                 <LinearProgress color="secondary" />

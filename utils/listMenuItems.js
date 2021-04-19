@@ -20,8 +20,10 @@ import ContactSupportIcon from '@material-ui/icons/ContactSupport';
 import GroupIcon from '@material-ui/icons/Group';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import AccessibilityNewIcon from '@material-ui/icons/AccessibilityNew';
+import CreateIcon from '@material-ui/icons/Create';
 
 import isNotPlayer from './isNotPlayer';
+import isAdmin from './isAdmin';
 
 export const mainListItems = (
     <div>
@@ -68,23 +70,26 @@ export const mainListItems = (
             <ListItemText primary="Players Search" />
         </ListItem>
         {
-            isNotPlayer() ? (
-                <div>
-                    <ListItem button component={Link} to="/accounts">
-                        <ListItemIcon>
-                            <SupervisorAccountIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Players Accounts" />
-                    </ListItem>
-                    <ListItem button component={Link} to="/club">
-                        <ListItemIcon>
-                            <GroupIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Club" />
-                    </ListItem>
-                </div>
+            isAdmin() ? (
+                <ListItem button component={Link} to="/accounts">
+                    <ListItemIcon>
+                        <SupervisorAccountIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Manage Accounts" />
+                </ListItem>
             ) : ''
         }
+        {
+            isNotPlayer() ? (
+                <ListItem button component={Link} to="/club">
+                    <ListItemIcon>
+                        <GroupIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Club" />
+                </ListItem>
+            ) : ''
+        }
+
     </div>
 );
 
@@ -104,6 +109,16 @@ export const secondaryListItems = (
             </ListItemIcon>
             <ListItemText primary="TOP Players" />
         </ListItem>
+        {
+            isAdmin() ? (
+                <ListItem button component={Link} to="/admin/news">
+                    <ListItemIcon>
+                        <CreateIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Manage News" />
+                </ListItem>
+            ) : ''
+        }
         <ListItem button component={Link} to="/news">
             <ListItemIcon>
                 <AnnouncementIcon />
