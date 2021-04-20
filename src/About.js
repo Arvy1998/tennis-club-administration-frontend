@@ -65,7 +65,7 @@ export default function About() {
                             <CardContent>
                                 <Typography className={classes.title} color="textSecondary" gutterBottom>
                                     How do I find a player?
-                            </Typography>
+                                </Typography>
                                 <Typography className={classes.description} color="textSecondary">
                                     It's easy! Go to <b>Players Search</b>, here you will see all players, if you want to filter them, click <b>Filter Players</b> above the table and select any filter you desire!
                             </Typography>
@@ -77,10 +77,10 @@ export default function About() {
                             <CardContent>
                                 <Typography className={classes.title} color="textSecondary" gutterBottom>
                                     How do I make reservation?
-                            </Typography>
+                                </Typography>
                                 <Typography className={classes.description} color="textSecondary">
-                                    Go to <b>Play Fields</b> list, select any playfield you want to reservate, then at the bottom of the page you will find a 
-                                    <br/>
+                                    Go to <b>Play Fields</b> list, select any playfield you want to reservate, then at the bottom of the page you will find a
+                                    <br />
                                     button <b>Make Reservation</b>, press it, select time that is not busy, press <b>Create</b> and you are done!
                             </Typography>
                             </CardContent>
@@ -91,12 +91,12 @@ export default function About() {
                             <CardContent>
                                 <Typography className={classes.title} color="textSecondary" gutterBottom>
                                     How do I earn rank and badges?
-                            </Typography>
+                                </Typography>
                                 <Typography className={classes.description} color="textSecondary">
-                                    The ranking of any registered user inside the system is calculated depending on how much games you have won during the period you are registered here. 
-                                    <br/>
+                                    The ranking of any registered user inside the system is calculated depending on how much games you have won during the period you are registered here.
+                                    <br />
                                     Badges are earned depending on how many games you have won, how many types of matches you have won, have you ever been in the TOP player, your some
-                                    <br/>
+                                    <br />
                                     first awesome actions like making reservations also will make system proud of you! ;)
                             </Typography>
                             </CardContent>
@@ -107,7 +107,7 @@ export default function About() {
                             <CardContent>
                                 <Typography className={classes.title} color="textSecondary" gutterBottom>
                                     It is possible to enrol to the club myself?
-                            </Typography>
+                                </Typography>
                                 <Typography className={classes.description} color="textSecondary">
                                     Not really, you have to know the personal trenner and prove yourself.
                             </Typography>
@@ -118,8 +118,8 @@ export default function About() {
                         <Card className={classes.card} variant="outlined">
                             <CardContent>
                                 <Typography className={classes.title} color="textSecondary" gutterBottom>
-                                    Who are creator of this information system?
-                            </Typography>
+                                    Who are the creator of this information system?
+                                </Typography>
                                 <Typography className={classes.description} color="textSecondary">
                                     The creator is <b>Arvydas Baranauskas</b>, <b>VGTU</b> 4th grade student from <b>PRIf-17/2</b>.
                             </Typography>
