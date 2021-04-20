@@ -16,8 +16,6 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Avatar from '@material-ui/core/Avatar';
-import Rating from '@material-ui/lab/Rating';
 import Button from '@material-ui/core/Button';
 
 import Navigation from './Navigation';
@@ -37,7 +35,6 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import PhotoIcon from '@material-ui/icons/Photo';
 import InfoIcon from '@material-ui/icons/Info';
 import FilterListIcon from '@material-ui/icons/FilterList';
 
@@ -62,7 +59,6 @@ import getModalStyle from '../utils/props/getModalStyle';
 import stableSort from '../utils/comparators/stableSort';
 import getComparator from '../utils/comparators/getComparator';
 import reservationsHeadCells from '../utils/cells/reservationsHeadCells';
-import isNotPlayer from '../utils/isNotPlayer';
 
 import transformReservationsData from '../utils/transformations/transformReservationsData';
 

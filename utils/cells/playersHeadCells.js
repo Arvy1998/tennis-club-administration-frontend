@@ -5,6 +5,7 @@ const playersHeadCells = [
     { id: 'level', disablePadding: false, label: 'Level' },
     { id: 'city', disablePadding: false, label: 'City' },
     { id: 'mainHand', disablePadding: false, label: 'Main Hand' },
+    { id: 'rating', disablePadding: false, label: 'Rating' },
     { id: 'clubTitle', disablePadding: false, label: 'Club' },
 ];
 

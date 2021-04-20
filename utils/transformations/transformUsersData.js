@@ -29,6 +29,7 @@ const transformUsersData = (users, clubs) => {
             level: user.level ? levelMap[user.level] : '',
             clubTitle: userClub ? userClub.title : '',
             clubLogo: userClub ? userClub.clubLogo : '',
+            rating: user.rating ? parseInt(user.rating) : 0,
         }
     })
 }

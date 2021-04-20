@@ -16,7 +16,6 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Avatar from '@material-ui/core/Avatar';
-import Rating from '@material-ui/lab/Rating';
 import Button from '@material-ui/core/Button';
 
 import Navigation from './Navigation';
@@ -36,12 +35,15 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import PhotoIcon from '@material-ui/icons/Photo';
-import InfoIcon from '@material-ui/icons/Info';
 import FilterListIcon from '@material-ui/icons/FilterList';
 
 import TextFieldsIcon from '@material-ui/icons/TextFields';
 import HomeIcon from '@material-ui/icons/Home';
+import WcIcon from '@material-ui/icons/Wc';
+import EjectIcon from '@material-ui/icons/Eject';
+import PanToolIcon from '@material-ui/icons/PanTool';
+import StarIcon from '@material-ui/icons/Star';
+import InfoIcon from '@material-ui/icons/Info';
 
 import { Typography } from '@material-ui/core';
 
@@ -60,7 +62,6 @@ import getModalStyle from '../utils/props/getModalStyle';
 import stableSort from '../utils/comparators/stableSort';
 import getComparator from '../utils/comparators/getComparator';
 import playersHeadCells from '../utils/cells/playersHeadCells';
-import isNotPlayer from '../utils/isNotPlayer';
 
 import transformUsersData from '../utils/transformations/transformUsersData';
 
@@ -194,7 +195,8 @@ export default function Players() {
     const [level, setLevel] = useState('Not Selected');
     const [city, setCity] = useState('Not Selected');
     const [mainHand, setMainHand] = useState('Not Selected');
-    const [clubTitle, setClubTitle] = useState('');
+    const [clubTitle, setClubTitle] = useState('Not Selected');
+    const [rating, setRating] = useState(0);
 
     useEffect(() => {
         if (playersLoading) {
@@ -283,10 +285,10 @@ export default function Players() {
         'Not Selected',
     ];
 
-    let availableCities = _.uniq(rows.map(row => row.city));
+    let availableCities = _.compact(_.uniq(rows.map(row => row.city)));
     availableCities.push('Not Selected');
 
-    let availableClubs = _.uniq(loadedClubsData.listClubs.map(club => club.title));
+    let availableClubs = _.compact(_.uniq(loadedClubsData.listClubs.map(club => club.title)));
     availableClubs.push('Not Selected');
 
     const handleRequestSort = (event, property) => {
@@ -299,17 +301,25 @@ export default function Players() {
         history.push(`/players/${id}`);
     };
 
-    // function handleCitySelect(event) {
-    //     setCity(event.target.value);
-    // };
+    function handleLevelSelect(event) {
+        setLevel(event.target.value);
+    }
 
-    // function handleCourtTypeSelect(event) {
-    //     setCourtType(event.target.value);
-    // };
+    function handleGenderSelect(event) {
+        setSex(event.target.value);
+    }
 
-    // function handleCourtFloorTypeSelect(event) {
-    //     setCourtFloorType(event.target.value);
-    // };
+    function handleCitySelect(event) {
+        setCity(event.target.value);
+    };
+
+    function handleMainHandSelect(event) {
+        setMainHand(event.target.value);
+    };
+
+    function handleClubSelect(event) {
+        setClubTitle(event.target.value);
+    };
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -332,44 +342,55 @@ export default function Players() {
     function handleFilterSubmit(event) {
         event.preventDefault();
 
-        console.log({ loadedClubsData });
         let filteredData = transformUsersData(loadedPlayersData.getPlayers, loadedClubsData.listClubs);
 
-        // if (title) {
-        //     filteredData = filteredData.filter(
-        //         data => data.title.includes(title),
-        //     );
-        // }
+        if (firstName !== '') {
+            filteredData = filteredData.filter(
+                data => data.firstName.includes(firstName),
+            );
+        }
 
-        // if (city !== 'Not Selected') {
-        //     filteredData = filteredData.filter(
-        //         data => data.city === city,
-        //     );
-        // }
+        if (lastName !== '') {
+            filteredData = filteredData.filter(
+                data => data.lastName.includes(lastName),
+            );
+        }
 
-        // if (cost !== 0) {
-        //     filteredData = filteredData.filter(
-        //         data => data.cost <= cost,
-        //     );
-        // }
+        if (level !== 'Not Selected') {
+            filteredData = filteredData.filter(
+                data => data.level === level,
+            );
+        }
 
-        // if (rating !== 0) {
-        //     filteredData = filteredData.filter(
-        //         data => data.rating >= rating,
-        //     );
-        // }
+        if (sex !== 'Not Selected') {
+            filteredData = filteredData.filter(
+                data => data.sex === sex,
+            );
+        }
 
-        // if (courtType !== 'Not Selected') {
-        //     filteredData = filteredData.filter(
-        //         data => data.courtType === courtType,
-        //     );
-        // }
+        if (city !== 'Not Selected') {
+            filteredData = filteredData.filter(
+                data => data.city === city,
+            );
+        }
 
-        // if (courtFloorType !== 'Not Selected') {
-        //     filteredData = filteredData.filter(
-        //         data => data.courtFloorType === courtFloorType,
-        //     );
-        // }
+        if (mainHand !== 'Not Selected') {
+            filteredData = filteredData.filter(
+                data => data.mainHand === mainHand,
+            );
+        }
+
+        if (clubTitle !== 'Not Selected') {
+            filteredData = filteredData.filter(
+                data => data.clubTitle === clubTitle,
+            );
+        }
+
+        if (rating !== 0) {
+            filteredData = filteredData.filter(
+                data => data.rating <= parseInt(rating),
+            );
+        }
 
         setFilteredPlayersData(filteredData);
         setOpen(false);
@@ -384,7 +405,8 @@ export default function Players() {
         setLevel('Not Selected');
         setCity('Not Selected');
         setMainHand('Not Selected');
-        setClubTitle('');
+        setClubTitle('Not Selected');
+        setRating(0);
 
         setFilteredPlayersData(transformUsersData(loadedPlayersData.getPlayers, loadedClubsData.listClubs));
     }
@@ -404,7 +426,204 @@ export default function Players() {
             </Typography>
             <form className={classes.form} onSubmit={handleFilterSubmit}>
                 <Grid container>
-
+                <Grid container spacing={1} alignItems="flex-end" justify="center">
+                        <Grid item>
+                            <TextFieldsIcon />
+                        </Grid>
+                        <Grid item>
+                            <TextField
+                                autoComplete="firstName"
+                                defaultValue={firstName}
+                                name="firstName"
+                                style={{ width: 200 }}
+                                id="firstName"
+                                label="First Name"
+                                onInput={e => setFirstName(e.target.value)}
+                            />
+                        </Grid>
+                    </Grid>
+                    <Grid className={classes.spacingBetweenFields}></Grid>
+                    <Grid container spacing={1} alignItems="flex-end" justify="center">
+                        <Grid item>
+                            <TextFieldsIcon />
+                        </Grid>
+                        <Grid item>
+                            <TextField
+                                autoComplete="lastName"
+                                defaultValue={lastName}
+                                name="lastName"
+                                style={{ width: 200 }}
+                                id="lastName"
+                                label="Last Name"
+                                onInput={e => setLastName(e.target.value)}
+                            />
+                        </Grid>
+                    </Grid>
+                    <Grid className={classes.spacingBetweenFields}></Grid>
+                    <Grid container spacing={1} alignItems="flex-end" justify="center">
+                        <Grid item>
+                            <EjectIcon />
+                        </Grid>
+                        <Grid item>
+                            <FormControl className={classes.formControl}>
+                                <InputLabel id="level">Level</InputLabel>
+                                <Select
+                                    labelId="level"
+                                    id="level"
+                                    defaultValue='Not Selected'
+                                    style={{ width: 200 }}
+                                    onChange={handleLevelSelect}
+                                    input={<Input />}
+                                    MenuProps={MenuProps}
+                                >
+                                    {availableLevels.map((levelToSelect) => (
+                                        <MenuItem key={levelToSelect} value={levelToSelect} style={
+                                            getDropdownStyles(levelToSelect, level, theme)
+                                        }>
+                                            {levelToSelect}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                    </Grid>
+                    <Grid className={classes.spacingBetweenFields}></Grid>
+                    <Grid container spacing={1} alignItems="flex-end" justify="center">
+                        <Grid item>
+                            <WcIcon />
+                        </Grid>
+                        <Grid item>
+                            <FormControl className={classes.formControl}>
+                                <InputLabel id="sex">Gender</InputLabel>
+                                <Select
+                                    labelId="sex"
+                                    id="sex"
+                                    defaultValue='Not Selected'
+                                    style={{ width: 200 }}
+                                    onChange={handleGenderSelect}
+                                    input={<Input />}
+                                    MenuProps={MenuProps}
+                                >
+                                    {availableSex.map((gender) => (
+                                        <MenuItem key={gender} value={gender} style={
+                                            getDropdownStyles(gender, sex, theme)
+                                        }>
+                                            {gender}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                    </Grid>
+                    <Grid className={classes.spacingBetweenFields}></Grid>
+                    <Grid container spacing={1} alignItems="flex-end" justify="center">
+                        <Grid item>
+                            <HomeIcon />
+                        </Grid>
+                        <Grid item>
+                            <FormControl className={classes.formControl}>
+                                <InputLabel id="city">City</InputLabel>
+                                <Select
+                                    labelId="city"
+                                    id="city"
+                                    defaultValue='Not Selected'
+                                    style={{ width: 200 }}
+                                    onChange={handleCitySelect}
+                                    input={<Input />}
+                                    MenuProps={MenuProps}
+                                >
+                                    {availableCities.map((cityToSelect) => (
+                                        <MenuItem key={cityToSelect} value={cityToSelect} style={
+                                            getDropdownStyles(cityToSelect, city, theme)
+                                        }>
+                                            {cityToSelect}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                    </Grid>
+                    <Grid className={classes.spacingBetweenFields}></Grid>
+                    <Grid container spacing={1} alignItems="flex-end" justify="center">
+                        <Grid item>
+                            <PanToolIcon />
+                        </Grid>
+                        <Grid item>
+                            <FormControl className={classes.formControl}>
+                                <InputLabel id="mainHand">Main Hand</InputLabel>
+                                <Select
+                                    labelId="mainHand"
+                                    id="mainHand"
+                                    defaultValue='Not Selected'
+                                    style={{ width: 200 }}
+                                    onChange={handleMainHandSelect}
+                                    input={<Input />}
+                                    MenuProps={MenuProps}
+                                >
+                                    {availableHands.map((hand) => (
+                                        <MenuItem key={hand} value={hand} style={
+                                            getDropdownStyles(hand, mainHand, theme)
+                                        }>
+                                            {hand}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                    </Grid>
+                    <Grid className={classes.spacingBetweenFields}></Grid>
+                    <Grid container spacing={1} alignItems="flex-end" justify="center">
+                        <Grid item>
+                            <HomeIcon />
+                        </Grid>
+                        <Grid item>
+                            <FormControl className={classes.formControl}>
+                                <InputLabel id="club">Club</InputLabel>
+                                <Select
+                                    labelId="club"
+                                    id="club"
+                                    defaultValue='Not Selected'
+                                    style={{ width: 200 }}
+                                    onChange={handleClubSelect}
+                                    input={<Input />}
+                                    MenuProps={MenuProps}
+                                >
+                                    {availableClubs.map((club) => (
+                                        <MenuItem key={club} value={club} style={
+                                            getDropdownStyles(club, clubTitle, theme)
+                                        }>
+                                            {club}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                    </Grid>
+                    <Grid className={classes.spacingBetweenFields}></Grid>
+                    <Grid container spacing={1} alignItems="flex-end" justify="center">
+                        <Grid item>
+                            <StarIcon />
+                        </Grid>
+                        <Grid item>
+                            <TextField
+                                style={{ width: 175 }}
+                                id="rating"
+                                defaultValue={rating}
+                                label="Rating"
+                                name="rating"
+                                autoComplete="rating"
+                                onInput={e => setRating(e.target.value)}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <Tooltip
+                                placement="right"
+                                title="The higher ranking, the more games has been won by certain user. Filtered ranking values are equal or lower."
+                            >
+                                <InfoIcon />
+                            </Tooltip>
+                        </Grid>
+                    </Grid>
                     <Grid className={classes.spacingBetweenFields}></Grid>
                     <Grid container alignItems="center" justify="space-between">
                         <Button
@@ -504,6 +723,7 @@ export default function Players() {
                                                 <TableCell>{row.level}</TableCell>
                                                 <TableCell>{row.city}</TableCell>
                                                 <TableCell>{row.mainHand}</TableCell>
+                                                <TableCell>{row.rating}</TableCell>
                                                 <TableCell>
                                                     {row.clubTitle !== '' ? (
                                                         <Grid container spacing={1} alignItems="center">

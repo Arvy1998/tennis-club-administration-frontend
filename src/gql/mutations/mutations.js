@@ -47,6 +47,17 @@ const UPDATE_USER = gql`
     }
 `;
 
+const UPDATE_USER_BY_ID = gql`
+    mutation editUserById($id: ID!, $userInput: UserInput!) {
+        editUserById(id: $id, userInput: $userInput) {
+            id
+            firstName
+            lastName
+            status
+        }
+    }
+`;
+
 const CREATE_PLAYFIELD = gql`
     mutation createPlayField($playFieldInput: PlayFieldInput!) {
         createPlayField(playFieldInput: $playFieldInput) {
@@ -282,6 +293,7 @@ const DELETE_CLUB = gql`
 export {
     LOGIN_USER,
     UPDATE_USER,
+    UPDATE_USER_BY_ID,
     REGISTER_USER,
     CREATE_PLAYFIELD,
     UPDATE_PLAYFIELD,

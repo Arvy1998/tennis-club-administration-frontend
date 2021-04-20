@@ -88,6 +88,7 @@ const ALL_USERS = gql`
             id
             firstName
             lastName
+            status
         }
     }
 `;
