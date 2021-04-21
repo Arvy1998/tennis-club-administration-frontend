@@ -52,8 +52,6 @@ import {
     GET_PLAYFIELDS,
 } from './gql/queries/queries';
 
-import customRatingIcons from '../utils/customRatingIcons';
-import ratingLabels from '../utils/ratingLabels';
 import areFiltersSelected from '../utils/areFiltersSelected';
 
 import MenuProps from '../utils/props/MenuProps';
@@ -112,12 +110,6 @@ const useStyles = makeStyles((theme) => ({
         boxShadow: theme.shadows[5],
         padding: theme.spacing(2, 4, 3),
     },
-    ratingGrid: {
-        paddingRight: theme.spacing(6),
-    },
-    spacingBetweenRatingStars: {
-        padding: theme.spacing(1),
-    },
     spacingBetweenFields: {
         padding: theme.spacing(0.5),
     },
@@ -129,11 +121,6 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(1.5),
     }
 }));
-
-function IconContainer(props) {
-    const { value, ...other } = props;
-    return <span {...other}>{customRatingIcons[value].icon}</span>;
-}
 
 function EnhancedTableHead(props) {
     const { classes, order, orderBy, onRequestSort } = props;
@@ -199,7 +186,6 @@ export default function PlayFields() {
     const [cost, setCost] = useState(0);
     const [courtType, setCourtType] = useState('Not Selected');
     const [courtFloorType, setCourtFloorType] = useState('Not Selected');
-    const [rating, setRating] = useState(0);
     const [hover, setHover] = useState(-1);
 
     useEffect(() => {
@@ -303,12 +289,6 @@ export default function PlayFields() {
             );
         }
 
-        if (rating !== 0) {
-            filteredData = filteredData.filter(
-                data => data.rating >= rating,
-            );
-        }
-
         if (courtType !== 'Not Selected') {
             filteredData = filteredData.filter(
                 data => data.courtType === courtType,
@@ -333,7 +313,6 @@ export default function PlayFields() {
         setCost(0);
         setCourtType('Not Selected');
         setCourtFloorType('Not Selected');
-        setRating(0);
 
         setFilteredPlayFieldsData(loadedPlayfieldsData.listPlayFields);
     }
@@ -478,48 +457,6 @@ export default function PlayFields() {
                             </FormControl>
                         </Grid>
                     </Grid>
-                    <Grid className={classes.spacingBetweenRatingStars}></Grid>
-                    <Grid
-                        container
-                        spacing={1}
-                        alignItems="center"
-                        justify="center"
-                        className={classes.ratingGrid}
-                    >
-                        <Grid item>
-                            <StarIcon />
-                        </Grid>
-                        <Grid item>
-                            <Tooltip
-                                placement="bottom"
-                                title={rating !== null && ratingLabels[hover !== -1 ? hover : rating]}
-                            >
-                                <Rating
-                                    precision={0.5}
-                                    size="large"
-                                    name="filter-rating-bar"
-                                    defaultValue={rating}
-                                    getLabelText={(value) => { customRatingIcons[value].label }}
-                                    IconContainerComponent={IconContainer}
-                                    onChangeActive={(event, newHover) => {
-                                        setHover(newHover || 0);
-                                    }}
-                                    onChange={(event, newValue) => {
-                                        setRating(newValue || 0);
-                                    }}
-                                />
-                            </Tooltip>
-                        </Grid>
-                        <Grid item>
-                            <Tooltip
-                                placement="right"
-                                title="What is global rating between 1 and 5? Filtered ratings are higher or equal to the selected value."
-                            >
-                                <InfoIcon />
-                            </Tooltip>
-                        </Grid>
-                    </Grid>
-                    <Grid className={classes.spacingBetweenFields}></Grid>
                     <Grid container alignItems="center" justify="space-between">
                         <Button
                             onClick={handleFilterClear}
@@ -527,7 +464,7 @@ export default function PlayFields() {
                             color="secondary"
                             className={classes.buttonBox}
                             disabled={!areFiltersSelected({
-                                title, city, cost, courtType, courtFloorType, rating,
+                                title, city, cost, courtType, courtFloorType,
                             })}
                         >
                             Clear Filters
@@ -538,7 +475,7 @@ export default function PlayFields() {
                             color="secondary"
                             className={classes.buttonBox}
                             disabled={!areFiltersSelected({
-                                title, city, cost, courtType, courtFloorType, rating,
+                                title, city, cost, courtType, courtFloorType,
                             })}
                         >
                             Filter
@@ -629,16 +566,6 @@ export default function PlayFields() {
                                                 <TableCell>{row.cost} €</TableCell>
                                                 <TableCell>{row.courtType}</TableCell>
                                                 <TableCell>{row.courtFloorType}</TableCell>
-                                                <TableCell>
-                                                    <Rating
-                                                        precision={0.5}
-                                                        size="large"
-                                                        name="playfield-rating-bar"
-                                                        IconContainerComponent={IconContainer}
-                                                        disabled={true}
-                                                        value={row.rating}
-                                                    />
-                                                </TableCell>
                                                 <TableCell>
                                                     <Avatar
                                                         id="avatar-tennis"

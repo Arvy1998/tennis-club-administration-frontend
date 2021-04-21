@@ -1,17 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import _ from 'lodash';
 
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { useHistory, useParams } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import Button from '@material-ui/core/Button';
 
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
-import Select from '@material-ui/core/Select';
-import Input from '@material-ui/core/Input';
-import MenuItem from '@material-ui/core/MenuItem';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
 import Tooltip from '@material-ui/core/Tooltip';
 
 import AlternateEmail from '@material-ui/icons/AlternateEmail';
@@ -27,21 +22,14 @@ import LanguageIcon from '@material-ui/icons/Language';
 import PhotoIcon from '@material-ui/icons/Photo';
 
 import Typography from '@material-ui/core/Typography';
-import CardMedia from '@material-ui/core/CardMedia';
-import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Avatar from '@material-ui/core/Avatar';
-import Card from '@material-ui/core/Card';
-import Rating from '@material-ui/lab/Rating';
 
 import Navigation from './Navigation';
 
 import filterNotEnteredEntries from '../utils/filterNotEnteredEntries';
 import validateEmail from '../utils/validateEmail';
-
-import customRatingIcons from '../utils/customRatingIcons';
-import ratingLabels from '../utils/ratingLabels';
 
 import { useMutation } from "@apollo/react-hooks";
 import {
@@ -90,7 +78,7 @@ const useStyles = makeStyles((theme) => ({
         marginTop: theme.spacing(1),
     },
     spacingBetween: {
-        padding: theme.spacing(2),
+        padding: theme.spacing(1),
     },
     spacingBetweenFields: {
         padding: theme.spacing(0.5),
@@ -106,18 +94,12 @@ const useStyles = makeStyles((theme) => ({
     spacingBetweenDifferentFields: {
         padding: theme.spacing(0.2),
     },
-    spacingBetweenRatingStars: {
-        padding: theme.spacing(1),
-    },
     input: {
         display: 'none',
     },
     large: {
         width: theme.spacing(7),
         height: theme.spacing(7),
-    },
-    ratingGrid: {
-        paddingRight: theme.spacing(18),
     },
     input: {
         display: 'none',
@@ -127,11 +109,6 @@ const useStyles = makeStyles((theme) => ({
         height: theme.spacing(9 * 3),
     },
 }));
-
-function IconContainer(props) {
-    const { value, ...other } = props;
-    return <span {...other}>{customRatingIcons[value].icon}</span>;
-}
 
 export default function PlayFieldsAddForm() {
     const classes = useStyles();
@@ -155,7 +132,6 @@ export default function PlayFieldsAddForm() {
     const [courtType, setCourtType] = useState('');
     const [courtFloorType, setCourtFloorType] = useState('');
     const [webpage, setWebpage] = useState('');
-    const [rating, setRating] = useState(0);
     const [additionalInformation, setAdditionalInformation] = useState('');
 
     const [playFieldPhoto, setPlayFieldPhoto] = useState('');
@@ -179,7 +155,6 @@ export default function PlayFieldsAddForm() {
                     courtType,
                     courtFloorType,
                     webpage,
-                    rating,
                     additionalInformation,
                     playFieldPhoto,
                 }),
@@ -432,48 +407,7 @@ export default function PlayFieldsAddForm() {
                                     />
                                 </Grid>
                             </Grid>
-                            <Grid className={classes.spacingBetweenRatingStars}></Grid>
-                            <Grid
-                                container
-                                spacing={1}
-                                alignItems="center"
-                                justify="center"
-                                className={classes.ratingGrid}
-                            >
-                                <Grid item>
-                                    <StarIcon />
-                                </Grid>
-                                <Grid item>
-                                    <Tooltip
-                                        placement="bottom"
-                                        title={rating !== null && ratingLabels[hover !== -1 ? hover : rating]}
-                                    >
-                                        <Rating
-                                            required
-                                            precision={0.5}
-                                            size="large"
-                                            name="playfield-rating-bar"
-                                            getLabelText={(value) => { customRatingIcons[value].label }}
-                                            IconContainerComponent={IconContainer}
-                                            onChangeActive={(event, newHover) => {
-                                                setHover(newHover || 0);
-                                            }}
-                                            onChange={(event, newValue) => {
-                                                setRating(newValue || 0);
-                                            }}
-                                        />
-                                    </Tooltip>
-                                </Grid>
-                                <Grid item>
-                                    <Tooltip
-                                        placement="right"
-                                        title="What is global rating between 1 and 5?"
-                                    >
-                                        <InfoIcon />
-                                    </Tooltip>
-                                </Grid>
-                            </Grid>
-                            <Grid className={classes.spacingBetweenRatingStars}></Grid>
+                            <Grid className={classes.spacingBetween}></Grid>
                             <Grid container spacing={1} alignItems="center" justify="center">
                                 <Grid item>
                                     <Avatar

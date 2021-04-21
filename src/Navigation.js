@@ -124,7 +124,7 @@ export default function Home() {
   function logoutAction() {
     removeAuthToken();
     localStorage.clear();
-    
+
     history.push('/');
     window.location.reload(true);
   }
@@ -147,9 +147,6 @@ export default function Home() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            LawnTennisClubIS
-          </Typography>
           {
             isRegisteredUser() ? (
               <Grid container alignItems="center" justify="flex-end">

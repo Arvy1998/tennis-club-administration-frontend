@@ -72,7 +72,6 @@ const CREATE_PLAYFIELD = gql`
             courtFloorType
             additionalInformation
             webpage
-            rating
             playFieldPhoto
             createdAt
             updatedAt
@@ -94,7 +93,6 @@ const UPDATE_PLAYFIELD = gql`
             courtFloorType
             additionalInformation
             webpage
-            rating
             playFieldPhoto
             createdAt
             updatedAt

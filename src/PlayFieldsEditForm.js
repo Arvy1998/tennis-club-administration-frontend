@@ -25,16 +25,12 @@ import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Avatar from '@material-ui/core/Avatar';
-import Rating from '@material-ui/lab/Rating';
 
 import Navigation from './Navigation';
 
 import filterNotEnteredEntries from '../utils/filterNotEnteredEntries';
 import validateEmail from '../utils/validateEmail';
 import isDisabled from '../utils/isDisabled';
-
-import customRatingIcons from '../utils/customRatingIcons';
-import ratingLabels from '../utils/ratingLabels';
 
 import { useMutation, useQuery } from "@apollo/react-hooks";
 
@@ -91,7 +87,7 @@ const useStyles = makeStyles((theme) => ({
         marginTop: theme.spacing(1),
     },
     spacingBetween: {
-        padding: theme.spacing(2),
+        padding: theme.spacing(1),
     },
     spacingBetweenFields: {
         padding: theme.spacing(0.5),
@@ -107,18 +103,12 @@ const useStyles = makeStyles((theme) => ({
     spacingBetweenDifferentFields: {
         padding: theme.spacing(0.2),
     },
-    spacingBetweenRatingStars: {
-        padding: theme.spacing(1),
-    },
     input: {
         display: 'none',
     },
     large: {
         width: theme.spacing(7),
         height: theme.spacing(7),
-    },
-    ratingGrid: {
-        paddingRight: theme.spacing(18),
     },
     input: {
         display: 'none',
@@ -128,11 +118,6 @@ const useStyles = makeStyles((theme) => ({
         height: theme.spacing(9 * 3),
     },
 }));
-
-function IconContainer(props) {
-    const { value, ...other } = props;
-    return <span {...other}>{customRatingIcons[value].icon}</span>;
-}
 
 export default function PlayFieldsEditForm({ match }) {
     const classes = useStyles();
@@ -160,7 +145,6 @@ export default function PlayFieldsEditForm({ match }) {
     const [courtType, setCourtType] = useState('');
     const [courtFloorType, setCourtFloorType] = useState('');
     const [webpage, setWebpage] = useState('');
-    const [rating, setRating] = useState(0);
     const [additionalInformation, setAdditionalInformation] = useState('');
 
     const [playFieldPhoto, setPlayFieldPhoto] = useState('');
@@ -221,7 +205,6 @@ export default function PlayFieldsEditForm({ match }) {
                     courtType,
                     courtFloorType,
                     webpage,
-                    rating,
                     additionalInformation,
                     playFieldPhoto,
                 }),
@@ -520,50 +503,7 @@ export default function PlayFieldsEditForm({ match }) {
                                     />
                                 </Grid>
                             </Grid>
-                            <Grid className={classes.spacingBetweenRatingStars}></Grid>
-                            <Grid
-                                container
-                                spacing={1}
-                                alignItems="center"
-                                justify="center"
-                                className={classes.ratingGrid}
-                            >
-                                <Grid item>
-                                    <StarIcon />
-                                </Grid>
-                                <Grid item>
-                                    <Tooltip
-                                        placement="bottom"
-                                        title={rating !== null && ratingLabels[hover !== -1 ? hover : rating]}
-                                    >
-                                        <Rating
-                                            required
-                                            precision={0.5}
-                                            size="large"
-                                            disabled={isDisabled()}
-                                            defaultValue={playField.rating}
-                                            name="playfield-rating-bar"
-                                            getLabelText={(value) => { customRatingIcons[value].label }}
-                                            IconContainerComponent={IconContainer}
-                                            onChangeActive={(event, newHover) => {
-                                                setHover(newHover || 0);
-                                            }}
-                                            onChange={(event, newValue) => {
-                                                setRating(newValue || 0);
-                                            }}
-                                        />
-                                    </Tooltip>
-                                </Grid>
-                                <Grid item>
-                                    <Tooltip
-                                        placement="right"
-                                        title="What is global rating between 1 and 5?"
-                                    >
-                                        <InfoIcon />
-                                    </Tooltip>
-                                </Grid>
-                            </Grid>
-                            <Grid className={classes.spacingBetweenRatingStars}></Grid>
+                            <Grid className={classes.spacingBetween}></Grid>
                             <Grid container spacing={1} alignItems="center" justify="center">
                                 <Grid item>
                                     <Avatar
@@ -606,7 +546,7 @@ export default function PlayFieldsEditForm({ match }) {
                             </Grid>
                         </Grid>
                         <Grid container justify="center">
-                            <Grid className={classes.spacingBetweenRatingStars}></Grid>
+                            <Grid className={classes.spacingBetween}></Grid>
                             <Grid container alignItems="center" justify="center">
                                 {isRegisteredUser() ? (
                                     <Button
@@ -619,7 +559,7 @@ export default function PlayFieldsEditForm({ match }) {
                                     </Button>
                                 ) : ''}
                                 {isAdmin() ? (
-                                    <Grid className={classes.spacingBetweenRatingStars}></Grid>
+                                    <Grid className={classes.spacingBetween}></Grid>
                                 ) : ''}
                                 {isAdmin() ? (
                                     <Button
@@ -632,7 +572,7 @@ export default function PlayFieldsEditForm({ match }) {
                                         Update
                                     </Button>
                                 ) : ''}
-                                <Grid className={classes.spacingBetweenRatingStars}></Grid>
+                                <Grid className={classes.spacingBetween}></Grid>
                                 {isAdmin() ? (
                                     <Button
                                         variant="contained"
