@@ -1,3 +1,5 @@
+/* globals window */
+
 import { useCookies } from "react-cookie";
 
 const TOKEN_NAME = "AuthToken";
@@ -17,7 +19,7 @@ export const useAuthToken = () => {
   };
   const removeAuthToken = () => cookies.remove(TOKEN_NAME);
   const clearUser = () => localStorage.clear();
-  
+
   return [
     cookies[TOKEN_NAME], 
     setAuthToken, 

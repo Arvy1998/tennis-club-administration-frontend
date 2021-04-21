@@ -24,51 +24,64 @@ import CreateIcon from '@material-ui/icons/Create';
 
 import isNotPlayer from './isNotPlayer';
 import isAdmin from './isAdmin';
+import isRegisteredUser from './isRegisteredUser';
 
 export const mainListItems = (
     <div>
-        <ListItem button component={Link} to="/home">
-            <ListItemIcon>
-                <DashboardIcon />
-            </ListItemIcon>
-            <ListItemText primary="Home" />
-        </ListItem>
-        <ListItem button component={Link} to="/games">
-            <ListItemIcon>
-                <GamesIcon />
-            </ListItemIcon>
-            <ListItemText primary="Games" />
-        </ListItem>
-        <ListItem button component={Link} to="/reservations">
-            <ListItemIcon>
-                <TodayIcon />
-            </ListItemIcon>
-            <ListItemText primary="Reservations" />
-        </ListItem>
+        {
+            isRegisteredUser() ? (
+                <div>
+                    <ListItem button component={Link} to="/home">
+                        <ListItemIcon>
+                            <DashboardIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Home" />
+                    </ListItem >
+                    <ListItem button component={Link} to="/games">
+                        <ListItemIcon>
+                            <GamesIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Games" />
+                    </ListItem>
+                    <ListItem button component={Link} to="/reservations">
+                        <ListItemIcon>
+                            <TodayIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Reservations" />
+                    </ListItem>
+                </ div>
+            ) : ''
+        }
         <ListItem button component={Link} to="/playfields">
             <ListItemIcon>
                 <TocIcon />
             </ListItemIcon>
             <ListItemText primary="Play Fields" />
         </ListItem>
-        <ListItem button component={Link} to="/badges">
-            <ListItemIcon>
-                <LoyaltyIcon />
-            </ListItemIcon>
-            <ListItemText primary="Badges" />
-        </ListItem>
-        <ListItem button component={Link} to="/account">
-            <ListItemIcon>
-                <AccountCircleIcon />
-            </ListItemIcon>
-            <ListItemText primary="Your Account" />
-        </ListItem>
-        <ListItem button component={Link} to="/players">
-            <ListItemIcon>
-                <AccessibilityNewIcon />
-            </ListItemIcon>
-            <ListItemText primary="Players Search" />
-        </ListItem>
+        {
+            isRegisteredUser() ? (
+                <div>
+                    <ListItem button component={Link} to="/badges">
+                        <ListItemIcon>
+                            <LoyaltyIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Badges" />
+                    </ListItem>
+                    <ListItem button component={Link} to="/account">
+                        <ListItemIcon>
+                            <AccountCircleIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Your Account" />
+                    </ListItem>
+                    <ListItem button component={Link} to="/players">
+                        <ListItemIcon>
+                            <AccessibilityNewIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Players Search" />
+                    </ListItem>
+                </div >
+            ) : ''
+        }
         {
             isAdmin() ? (
                 <ListItem button component={Link} to="/accounts">
@@ -89,47 +102,50 @@ export const mainListItems = (
                 </ListItem>
             ) : ''
         }
-
-    </div>
+    </div >
 );
 
 export const secondaryListItems = (
-    <div>
-        <ListSubheader>
-            <Box display="flex">
-                <ListItemIcon>
-                    <ContactSupportIcon color="disabled" />
-                </ListItemIcon>
-                <ListItemText primary="Information" />
-            </Box>
-        </ListSubheader>
-        <ListItem button component={Link} to="/top">
-            <ListItemIcon>
-                <TableChartIcon />
-            </ListItemIcon>
-            <ListItemText primary="TOP Players" />
-        </ListItem>
-        {
-            isAdmin() ? (
-                <ListItem button component={Link} to="/admin/news">
+        <div>
+            <ListSubheader>
+                <Box display="flex">
                     <ListItemIcon>
-                        <CreateIcon />
+                        <ContactSupportIcon color="disabled" />
                     </ListItemIcon>
-                    <ListItemText primary="Manage News" />
-                </ListItem>
-            ) : ''
-        }
-        <ListItem button component={Link} to="/news">
-            <ListItemIcon>
-                <AnnouncementIcon />
-            </ListItemIcon>
-            <ListItemText primary="News" />
-        </ListItem>
-        <ListItem button component={Link} to="/about">
-            <ListItemIcon>
-                <InfoIcon />
-            </ListItemIcon>
-            <ListItemText primary="About" />
-        </ListItem>
-    </div>
+                    <ListItemText primary="Information" />
+                </Box>
+            </ListSubheader>
+            {
+                isRegisteredUser() ? (
+                    <ListItem button component={Link} to="/top">
+                        <ListItemIcon>
+                            <TableChartIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="TOP Players" />
+                    </ListItem>
+                ) : ''
+            }
+            {
+                isAdmin() ? (
+                    <ListItem button component={Link} to="/admin/news">
+                        <ListItemIcon>
+                            <CreateIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Manage News" />
+                    </ListItem>
+                ) : ''
+            }
+            <ListItem button component={Link} to="/news">
+                <ListItemIcon>
+                    <AnnouncementIcon />
+                </ListItemIcon>
+                <ListItemText primary="News" />
+            </ListItem>
+            <ListItem button component={Link} to="/about">
+                <ListItemIcon>
+                    <InfoIcon />
+                </ListItemIcon>
+                <ListItemText primary="About" />
+            </ListItem>
+        </div>
 );

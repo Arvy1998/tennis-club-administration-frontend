@@ -3,14 +3,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
 import Container from '@material-ui/core/Container';
-import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
-import Select from '@material-ui/core/Select';
-import Input from '@material-ui/core/Input';
-import MenuItem from '@material-ui/core/MenuItem';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
-import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -68,6 +61,8 @@ export default function About() {
                                 </Typography>
                                 <Typography className={classes.description} color="textSecondary">
                                     It's easy! Go to <b>Players Search</b>, here you will see all players, if you want to filter them, click <b>Filter Players</b> above the table and select any filter you desire!
+                                    <br />
+                                    And even more, you can check yours status with the player you have selected from the table, have fun!
                             </Typography>
                             </CardContent>
                         </Card>
@@ -95,9 +90,9 @@ export default function About() {
                                 <Typography className={classes.description} color="textSecondary">
                                     The ranking of any registered user inside the system is calculated depending on how much games you have won during the period you are registered here.
                                     <br />
-                                    Badges are earned depending on how many games you have won, how many types of matches you have won, have you ever been in the TOP player, your some
+                                    Badges are earned depending on how many games you have won, how many types of matches you have won, have you ever been in the TOP players list,
                                     <br />
-                                    first awesome actions like making reservations also will make system proud of you! ;)
+                                    your some first awesome actions like making reservations also will make system proud of you! ;)
                             </Typography>
                             </CardContent>
                         </Card>

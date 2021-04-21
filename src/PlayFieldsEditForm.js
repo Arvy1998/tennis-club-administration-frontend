@@ -1,28 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
 
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { useHistory, useParams } from 'react-router-dom'
+import { makeStyles } from '@material-ui/core/styles';
+import { useHistory } from 'react-router-dom'
 import Button from '@material-ui/core/Button';
 
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
-import Select from '@material-ui/core/Select';
-import Input from '@material-ui/core/Input';
-import MenuItem from '@material-ui/core/MenuItem';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
 import Tooltip from '@material-ui/core/Tooltip';
-import Paper from '@material-ui/core/Paper';
 
 import AlternateEmail from '@material-ui/icons/AlternateEmail';
-import VpnKey from '@material-ui/icons/VpnKey';
 import TextFieldsIcon from '@material-ui/icons/TextFields';
-import WcIcon from '@material-ui/icons/Wc';
 import PhoneIcon from '@material-ui/icons/Phone';
 import HomeIcon from '@material-ui/icons/Home';
 import StreetviewIcon from '@material-ui/icons/Streetview';
-import EjectIcon from '@material-ui/icons/Eject';
 import EuroSymbolIcon from '@material-ui/icons/EuroSymbol';
 import BorderHorizontalIcon from '@material-ui/icons/BorderHorizontal';
 import InfoIcon from '@material-ui/icons/Info';
@@ -31,12 +22,9 @@ import LanguageIcon from '@material-ui/icons/Language';
 import PhotoIcon from '@material-ui/icons/Photo';
 
 import Typography from '@material-ui/core/Typography';
-import CardMedia from '@material-ui/core/CardMedia';
-import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Avatar from '@material-ui/core/Avatar';
-import Card from '@material-ui/core/Card';
 import Rating from '@material-ui/lab/Rating';
 
 import Navigation from './Navigation';
@@ -44,7 +32,6 @@ import Navigation from './Navigation';
 import filterNotEnteredEntries from '../utils/filterNotEnteredEntries';
 import validateEmail from '../utils/validateEmail';
 import isDisabled from '../utils/isDisabled';
-import isNotPlayer from '../utils/isNotPlayer';
 
 import customRatingIcons from '../utils/customRatingIcons';
 import ratingLabels from '../utils/ratingLabels';
@@ -59,6 +46,8 @@ import {
 import {
     GET_PLAYFIELD,
 } from './gql/queries/queries';
+import isRegisteredUser from '../utils/isRegisteredUser';
+import isAdmin from '../utils/isAdmin';
 
 const useStyles = makeStyles((theme) => ({
     avatar: {
@@ -589,7 +578,7 @@ export default function PlayFieldsEditForm({ match }) {
                                     </Avatar>
                                 </Grid>
                                 <Grid item>
-                                    {isNotPlayer() ? (
+                                    {isAdmin() ? (
                                         <Grid>
                                             <input
                                                 accept="image/*"
@@ -619,18 +608,20 @@ export default function PlayFieldsEditForm({ match }) {
                         <Grid container justify="center">
                             <Grid className={classes.spacingBetweenRatingStars}></Grid>
                             <Grid container alignItems="center" justify="center">
-                                <Button
-                                    variant="outlined"
-                                    color="secondary"
-                                    className={classes.buttonBox}
-                                    onClick={openReservationCreatePageAction}
-                                >
-                                    Make Reservation
+                                {isRegisteredUser() ? (
+                                    <Button
+                                        variant="outlined"
+                                        color="secondary"
+                                        className={classes.buttonBox}
+                                        onClick={openReservationCreatePageAction}
+                                    >
+                                        Make Reservation
                                     </Button>
-                                {isNotPlayer() ? (
+                                ) : ''}
+                                {isAdmin() ? (
                                     <Grid className={classes.spacingBetweenRatingStars}></Grid>
                                 ) : ''}
-                                {isNotPlayer() ? (
+                                {isAdmin() ? (
                                     <Button
                                         type="submit"
                                         variant="outlined"
@@ -642,7 +633,7 @@ export default function PlayFieldsEditForm({ match }) {
                                     </Button>
                                 ) : ''}
                                 <Grid className={classes.spacingBetweenRatingStars}></Grid>
-                                {isNotPlayer() ? (
+                                {isAdmin() ? (
                                     <Button
                                         variant="contained"
                                         color="secondary"

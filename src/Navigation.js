@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
+import Grid from '@material-ui/core/Grid';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -19,6 +20,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import { mainListItems, secondaryListItems } from '../utils/listMenuItems';
 
 import { useAuthToken } from './hooks/useAuthToken';
+import isRegisteredUser from '../utils/isRegisteredUser';
 
 const drawerWidth = 240;
 
@@ -105,8 +107,6 @@ export default function Home() {
 
   const [open, setOpen] = React.useState(true);
 
-  const [firstTimeReload, setFirstTimeReload] = React.useState(true);
-
   const [_, removeAuthToken, clearUser] = useAuthToken();
 
   const handleDrawerOpen = () => {
@@ -117,10 +117,16 @@ export default function Home() {
     setOpen(false);
   };
 
+  function goToLoginAction() {
+    history.push('/login');
+  }
+
   function logoutAction() {
     removeAuthToken();
-    clearUser();
+    localStorage.clear();
+    
     history.push('/');
+    window.location.reload(true);
   }
 
   return (
@@ -144,16 +150,33 @@ export default function Home() {
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
             LawnTennisClubIS
           </Typography>
-          <div>
-            <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.signedAsTitle}>
-              {`Signed in as ${localStorage.getItem('firstName')} ${localStorage.getItem('lastName')}`}
-            </Typography>
-          </div>
-          <div>
-            <Button variant="contained" color="secondary" onClick={logoutAction}>
-              Log Out
-            </Button>
-          </div>
+          {
+            isRegisteredUser() ? (
+              <Grid container alignItems="center" justify="flex-end">
+                <Grid item>
+                  <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.signedAsTitle}>
+                    {`Signed in as ${localStorage.getItem('firstName')} ${localStorage.getItem('lastName')}`}
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Button variant="contained" color="secondary" onClick={logoutAction}>
+                    Log Out
+                </Button>
+                </Grid>
+              </Grid>
+            ) : ''
+          }
+          {
+            !isRegisteredUser() ? (
+              <Grid container alignItems="center" justify="flex-end">
+                <Grid item>
+                  <Button variant="contained" color="secondary" onClick={goToLoginAction}>
+                    Log In
+                  </Button>
+                </Grid>
+              </Grid>
+            ) : ''
+          }
         </Toolbar>
       </AppBar>
       <Drawer
