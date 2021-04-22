@@ -155,9 +155,6 @@ export default function Account() {
         systemBadges = loadedBadgesData.listBadges;
     }
 
-    console.log({ userBadges });
-    console.log({ systemBadges });
-
     return (
         <div className={classes.root}>
             <Navigation />
@@ -173,7 +170,7 @@ export default function Account() {
                         </Typography>
                     </Grid>
                     <Grid className={classes.spacingBetween}></Grid>
-                    <Grid container spacing={2} justify="center" alignItems="flex-end" flexDirection="column">
+                    <Grid container spacing={2} justify="center" alignItems="flex-end">
                         {systemBadges.map(badge => {
                             return (
                                 <Tooltip

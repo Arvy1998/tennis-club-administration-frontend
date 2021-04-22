@@ -23,6 +23,7 @@ import Badges from './Badges';
 import AdminNews from './AdminNews';
 import AdminAddNews from './AdminAddNews';
 import AdminEditNews from './AdminEditNews';
+import News from './News';
 
 import {
     BrowserRouter as Router,
@@ -46,6 +47,7 @@ const App = () => {
                         <Route path="/admin/news/edit/:id" component={AdminEditNews} />
                         <Route path="/admin/news/add" component={AdminAddNews} />
                         <Route path="/admin/news" component={AdminNews} />
+                        <Route path="/news" component={News} />
                         <Route path="/top" component={Top} />
                         <Route path="/about" component={About} />
                         <Route path="/badges" component={Badges} />
