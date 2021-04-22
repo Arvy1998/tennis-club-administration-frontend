@@ -51,6 +51,11 @@ const GET_USER = gql`
                     secondTeamScore
                 }
             }
+            badges {
+                id
+                title
+                description
+            }
         }
     }
 `;
@@ -304,6 +309,16 @@ const GET_CLUB_BY_CREATOR_ID = gql`
     }
 `;
 
+const LIST_BADGES = gql`
+    query listBadges {
+        listBadges {
+            id
+            title
+            description
+        }
+    }
+`;
+
 export {
     GET_USER,
     ALL_USERS,
@@ -317,4 +332,5 @@ export {
     GET_CLUB,
     LIST_CLUBS,
     GET_CLUB_BY_CREATOR_ID,
+    LIST_BADGES,
 }

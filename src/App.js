@@ -19,6 +19,7 @@ import ClubsForm from './ClubsForm';
 import AdminAccounts from './AdminAccounts';
 import About from './About';
 import Top from './Top';
+import Badges from './Badges';
 
 import {
     BrowserRouter as Router,
@@ -41,6 +42,7 @@ const App = () => {
                         <Route path="/home" component={Home} />
                         <Route path="/top" component={Top} />
                         <Route path="/about" component={About} />
+                        <Route path="/badges" component={Badges} />
                         <Route path="/accounts" component={AdminAccounts} />
                         <Route path="/account" component={Account} />
                         <Route path="/club" component={ClubsForm}/>

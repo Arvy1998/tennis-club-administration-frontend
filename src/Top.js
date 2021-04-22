@@ -14,32 +14,10 @@ import TableRow from '@material-ui/core/TableRow';
 import Avatar from '@material-ui/core/Avatar';
 
 import Navigation from './Navigation';
-import Modal from '@material-ui/core/Modal';
-
-import clsx from 'clsx';
-
-import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
-import Select from '@material-ui/core/Select';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
-import MenuItem from '@material-ui/core/MenuItem';
 
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import FilterListIcon from '@material-ui/icons/FilterList';
 import Typography from '@material-ui/core/Typography';
-
-import TextFieldsIcon from '@material-ui/icons/TextFields';
-import HomeIcon from '@material-ui/icons/Home';
-import WcIcon from '@material-ui/icons/Wc';
-import EjectIcon from '@material-ui/icons/Eject';
-import PanToolIcon from '@material-ui/icons/PanTool';
-import StarIcon from '@material-ui/icons/Star';
-import InfoIcon from '@material-ui/icons/Info';
 
 import LooksOneIcon from '@material-ui/icons/LooksOne';
 import LooksTwoIcon from '@material-ui/icons/LooksTwo';
@@ -176,6 +154,7 @@ export default function Players() {
         rows = _.orderBy(rows, 'rating', 'desc');
 
         rows = rows.filter(user => user.rating > 0);
+        rows = rows.slice(0, 10);
     }
 
     if (!rows) {
