@@ -319,6 +319,69 @@ const LIST_BADGES = gql`
     }
 `;
 
+const GET_NEWS = gql`
+    query getNews($id: ID!) {
+        getNews(id: $id) {
+            id
+            title
+            description
+            firstClubPlaying {
+                id
+                title
+                clubLogo
+            }
+            secondClubPlaying {
+                id
+                title
+                clubLogo
+            }
+            date
+            playField {
+                id
+                title
+                address
+                city
+            }
+        }
+    }
+`;
+
+const LIST_NEWS = gql`
+    query listNews {
+        listNews {
+            id
+            title
+            description
+            firstClubPlaying {
+                id
+                title
+                clubLogo
+            }
+            secondClubPlaying {
+                id
+                title
+                clubLogo
+            }
+            date
+            playField {
+                id
+                title
+                address
+                city
+            }
+        }
+    }
+`;
+
+const GET_PLAYFIELDS_SELECTION = gql`
+    query listPlayFields($playFieldQueryInput: PlayFieldQueryInput) {
+        listPlayFields(playFieldQueryInput: $playFieldQueryInput) {
+            id
+            title
+        }
+    }
+`;
+
 export {
     GET_USER,
     ALL_USERS,
@@ -333,4 +396,7 @@ export {
     LIST_CLUBS,
     GET_CLUB_BY_CREATOR_ID,
     LIST_BADGES,
+    GET_NEWS,
+    LIST_NEWS,
+    GET_PLAYFIELDS_SELECTION,
 }

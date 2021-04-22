@@ -288,6 +288,68 @@ const DELETE_CLUB = gql`
     }
 `;
 
+const CREATE_NEWS = gql`
+    mutation createNews($newsInput: NewsInput!) {
+        createNews(newsInput: $newsInput) {
+            id
+            title
+            description
+            firstClubPlaying {
+                id
+                title
+                clubLogo
+            }
+            secondClubPlaying {
+                id
+                title
+                clubLogo
+            }
+            date
+            playField {
+                id
+                title
+                address
+                city
+            }
+        }
+    }
+`;
+
+const UPDATE_NEWS = gql`
+    mutation updateNews($id: ID!, $newsInput: NewsInput!) {
+        updateNews(id: $id, newsInput: $newsInput) {
+            id
+            title
+            description
+            firstClubPlaying {
+                id
+                title
+                clubLogo
+            }
+            secondClubPlaying {
+                id
+                title
+                clubLogo
+            }
+            date
+            playField {
+                id
+                title
+                address
+                city
+            }
+        }
+    }
+`;
+
+const DELETE_NEWS = gql`
+    mutation deleteNews($id: ID!) {
+        deleteNews(id: $id) {
+            id
+        }
+    }
+`;
+
 export {
     LOGIN_USER,
     UPDATE_USER,
@@ -305,4 +367,7 @@ export {
     CREATE_CLUB,
     UPDATE_CLUB,
     DELETE_CLUB,
+    CREATE_NEWS,
+    UPDATE_NEWS,
+    DELETE_NEWS,
 }
