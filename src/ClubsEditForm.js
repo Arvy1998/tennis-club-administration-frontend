@@ -8,7 +8,6 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import TextFieldsIcon from '@material-ui/icons/TextFields';
-import HomeIcon from '@material-ui/icons/Home';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import InfoIcon from '@material-ui/icons/Info';
 
@@ -134,7 +133,7 @@ export default function ClubsAddForm({ clubId }) {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [clubLogo, setClubLogo] = useState('');
-    const [formState, setFormState] = React.useState({
+    const [formState, setFormState] = useState({
         userIds: []
     });
 
@@ -293,9 +292,6 @@ export default function ClubsAddForm({ clubId }) {
 
     function handleUserIdsChange(event) {
         event.persist();
-        console.log({
-
-        })
         setFormState(formState => ({
             ...formState,
             [event.target.name]:

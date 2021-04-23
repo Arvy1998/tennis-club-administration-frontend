@@ -44,12 +44,15 @@ import EjectIcon from '@material-ui/icons/Eject';
 import PanToolIcon from '@material-ui/icons/PanTool';
 import StarIcon from '@material-ui/icons/Star';
 import InfoIcon from '@material-ui/icons/Info';
+import Chip from '@material-ui/core/Chip';
+import LoyaltyIcon from '@material-ui/icons/Loyalty';
 
 import { Typography } from '@material-ui/core';
 
 import { useQuery } from "@apollo/react-hooks";
 import {
     GET_PLAYERS,
+    LIST_BADGES,
     LIST_CLUBS,
 } from './gql/queries/queries';
 
@@ -64,6 +67,8 @@ import getComparator from '../utils/comparators/getComparator';
 import playersHeadCells from '../utils/cells/playersHeadCells';
 
 import transformUsersData from '../utils/transformations/transformUsersData';
+
+import badgesIconMap from '../utils/badges/badgesIconMap';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -171,7 +176,7 @@ export default function Players() {
 
     const [loadedPlayersData, setLoadedPlayersData] = useState(null);
     const [filteredPlayersData, setFilteredPlayersData] = useState(null);
-
+    const [loadedBadgesData, setLoadedBadgesData] = useState(null);
     const [loadedClubsData, setLoadedClubsData] = useState(null);
 
     const [isLoading, setIsLoading] = useState(null);
@@ -187,6 +192,7 @@ export default function Players() {
 
     const { loading: playersLoading, error: playersError, data: playersData } = useQuery(GET_PLAYERS);
     const { loading: clubsLoading, error: clubsError, data: clubsData } = useQuery(LIST_CLUBS);
+    const { loading: badgesLoading, error: badgesError, data: badgesData } = useQuery(LIST_BADGES);
 
     /* Filtering state */
     const [firstName, setFirstName] = useState('');
@@ -197,6 +203,9 @@ export default function Players() {
     const [mainHand, setMainHand] = useState('Not Selected');
     const [clubTitle, setClubTitle] = useState('Not Selected');
     const [rating, setRating] = useState(0);
+    const [badges, setBadges] = useState({
+        badgeIds: [],
+    });
 
     useEffect(() => {
         if (playersLoading) {
@@ -236,6 +245,22 @@ export default function Players() {
         }
     }, [clubsLoading, clubsError, clubsData]);
 
+    useEffect(() => {
+        if (badgesLoading) {
+            setIsLoading(badgesLoading);
+        }
+
+        if (badgesError) {
+            setIsError(badgesError);
+            setIsLoading(false);
+        }
+
+        if (badgesData) {
+            setLoadedBadgesData(badgesData);
+            setIsLoading(false);
+        }
+    }, [badgesLoading, badgesError, badgesData]);
+
     if (!loadedPlayersData || isLoading) {
         return (
             <div className={classes.loadingBarContainer}>
@@ -252,9 +277,22 @@ export default function Players() {
         );
     }
 
+    if (!loadedBadgesData || isLoading) {
+        return (
+            <div className={classes.loadingBarContainer}>
+                <LinearProgress color="secondary" />
+            </div>
+        );
+    }
+
     let rows;
     if (loadedPlayersData) {
         rows = transformUsersData(loadedPlayersData.getPlayers, loadedClubsData.listClubs);
+    }
+
+    let systemBadges;
+    if (loadedBadgesData) {
+        systemBadges = loadedBadgesData.listBadges;
     }
 
     const availableHands = [
@@ -392,6 +430,12 @@ export default function Players() {
             );
         }
 
+        if (badges.badgeIds.length > 0) {
+            filteredData = filteredData.filter(
+                data => _.intersection(badges.badgeIds, data.badgeIds).length > 0,
+            );
+        }
+
         setFilteredPlayersData(filteredData);
         setOpen(false);
     };
@@ -407,8 +451,20 @@ export default function Players() {
         setMainHand('Not Selected');
         setClubTitle('Not Selected');
         setRating(0);
+        setBadges({ badgeIds: [] });
 
         setFilteredPlayersData(transformUsersData(loadedPlayersData.getPlayers, loadedClubsData.listClubs));
+    }
+
+    function handleBadgeIdsChange(event) {
+        event.persist();
+        setBadges(badges => ({
+            ...badges,
+            'badgeIds':
+                event.target.type === "checkbox"
+                    ? event.target.checked
+                    : event.target.value
+        }));
     }
 
     if (!rows) {
@@ -426,7 +482,7 @@ export default function Players() {
             </Typography>
             <form className={classes.form} onSubmit={handleFilterSubmit}>
                 <Grid container>
-                <Grid container spacing={1} alignItems="flex-end" justify="center">
+                    <Grid container spacing={1} alignItems="flex-end" justify="center">
                         <Grid item>
                             <TextFieldsIcon />
                         </Grid>
@@ -625,6 +681,47 @@ export default function Players() {
                         </Grid>
                     </Grid>
                     <Grid className={classes.spacingBetweenFields}></Grid>
+                    <Grid container spacing={1} alignItems="flex-end" justify="center">
+                        <Grid item>
+                            <LoyaltyIcon />
+                        </Grid>
+                        <Grid item>
+                            <FormControl>
+                                <InputLabel id="mutiple-chip-label">Badges</InputLabel>
+                                <Select
+                                    labelId="mutiple-chip-label"
+                                    id="badgeIds"
+                                    style={{ width: 300 }}
+                                    multiple
+                                    value={badges.badgeIds}
+                                    onChange={handleBadgeIdsChange}
+                                    input={<Input id="select-multiple-chip" />}
+                                    renderValue={() => (
+                                        systemBadges.map((badge) => (
+                                            badges.badgeIds.includes(badge.id) ? (
+                                                <Chip
+                                                    icon={badgesIconMap[badge.id]}
+                                                    label={badge.title}
+                                                    color="secondary"
+                                                />
+                                            ) : ''
+                                        ))
+                                    )}
+                                >
+                                    {systemBadges.map((badge) => (
+                                        <MenuItem key={badge.id} value={badge.id}>
+                                            <Chip
+                                                icon={badgesIconMap[badge.id]}
+                                                label={badge.title}
+                                                color="secondary"
+                                            />
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                    </Grid>
+                    <Grid className={classes.spacingBetweenFields}></Grid>
                     <Grid container alignItems="center" justify="space-between">
                         <Button
                             onClick={handleFilterClear}
@@ -724,6 +821,19 @@ export default function Players() {
                                                 <TableCell>{row.city}</TableCell>
                                                 <TableCell>{row.mainHand}</TableCell>
                                                 <TableCell>{row.rating}</TableCell>
+                                                <TableCell>{systemBadges.map(badge => {
+                                                    return (
+                                                        row.badgeIds.includes(badge.id) ? (
+                                                            <Grid container spacing={1}>
+                                                                <Chip
+                                                                    icon={badgesIconMap[badge.id]}
+                                                                    label={badge.title}
+                                                                    color="secondary"
+                                                                />
+                                                            </Grid>
+                                                        ) : ''
+                                                    )
+                                                })}</TableCell>
                                                 <TableCell>
                                                     {row.clubTitle !== '' ? (
                                                         <Grid container spacing={1} alignItems="center">

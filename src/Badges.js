@@ -83,8 +83,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Account() {
     const classes = useStyles();
-    const history = useHistory();
-    const theme = useTheme();
 
     const [loadedBadgesData, setLoadedBadgesData] = useState(null);
     const [loadedUserData, setLoadedUserData] = useState(null);

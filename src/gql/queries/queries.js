@@ -83,6 +83,11 @@ const GET_PLAYERS = gql`
                 title
                 clubLogo
             }
+            badges {
+                id
+                title
+                description
+            }
         }
     }
 `;

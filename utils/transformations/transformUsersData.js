@@ -30,6 +30,7 @@ const transformUsersData = (users, clubs) => {
             clubTitle: userClub ? userClub.title : '',
             clubLogo: userClub ? userClub.clubLogo : '',
             rating: user.rating ? parseInt(user.rating) : 0,
+            badgeIds: user.badges.map(badge => badge.id),
         }
     })
 }
