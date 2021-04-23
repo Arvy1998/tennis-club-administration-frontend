@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
 
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { useHistory } from 'react-router';
+import { makeStyles } from '@material-ui/core/styles';
 
 import Grid from '@material-ui/core/Grid';
 import Tooltip from '@material-ui/core/Tooltip';

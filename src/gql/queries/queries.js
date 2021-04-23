@@ -60,6 +60,66 @@ const GET_USER = gql`
     }
 `;
 
+const GET_USER_BY_ID = gql`
+    query getUserById($id: ID!) {
+        getUserById(id: $id) {
+            id
+            firstName
+            lastName
+            city
+            address
+            sex
+            level
+            phoneNumber
+            email
+            city
+            role
+            userProfilePhoto
+            mainHand
+            details
+            rating
+            club {
+                id
+                title
+                clubLogo
+            }
+            games {
+                id
+                date
+                firstTeamFirstPlayer {
+                    id
+                    firstName
+                    lastName
+                }
+                firstTeamSecondPlayer {
+                    id
+                    firstName
+                    lastName
+                }
+                secondTeamFirstPlayer {
+                    id
+                    firstName
+                    lastName
+                }
+                secondTeamSecondPlayer {
+                    id
+                    firstName
+                    lastName
+                }
+                matches {
+                    firstTeamScore
+                    secondTeamScore
+                }
+            }
+            badges {
+                id
+                title
+                description
+            }
+        }
+    }
+`;
+
 const GET_PLAYERS = gql`
     query getPlayers {
         getPlayers {
@@ -389,6 +449,7 @@ const GET_PLAYFIELDS_SELECTION = gql`
 
 export {
     GET_USER,
+    GET_USER_BY_ID,
     ALL_USERS,
     GET_PLAYFIELDS,
     GET_PLAYFIELD,
