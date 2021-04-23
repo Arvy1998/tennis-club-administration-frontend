@@ -82,7 +82,7 @@ const useStyles = makeStyles((theme) => ({
         alignContent: 'center'
     },
     table: {
-        minWidth: 750,
+        minWidth: 900,
     },
     visuallyHidden: {
         border: 0,
@@ -836,20 +836,15 @@ export default function Players() {
                                                 })}</TableCell>
                                                 <TableCell>
                                                     {row.clubTitle !== '' ? (
-                                                        <Grid container spacing={1} alignItems="center">
-                                                            <Grid item>
-                                                                <Avatar
-                                                                    id="avatar"
-                                                                    sizes="100px"
-                                                                    alt={`${row.id}`}
-                                                                    src={row.clubLogo}
-                                                                    className={classes.large}
-                                                                />
-                                                            </Grid>
-                                                            <Grid item>
-                                                                {row.clubTitle}
-                                                            </Grid>
-                                                        </Grid>
+                                                        <Tooltip placement="top" title={row.clubTitle}>
+                                                            <Avatar
+                                                                id="avatar"
+                                                                sizes="100px"
+                                                                alt={`${row.id}`}
+                                                                src={row.clubLogo}
+                                                                className={classes.large}
+                                                            />
+                                                        </Tooltip>
                                                     ) : ''}
 
                                                 </TableCell>
