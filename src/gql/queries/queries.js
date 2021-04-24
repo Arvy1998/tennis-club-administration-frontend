@@ -322,6 +322,32 @@ const GET_RESERVATIONS_BY_USER_ID = gql`
     }
 `;
 
+const LIST_RESERVATIONS = gql`
+    query listReservations {
+        listReservations {
+            id
+            startDateTime
+            endDateTime
+            user {
+                id
+            }
+            isRecurring
+            recurringDate
+            recurringPeriod
+            recurringEvery
+            playField {
+                id
+                title
+                city
+                address
+            }
+            totalCost
+            status
+            paid
+        }
+    }
+`;
+
 const GET_CLUB = gql`
     query getClub($id: ID!) {
         getClub(id: $id) {
@@ -465,4 +491,5 @@ export {
     GET_NEWS,
     LIST_NEWS,
     GET_PLAYFIELDS_SELECTION,
+    LIST_RESERVATIONS,
 }

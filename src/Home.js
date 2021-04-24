@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -13,6 +13,8 @@ import Navigation from './Navigation';
 import { Typography } from '@material-ui/core';
 
 import isRegisteredUser from '../utils/isRegisteredUser';
+
+import RegisteredHome from './RegisteredHome';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,7 +33,19 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'auto',
     flexDirection: 'column',
   },
-
+  welcomeText: {
+    color: 'grey',
+    marginTop: theme.spacing(1),
+  },
+  title: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignContent: 'center',
+    color: 'grey',
+    marginTop: theme.spacing(1),
+    fontSize: 20,
+    fontWeight: 500,
+  },
 }));
 
 export default function Home() {
@@ -64,12 +78,9 @@ export default function Home() {
           }
           {
             isRegisteredUser() ? (
-              <Grid item>
-                <Typography variant="h1" component="h2" >TEST</Typography>
-              </Grid>
+              <RegisteredHome />
             ) : ''
           }
-
         </Grid>
       </Container>
     </div >

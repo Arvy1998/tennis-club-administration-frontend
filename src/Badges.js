@@ -149,7 +149,7 @@ export default function Account() {
 
     let systemBadges;
     if (loadedBadgesData) {
-        systemBadges = loadedBadgesData.listBadges;
+        systemBadges = _.sortBy(loadedBadgesData.listBadges, 'id');
     }
 
     return (
