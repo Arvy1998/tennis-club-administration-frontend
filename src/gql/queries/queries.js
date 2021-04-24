@@ -179,6 +179,8 @@ const GET_PLAYFIELDS = gql`
             additionalInformation
             webpage
             playFieldPhoto
+            paymentRecipient
+            paymentIBAN
             createdAt
             updatedAt
         }
@@ -201,6 +203,8 @@ const GET_PLAYFIELD = gql`
             additionalInformation
             webpage
             playFieldPhoto
+            paymentRecipient
+            paymentIBAN
             createdAt
             updatedAt
         }
@@ -314,6 +318,8 @@ const GET_RESERVATIONS_BY_USER_ID = gql`
                 title
                 city
                 address
+                paymentRecipient
+                paymentIBAN
             }
             totalCost
             status

@@ -458,7 +458,7 @@ export default function PlayerDetails({ match }) {
                         </Typography>
                     </Grid>
                     <Grid className={classes.spacingBetween}></Grid>
-                    <Grid container spacing={2} justify="center" alignItems="top">
+                    <Grid container spacing={2} justify="center">
                         <Grid item>
                             <Card className={classes.card} variant="outlined">
                                 <CardContent>

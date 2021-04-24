@@ -17,9 +17,9 @@ import StreetviewIcon from '@material-ui/icons/Streetview';
 import EuroSymbolIcon from '@material-ui/icons/EuroSymbol';
 import BorderHorizontalIcon from '@material-ui/icons/BorderHorizontal';
 import InfoIcon from '@material-ui/icons/Info';
-import StarIcon from '@material-ui/icons/Star';
 import LanguageIcon from '@material-ui/icons/Language';
 import PhotoIcon from '@material-ui/icons/Photo';
+import CreditCardIcon from '@material-ui/icons/CreditCard';
 
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
@@ -44,6 +44,7 @@ import {
 } from './gql/queries/queries';
 import isRegisteredUser from '../utils/isRegisteredUser';
 import isAdmin from '../utils/isAdmin';
+import isNotPlayer from '../utils/isNotPlayer';
 
 const useStyles = makeStyles((theme) => ({
     avatar: {
@@ -117,6 +118,9 @@ const useStyles = makeStyles((theme) => ({
         width: theme.spacing(16 * 3),
         height: theme.spacing(9 * 3),
     },
+    centeredDiv: {
+        margin: 'auto',
+    }
 }));
 
 export default function PlayFieldsEditForm({ match }) {
@@ -146,6 +150,8 @@ export default function PlayFieldsEditForm({ match }) {
     const [courtFloorType, setCourtFloorType] = useState('');
     const [webpage, setWebpage] = useState('');
     const [additionalInformation, setAdditionalInformation] = useState('');
+    const [paymentRecipient, setPaymentRecipient] = useState('');
+    const [paymentIBAN, setPaymentIBAN] = useState('');
 
     const [playFieldPhoto, setPlayFieldPhoto] = useState('');
     const [fileName, setFileName] = useState('');
@@ -207,6 +213,8 @@ export default function PlayFieldsEditForm({ match }) {
                     webpage,
                     additionalInformation,
                     playFieldPhoto,
+                    paymentRecipient,
+                    paymentIBAN,
                 }),
             },
         });
@@ -503,7 +511,54 @@ export default function PlayFieldsEditForm({ match }) {
                                     />
                                 </Grid>
                             </Grid>
-                            <Grid className={classes.spacingBetween}></Grid>
+                            {isNotPlayer() ?
+                                <div className={classes.centeredDiv}>
+                                    <Grid className={classes.spacingBetween}></Grid>
+                                    <Grid container spacing={1} alignItems="flex-end" justify="center">
+                                        <Typography
+                                            component="h1"
+                                            variant="h5"
+                                            className={classes.contactInformationText}
+                                        >
+                                            Reservation Payment Details
+                                        </Typography>
+                                    </Grid>
+                                    <Grid container spacing={1} alignItems="flex-end" justify="center">
+                                        <Grid item>
+                                            <TextFieldsIcon />
+                                        </Grid>
+                                        <Grid item>
+                                            <TextField
+                                                style={{ width: 300 }}
+                                                id="paymentRecipient"
+                                                label="Payment Recipient"
+                                                name="paymentRecipient"
+                                                defaultValue={playField.paymentRecipient}
+                                                required
+                                                onInput={e => setPaymentRecipient(e.target.value)}
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                    <Grid className={classes.spacingBetweenFields}></Grid>
+                                    <Grid container spacing={1} alignItems="flex-end" justify="center">
+                                        <Grid item>
+                                            <CreditCardIcon />
+                                        </Grid>
+                                        <Grid item>
+                                            <TextField
+                                                style={{ width: 300 }}
+                                                id="iban"
+                                                label="Payment IBAN"
+                                                name="iban"
+                                                defaultValue={playField.paymentIBAN}
+                                                required
+                                                onInput={e => setPaymentIBAN(e.target.value)}
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                    <Grid className={classes.spacingBetweenFields}></Grid>
+                                </div>
+                                : ''}
                             <Grid container spacing={1} alignItems="center" justify="center">
                                 <Grid item>
                                     <Avatar

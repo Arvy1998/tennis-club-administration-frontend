@@ -198,6 +198,8 @@ const CREATE_RESERVATION = gql`
             playField {
                 id
                 cost
+                paymentRecipient
+                paymentIBAN
             }
             totalCost
             paid
@@ -221,6 +223,8 @@ const UPDATE_RESERVATION = gql`
             playField {
                 id
                 cost
+                paymentRecipient
+                paymentIBAN
             }
             totalCost
             paid
