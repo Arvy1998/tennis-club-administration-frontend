@@ -247,7 +247,6 @@ export default function Reservations() {
     };
 
     const handleEditDetails = (event, playFieldId, reservationId) => {
-        console.log({playFieldId, reservationId});
         history.push(`/reservations/edit/${playFieldId}/${reservationId}`);
     };
 

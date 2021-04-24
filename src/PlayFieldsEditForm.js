@@ -511,6 +511,7 @@ export default function PlayFieldsEditForm({ match }) {
                                     />
                                 </Grid>
                             </Grid>
+                            <Grid className={classes.spacingBetweenFields}></Grid>
                             {isNotPlayer() ?
                                 <div className={classes.centeredDiv}>
                                     <Grid className={classes.spacingBetween}></Grid>

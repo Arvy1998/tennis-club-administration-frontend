@@ -16,7 +16,6 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Avatar from '@material-ui/core/Avatar';
-import Rating from '@material-ui/lab/Rating';
 import Button from '@material-ui/core/Button';
 
 import Navigation from './Navigation';
@@ -43,7 +42,6 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 import TextFieldsIcon from '@material-ui/icons/TextFields';
 import HomeIcon from '@material-ui/icons/Home';
 import EuroSymbolIcon from '@material-ui/icons/EuroSymbol';
-import StarIcon from '@material-ui/icons/Star';
 
 import { Typography } from '@material-ui/core';
 
@@ -186,7 +184,6 @@ export default function PlayFields() {
     const [cost, setCost] = useState(0);
     const [courtType, setCourtType] = useState('Not Selected');
     const [courtFloorType, setCourtFloorType] = useState('Not Selected');
-    const [hover, setHover] = useState(-1);
 
     useEffect(() => {
         if (loading) {

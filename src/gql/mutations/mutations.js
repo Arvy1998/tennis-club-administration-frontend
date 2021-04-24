@@ -354,6 +354,14 @@ const DELETE_NEWS = gql`
     }
 `;
 
+const DO_PAYMENT = gql`
+    mutation doPayment($reservationId: ID!, $paymentInput: PaymentInput!) {
+        doPayment(reservationId: $reservationId, paymentInput: $paymentInput) {
+            id
+        }
+    }
+`;
+
 export {
     LOGIN_USER,
     UPDATE_USER,
@@ -374,4 +382,5 @@ export {
     CREATE_NEWS,
     UPDATE_NEWS,
     DELETE_NEWS,
+    DO_PAYMENT,
 }

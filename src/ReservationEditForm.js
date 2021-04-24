@@ -12,10 +12,14 @@ import Tooltip from '@material-ui/core/Tooltip';
 import InfoIcon from '@material-ui/icons/Info';
 import EventIcon from '@material-ui/icons/Event';
 import EuroSymbolIcon from '@material-ui/icons/EuroSymbol';
+import TextFieldsIcon from '@material-ui/icons/TextFields';
+import CreditCardIcon from '@material-ui/icons/CreditCard';
+import PersonIcon from '@material-ui/icons/Person';
 
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -23,6 +27,8 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 
 import Navigation from './Navigation';
+import Modal from '@material-ui/core/Modal';
+import getModalStyle from '../utils/props/getModalStyle';
 
 import filterNotEnteredEntries from '../utils/filterNotEnteredEntries';
 
@@ -30,6 +36,7 @@ import { useMutation } from "@apollo/react-hooks";
 import {
     DELETE_RESERVATION,
     UPDATE_RESERVATION,
+    DO_PAYMENT,
 } from './gql/mutations/mutations';
 
 import { useQuery } from "@apollo/react-hooks";
@@ -41,6 +48,7 @@ import {
 import validationsActive from '../utils/calendar/validationsActive';
 import helperTextMap from '../utils/calendar/helperTextMap';
 import getDatesDifferenceInHour from '../utils/calendar/getDatesDifferenceInHours';
+import isPaymentInformationCorrect from '../utils/isPaymentInformationCorrect';
 
 const useStyles = makeStyles((theme) => ({
     avatar: {
@@ -119,6 +127,21 @@ const useStyles = makeStyles((theme) => ({
     input: {
         display: 'none',
     },
+    paper: {
+        position: 'absolute',
+        width: 400,
+        backgroundColor: theme.palette.background.paper,
+        border: '2px solid #000',
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing(2, 4, 3),
+    },
+    title: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignContent: 'center',
+        color: 'grey',
+        marginTop: theme.spacing(1),
+    },
 }));
 
 export default function ReservationEditForm({ match }) {
@@ -147,8 +170,16 @@ export default function ReservationEditForm({ match }) {
     const [startDateTime, setStartDateTime] = useState('');
     const [endDateTime, setEndDateTime] = useState('');
 
+    const [modalStyle] = useState(getModalStyle);
+    const [open, setOpen] = useState(false);
+
+    const [IBAN, setIBAN] = useState('');
+    const [CVC, setCVC] = useState('');
+    const [YYMM, setYYMM] = useState('');
+
     const [editReservation, { data: updateReservation }] = useMutation(UPDATE_RESERVATION);
     const [removeReservation, { data: deleteReservation }] = useMutation(DELETE_RESERVATION);
+    const [payReservation, { data: doPayment }] = useMutation(DO_PAYMENT);
 
     const { loading: reservationsLoading, error: reservationsError, data: reservationsData } = useQuery(
         GET_RESERVATIONS_BY_PLAYFIELD_ID, { variables: { playFieldId: match.params.playFieldId } },
@@ -216,6 +247,10 @@ export default function ReservationEditForm({ match }) {
             });
         }
     }, [startDateTime, endDateTime]);
+
+    function awaitTime(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
 
     if (!loadedPlayFieldData || isLoading) {
         return (
@@ -291,8 +326,38 @@ export default function ReservationEditForm({ match }) {
         window.location.reload(true);
     }
 
-    function handlePaymentAction(event) {
+    function handleOpenModal(event) {
+        event.preventDefault();
+        setOpen(true);
+    };
 
+    const handleClose = (value) => {
+        setOpen(false);
+    };
+
+    function handlePaymentAction(event) {
+        event.preventDefault();
+
+        setUpdated(true);
+        setIsLoading(true);
+
+        payReservation({
+            variables: {
+                reservationId: match.params.reservationId,
+                paymentInput: filterNotEnteredEntries({
+                    IBAN,
+                    CVC: parseInt(CVC),
+                    YYMM,
+                    totalCost: playField.cost * getDatesDifferenceInHour(choosenEvent),
+                }),
+            },
+        });
+
+        setUpdated(false);
+        setIsLoading(false);
+
+        history.push('/reservations');
+        window.location.reload(true);
     }
 
     function handleInformationSubmit(event) {
@@ -327,6 +392,118 @@ export default function ReservationEditForm({ match }) {
             </div>
         );
     }
+
+    const body = (
+        <div style={modalStyle} className={classes.paper}>
+            <Typography className={classes.title}>
+                Payment Information
+            </Typography>
+            <form className={classes.form} onSubmit={handlePaymentAction}>
+                <Grid container>
+                    <Grid container spacing={1} alignItems="flex-end" justify="center">
+                        <Grid item>
+                            <TextFieldsIcon />
+                        </Grid>
+                        <Grid item>
+                            <TextField
+                                autoComplete="IBAN"
+                                defaultValue={IBAN}
+                                name="IBAN"
+                                style={{ width: 200 }}
+                                id="IBAN"
+                                label="IBAN"
+                                placeholder={'LTXXXXXXXXXXXXXXXXXX'}
+                                onInput={e => setIBAN(e.target.value)}
+                            />
+                        </Grid>
+                    </Grid>
+                    <Grid className={classes.spacingBetweenFields}></Grid>
+                    <Grid container spacing={1} alignItems="flex-end" justify="center">
+                        <Grid item>
+                            <CreditCardIcon />
+                        </Grid>
+                        <Grid item>
+                            <TextField
+                                autoComplete="CVC"
+                                defaultValue={CVC}
+                                name="CVC"
+                                style={{ width: 200 }}
+                                id="CVC"
+                                label="CVC"
+                                placeholder={'XXX'}
+                                onInput={e => setCVC(e.target.value)}
+                            />
+                        </Grid>
+                    </Grid>
+                    <Grid className={classes.spacingBetweenFields}></Grid>
+                    <Grid container spacing={1} alignItems="flex-end" justify="center">
+                        <Grid item>
+                            <CreditCardIcon />
+                        </Grid>
+                        <Grid item>
+                            <TextField
+                                autoComplete="Card Expiry Years/Month"
+                                defaultValue={YYMM}
+                                name="Card Expiry Years/Month"
+                                style={{ width: 200 }}
+                                placeholder={'MM/YY'}
+                                id="Card Expiry Years/Month"
+                                label="Card Expiry Years/Month"
+                                onInput={e => setYYMM(e.target.value)}
+                            />
+                        </Grid>
+                    </Grid>
+                    <Grid className={classes.spacingBetweenFields}></Grid>
+                    <Grid container spacing={1} alignItems="flex-end" justify="center">
+                        <Grid item>
+                            <PersonIcon />
+                        </Grid>
+                        <Grid item>
+                            <TextField
+                                autoComplete="recipient"
+                                defaultValue={playField.paymentRecipient}
+                                name="recipient"
+                                style={{ width: 200 }}
+                                id="recipient"
+                                label="Payment Recipient"
+                                disabled={true}
+                            />
+                        </Grid>
+                    </Grid>
+                    <Grid className={classes.spacingBetweenFields}></Grid>
+                    <Grid container spacing={1} alignItems="flex-end" justify="center">
+                        <Grid item>
+                            <CreditCardIcon />
+                        </Grid>
+                        <Grid item>
+                            <TextField
+                                autoComplete="iban"
+                                defaultValue={playField.paymentIBAN}
+                                name="iban"
+                                style={{ width: 200 }}
+                                id="iban"
+                                label="Payment IBAN"
+                                disabled={true}
+                            />
+                        </Grid>
+                    </Grid>
+                    <Grid container alignItems="center" justify="center">
+                        <Button
+                            variant="outlined"
+                            color="secondary"
+                            className={classes.buttonBox}
+                            onClick={handlePaymentAction}
+                            disabled={!isPaymentInformationCorrect({
+                                CVC, IBAN, YYMM,
+                            })}
+                        >
+                            Pay
+                        </Button>
+                    </Grid>
+                </Grid>
+            </form>
+        </div>
+    );
 
     return (
         <div className={classes.root}>
@@ -458,6 +635,19 @@ export default function ReservationEditForm({ match }) {
                             </Grid>
                         </Grid>
                         {/* reservation calendar */}
+                        <Modal
+                            open={open}
+                            onClose={handleClose}
+                            aria-labelledby="modal-title"
+                            aria-describedby="modal-description"
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            {body}
+                        </Modal>
                         <Grid className={classes.spacingBetweenCalendar}></Grid>
                         <FullCalendar
                             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -497,9 +687,13 @@ export default function ReservationEditForm({ match }) {
                             <Button
                                 variant="outlined"
                                 color="secondary"
-                                onClick={handlePaymentAction}
+                                onClick={handleOpenModal}
                                 className={classes.buttonBox}
-                                disabled={editableReservation.paid}
+                                disabled={choosenEvent ? !!(validationsActive(choosenEvent, reservations)
+                                    || editableReservation.paid
+                                    || editableReservation.status === 'Canceled'
+                                    || Date.parse(editableReservation.endDateTime) < new Date()
+                                ) : true}
                             >
                                 Pay For Reservation
                             </Button>

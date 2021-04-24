@@ -329,7 +329,7 @@ export default function RegisteredHome() {
                                             >
                                                 <TableCell>Start: {moment(reservation.startDateTime).format('YYYY-MM-DD HH:mm')}</TableCell>
                                                 <TableCell>At: {reservation.playField.title}</TableCell>
-                                                <TableCell>{reservation.playField.city} {reservation.playField.address}</TableCell>
+                                                <TableCell>{reservation.playField.city}, {reservation.playField.address}</TableCell>
                                                 <TableCell>{parseFloat(reservation.totalCost).toFixed(2)} €</TableCell>
                                                 <TableCell>
                                                     {
