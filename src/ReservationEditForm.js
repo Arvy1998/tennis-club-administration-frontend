@@ -248,10 +248,6 @@ export default function ReservationEditForm({ match }) {
         }
     }, [startDateTime, endDateTime]);
 
-    function awaitTime(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
     if (!loadedPlayFieldData || isLoading) {
         return (
             <div className={classes.loadingBarContainer}>
@@ -275,14 +271,16 @@ export default function ReservationEditForm({ match }) {
 
     let reservations;
     if (loadedReservationsData) {
-        reservations = reservationsData.getReservationsByPlayfieldId.map(reservation => {
-            return {
-                id: createEventId(),
-                title: 'Reservation',
-                start: reservation.startDateTime + ':00',
-                end: reservation.endDateTime + ':00',
+        reservations = _.compact(reservationsData.getReservationsByPlayfieldId.map(reservation => {
+            if (reservation.status === 'Active') {
+                return {
+                    id: createEventId(),
+                    title: 'Reservation',
+                    start: reservation.startDateTime + ':00',
+                    end: reservation.endDateTime + ':00',
+                }
             }
-        })
+        }));
     }
 
     function handleDeleteTrigger(event) {

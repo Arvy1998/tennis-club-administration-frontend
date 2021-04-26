@@ -7,6 +7,17 @@ import { useAuthToken } from '../../hooks/useAuthToken';
 
 const httpLink = new HttpLink({ uri: 'http://localhost:3005/graphql' });
 
+const defaultOptions = {
+  watchQuery: {
+    fetchPolicy: 'no-cache',
+    errorPolicy: 'ignore',
+  },
+  query: {
+    fetchPolicy: 'no-cache',
+    errorPolicy: 'all',
+  },
+}
+
 const authMiddleware = (authToken) =>
   new ApolloLink((operation, forward) => {
     if (authToken !== 'undefined' && authToken) {
@@ -28,5 +39,6 @@ export const useAppApolloClient = () => {
   return new ApolloClient({
     link: authMiddleware(authToken).concat(httpLink),
     cache,
+    defaultOptions,
   });
 };

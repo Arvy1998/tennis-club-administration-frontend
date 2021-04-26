@@ -217,15 +217,17 @@ export default function ReservationAddForm({ match }) {
 
     let reservations;
     if (loadedReservationsData) {
-        reservations = reservationsData.getReservationsByPlayfieldId.map(reservation => {
-            return {
-                id: createEventId(),
-                title: 'Reservation',
-                start: reservation.startDateTime + ':00',
-                end: reservation.endDateTime + ':00',
+        reservations = _.compact(reservationsData.getReservationsByPlayfieldId.map(reservation => {
+            if (reservation.status === 'Active') {
+                return {
+                    id: createEventId(),
+                    title: 'Reservation',
+                    start: reservation.startDateTime + ':00',
+                    end: reservation.endDateTime + ':00',
+                }
             }
-        })
-    }
+        }));
+    };
 
     function handleInformationSubmit(event) {
         event.preventDefault();
