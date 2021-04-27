@@ -259,8 +259,6 @@ export default function AdminAccounts() {
 
         setUpdated(false);
         setIsLoading(false);
-
-        history.push('/accounts');
     }
 
     function handleFilterSubmit(event) {
@@ -314,6 +312,11 @@ export default function AdminAccounts() {
                 <LinearProgress color="secondary" />
             </div>
         );
+    }
+
+    if (editUserById) {
+        history.push('/accounts');
+        window.location.reload(true);
     }
 
     const body = (
