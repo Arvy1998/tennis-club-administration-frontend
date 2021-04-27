@@ -46,6 +46,7 @@ import StarIcon from '@material-ui/icons/Star';
 import InfoIcon from '@material-ui/icons/Info';
 import Chip from '@material-ui/core/Chip';
 import LoyaltyIcon from '@material-ui/icons/Loyalty';
+import SportsTennisTwoToneIcon from '@material-ui/icons/SportsTennisTwoTone';
 
 import { Typography } from '@material-ui/core';
 
@@ -630,7 +631,7 @@ export default function Players() {
                     <Grid className={classes.spacingBetweenFields}></Grid>
                     <Grid container spacing={1} alignItems="flex-end" justify="center">
                         <Grid item>
-                            <HomeIcon />
+                            <SportsTennisTwoToneIcon />
                         </Grid>
                         <Grid item>
                             <FormControl className={classes.formControl}>
