@@ -365,7 +365,7 @@ export default function ReservationAddForm({ match }) {
                                         id="cost"
                                         value={
                                             choosenEvent ?
-                                                playField.cost * getDatesDifferenceInHour(choosenEvent) :
+                                                parseFloat(playField.cost * getDatesDifferenceInHour(choosenEvent)).toFixed(2) :
                                                 'No Cost Applied'
                                         }
                                         disabled={true}
