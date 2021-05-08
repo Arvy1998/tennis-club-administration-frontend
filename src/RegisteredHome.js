@@ -216,6 +216,10 @@ export default function RegisteredHome() {
             }
         });
 
+        if (!user.teammates) {
+            user.teammates = [];
+        }
+
         _.remove(user.teammates, {
             id: localStorage.getItem('id'),
         })
@@ -230,7 +234,7 @@ export default function RegisteredHome() {
                 return reservation;
             }
         });
-        reservations = _.orderBy(_.compact(reservations), 'startDateTime', 'asc').slice(0, 4);
+        reservations = _.orderBy(_.compact(reservations), 'startDateTime', 'desc').slice(0, 4);
     }
 
     let newsCards;
@@ -261,53 +265,59 @@ export default function RegisteredHome() {
             </Typography>
             <Grid container spacing={2} justify="center">
                 <Grid item>
-                    <Typography className={classes.title}>
-                        Club
-                    </Typography>
-                    <Card className={classes.card} variant="outlined">
-                        <CardContent>
-                            <Grid container spacing={2} justify="center" alignItems="center">
-                                <Grid item>
-                                    <Tooltip title={user.clubTitle} placement="top">
-                                        <Avatar
-                                            id="avatar"
-                                            sizes="100px"
-                                            src={user.clubLogo || ''}
-                                            className={classes.large}
-                                        />
-                                    </Tooltip>
-                                </Grid>
-                                <Grid item>
-                                    <Typography className={classes.cardDescription} color="textSecondary">
-                                        {user.clubTitle}
-                                    </Typography>
-                                </Grid>
-                            </Grid>
-                            <Grid container spacing={2} justify="center" alignItems="center">
-                                <Grid item>
-                                    <Typography className={classes.cardDescription} color="textSecondary">
-                                        Teammates:
-                                    </Typography>
-                                </Grid>
-                            </Grid>
-                            <Grid container spacing={2} justify="center" alignItems="center">
-                                <Grid item>
-                                    <Table size="small">
-                                        {user.teammates.map(teammate => (
-                                            <TableRow
-                                                hover
-                                                key={`${new Date()} ${teammate.id}`}
-                                                onClick={(event) => handleOpenDetails(event, teammate.id)}
-                                                selected={false}
-                                            >
-                                                <TableCell>{teammate.firstName} {teammate.lastName}</TableCell>
-                                            </TableRow>
-                                        ))}
-                                    </Table>
-                                </Grid>
-                            </Grid>
-                        </CardContent>
-                    </Card>
+                    {
+                        localStorage.getItem('role') === 'TRENNER' || localStorage.getItem('role') === 'ADMIN' ? '' : (
+                            <div>
+                                <Typography className={classes.title}>
+                                    Club
+                                </Typography>
+                                <Card className={classes.card} variant="outlined">
+                                    <CardContent>
+                                        <Grid container spacing={2} justify="center" alignItems="center">
+                                            <Grid item>
+                                                <Tooltip title={user.clubTitle} placement="top">
+                                                    <Avatar
+                                                        id="avatar"
+                                                        sizes="100px"
+                                                        src={user.clubLogo || ''}
+                                                        className={classes.large}
+                                                    />
+                                                </Tooltip>
+                                            </Grid>
+                                            <Grid item>
+                                                <Typography className={classes.cardDescription} color="textSecondary">
+                                                    {user.clubTitle}
+                                                </Typography>
+                                            </Grid>
+                                        </Grid>
+                                        <Grid container spacing={2} justify="center" alignItems="center">
+                                            <Grid item>
+                                                <Typography className={classes.cardDescription} color="textSecondary">
+                                                    Teammates:
+                                                </Typography>
+                                            </Grid>
+                                        </Grid>
+                                        <Grid container spacing={2} justify="center" alignItems="center">
+                                            <Grid item>
+                                                <Table size="small">
+                                                    {user.teammates.map(teammate => (
+                                                        <TableRow
+                                                            hover
+                                                            key={`${new Date()} ${teammate.id}`}
+                                                            onClick={(event) => handleOpenDetails(event, teammate.id)}
+                                                            selected={false}
+                                                        >
+                                                            <TableCell>{teammate.firstName} {teammate.lastName}</TableCell>
+                                                        </TableRow>
+                                                    ))}
+                                                </Table>
+                                            </Grid>
+                                        </Grid>
+                                    </CardContent>
+                                </Card>
+                            </div>
+                        )
+                    }
                     <Typography className={classes.title}>
                         Latest Reservations
                     </Typography>
@@ -358,7 +368,7 @@ export default function RegisteredHome() {
                             <Grid container spacing={2} justify="center" alignItems="center">
                                 <Grid item>
                                     <Table size="small">
-                                        {user.games.length > 0 ? user.games.map(game => (
+                                        {games.length > 0 ? games.map(game => (
                                             <TableRow
                                                 hover
                                                 key={`${new Date()} ${game.id}`}
