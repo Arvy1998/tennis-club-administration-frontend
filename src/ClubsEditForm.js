@@ -17,6 +17,9 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import Avatar from '@material-ui/core/Avatar';
 import MenuItem from '@material-ui/core/MenuItem';
 
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+
 import Navigation from './Navigation';
 
 import filterNotEnteredEntries from '../utils/filterNotEnteredEntries';
@@ -32,6 +35,10 @@ import {
     GET_CLUB,
     LIST_CLUBS,
 } from './gql/queries/queries';
+
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const useStyles = makeStyles((theme) => ({
     avatar: {
@@ -111,6 +118,12 @@ const useStyles = makeStyles((theme) => ({
         width: theme.spacing(16 * 3),
         height: theme.spacing(9 * 3),
     },
+    snack: {
+        width: '100%',
+        '& > * + *': {
+            marginTop: theme.spacing(2),
+        },
+    }
 }));
 
 export default function ClubsAddForm({ clubId }) {
@@ -121,6 +134,7 @@ export default function ClubsAddForm({ clubId }) {
 
     const [isLoading, setIsLoading] = useState(null);
     const [isError, setIsError] = useState(null);
+    const [open, setOpen] = React.useState(false);
 
     const [loadedClubsData, setLoadedClubsData] = useState(null);
     const [loadedUsersData, setLoadedUsersData] = useState(null);
@@ -249,6 +263,14 @@ export default function ClubsAddForm({ clubId }) {
         club = loadedClubsData.getClub;
     }
 
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpen(false);
+    };
+
     function handleInformationSubmit(event) {
         event.preventDefault();
 
@@ -270,8 +292,7 @@ export default function ClubsAddForm({ clubId }) {
         setUpdated(false);
         setIsLoading(false);
 
-        history.push('/home');
-        window.location.reload(true);
+        setOpen(true);
     }
 
     function fileToBase64(fileUploadEvent) {
@@ -351,7 +372,7 @@ export default function ClubsAddForm({ clubId }) {
                                             component="span"
                                         >
                                             Select Logotipe
-                                            </Button>
+                                        </Button>
                                     </label>
                                 </Grid>
                                 <Grid item>
@@ -431,10 +452,15 @@ export default function ClubsAddForm({ clubId }) {
                                 className={classes.buttonBox}
                             >
                                 UPDATE
-                                </Button>
+                            </Button>
                         </Grid>
                     </form>
                 </Grid>
+                <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                    <Alert onClose={handleClose} severity="success">
+                        Information updated successfuly!
+                    </Alert>
+                </Snackbar>
             </Container>
         </div >
     );
